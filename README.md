@@ -3,11 +3,11 @@
 This repository is the repository for the homeworks to developed in the Web Application course. A.Y. 2025/2026.
 
 ### Group Partecipant
-- Alvise Garberino
-- Giancarlo Padoan 
-- Thomas Sanavia 
-- Fabio Baldan 
-- Klaudio Merja
+- Baldan Fabio (2203580)
+- Merja Klaudio (2197815)
+- Garberino Alvise (2196387)
+- Padoan Giancarlo (2188345)
+- Sanavia Thomas (2197484)
 
 ### Organisation of the repository ###
 
