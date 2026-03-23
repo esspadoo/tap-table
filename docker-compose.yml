@@ -19,8 +19,8 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=93ak!HBtb?
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
     volumes:
       - ./data/db:/var/lib/postgresql/data/
       #- ./src/main/database/schema.sql:/docker-entrypoint-initdb.d/01-init.sql
