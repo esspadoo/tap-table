@@ -2,12 +2,13 @@ services:
   web:
     image: tomcat:latest
     ports:
-      - "8081:8080"
+      - "8080:8080"
     depends_on:
       db:
         condition: service_healthy
     volumes:
-      - ./target/sigir-webapp-1.00.war:/usr/local/tomcat/webapps/sigir-webapp.war
+      #DA SETTARE FILE WAR CORRETTO
+      - ./target/OURWEBAPP.war:/usr/local/tomcat/webapps/OURWEBAPP.war
       - ./tmp/server.xml:/usr/local/tomcat/conf/server.xml
       - ./logs:/usr/local/tomcat/webapps/my-logs
       - ./tmp/context.xml:/usr/local/tomcat/webapps.dist/manager/META-INF/context.xml
@@ -16,14 +17,14 @@ services:
   db:
     image: postgres
     ports:
-      - "5433:5432"
+      - "5432:5432"
     environment:
-      - POSTGRES_PASSWORD=postgres
       - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=93ak!HBtb?
     volumes:
       - ./data/db:/var/lib/postgresql/data/
-      - ./src/main/database/schema.sql:/docker-entrypoint-initdb.d/01-init.sql
-      - ./src/main/database/sigirwebapp-insert.sql:/docker-entrypoint-initdb.d/02-data.sql
+      #- ./src/main/database/schema.sql:/docker-entrypoint-initdb.d/01-init.sql
+      #- ./src/main/database/sigirwebapp-insert.sql:/docker-entrypoint-initdb.d/02-data.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
