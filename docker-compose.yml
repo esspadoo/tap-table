@@ -20,7 +20,7 @@ services:
       - "5432:5432"
     environment:
       - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
+      - POSTGRES_PASSWORD="_fijHm+<M;qmUOaax69^Z}baSb=6U0RF"
     volumes:
       - ./data/db:/var/lib/postgresql/data/
       #- ./src/main/database/schema.sql:/docker-entrypoint-initdb.d/01-init.sql
