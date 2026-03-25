@@ -23,15 +23,16 @@ services:
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+      - POSTGRES_DB=servlet
     secrets:
       - postgres_password
     volumes:
-#      - ./data/db:/var/lib/postgresql      HA SENSO FARE BIND??? VOLUME MOLTO PIÃ™ PULITO
+#      - ./data/db:/var/lib/postgresql      HA SENSO FARE BIND??? VOLUME MOLTO PIÙ PULITO
        - postgres_data:/var/lib/postgresql/data
-      #- ./src/main/database/schema.sql:/docker-entrypoint-initdb.d/01-init.sql
+       - ./db/database.sql:/docker-entrypoint-initdb.d/01-init.sql
       #- ./src/main/database/sigirwebapp-insert.sql:/docker-entrypoint-initdb.d/02-data.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U admin"]
       interval: 5s
       timeout: 10s
       retries: 5
