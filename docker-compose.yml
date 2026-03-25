@@ -1,5 +1,3 @@
-#tutte le righe commentate sono messe "in sospensione" solo per verificare la correzione del docker compose
-#e per evitare errori finche' non abbiamo dei file da caricare nelle directory preposte
 services:
   web:
     image: tomcat:10.1.53-jdk25-temurin
@@ -9,7 +7,6 @@ services:
       db:
         condition: service_healthy
     volumes:
-      #DA SETTARE FILE WAR CORRETTO
       - ./target/OURWEBAPP.war:/usr/local/tomcat/webapps/OURWEBAPP.war
      # - ./tmp/server.xml:/usr/local/tomcat/conf/server.xml
      # - ./logs:/usr/local/tomcat/webapps/my-logs
@@ -27,10 +24,8 @@ services:
     secrets:
       - postgres_password
     volumes:
-#      - ./data/db:/var/lib/postgresql      HA SENSO FARE BIND??? VOLUME MOLTO PIÙ PULITO
        - postgres_data:/var/lib/postgresql/data
-       - ./db/database.sql:/docker-entrypoint-initdb.d/01-init.sql
-      #- ./src/main/database/sigirwebapp-insert.sql:/docker-entrypoint-initdb.d/02-data.sql
+       - ./db/create.sql:/docker-entrypoint-initdb.d/01-init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U admin"]
       interval: 5s
