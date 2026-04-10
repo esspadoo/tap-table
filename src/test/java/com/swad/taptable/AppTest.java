@@ -1,14 +1,21 @@
 package com.swad.taptable;
 
-import static org.junit.Assert.assertTrue;
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-public class AppTest {
-    /**
-     * Rigorous Test :-)
-     */
+import static org.junit.jupiter.api.Assertions.*;
+
+class AppTest {
+
+    @DisplayName("Test that always passes")
     @Test
-    public void shouldAnswerWithTrue() {
+    void alwaysPass() {
         assertTrue(true);
+    }
+
+    @DisplayName("Test that always fails")
+    @Test
+    void alwaysFail() {
+        assertTrue(false, "This test is designed to fail");
     }
 }
