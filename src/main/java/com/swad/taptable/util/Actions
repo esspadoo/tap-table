@@ -1,0 +1,14 @@
+package com.swad.taptable.util;
+
+public final class Actions {
+
+    public static final String AUTHENTICATE_USER = "AUTHENTICATE_USER";
+
+    public static final String REGISTER_USER = "REGISTER_USER";
+    
+    public static final String RECOVER_PASSWORD = "RECOVER_PASSWORD";
+
+    public static final String UPDATE_PASSWORD = "UPDATE_PASSWORD";
+
+    public static final String REFRESH_TOKEN = "REFRESH_TOKEN";
+}
