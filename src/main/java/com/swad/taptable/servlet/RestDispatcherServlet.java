@@ -1,0 +1,84 @@
+package com.swad.taptable.servlet;
+
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.StringFormatterMessageFactory;
+import com.swad.taptable.resources.Message;
+import com.swad.taptable.util.ErrorCodes;
+import com.swad.taptable.util.LogContext;
+
+/**
+ * The main servlet responsible for dispatching REST requests to the appropriate handlers.
+ * 
+ * @author SWAD Team
+ */
+public final class RestDispatcherServlet extends HttpServlet {
+
+    private static final Logger LOGGER = LogManager.getLogger(RestDispatcherServlet.class,
+            StringFormatterMessageFactory.INSTANCE);
+
+    private static final String JSON_UTF_8_MEDIA_TYPE = "application/json; charset=utf-8";
+
+    @Override
+    protected void service(final HttpServletRequest req, final HttpServletResponse res)
+            throws IOException {
+
+        LogContext.setIPAddress(req.getRemoteAddr());
+        final OutputStream out = res.getOutputStream();
+
+        try {
+            if (processUserRoutes(req, res)) {
+                return;
+            }
+
+            LOGGER.warn("Unknown resource requested: %s.", req.getRequestURI());
+            final Message m = new Message("Unknown resource requested.",
+                    ErrorCodes.UNKNOWN_RESOURCE_REQUESTED,
+                    String.format("Requested resource is %s.", req.getRequestURI()));
+            res.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            res.setContentType(JSON_UTF_8_MEDIA_TYPE);
+            m.toJSON(out);
+
+        } catch (Throwable t) {
+            LOGGER.error("Unexpected error while processing the REST resource.", t);
+            final Message m =
+                    new Message("Unexpected error.", ErrorCodes.UNEXPECTED_ERROR, t.getMessage());
+            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            m.toJSON(out);
+        } finally {
+            if (out != null) {
+                out.flush();
+                out.close();
+            }
+            LogContext.removeIPAddress();
+        }
+    }
+
+    /**
+     * Routes requests under {@code /rest/user/}.
+     *
+     * @return {@code true} if the request matched a known route.
+     */
+    private boolean processUserRoutes(final HttpServletRequest req, final HttpServletResponse res)
+            throws Exception {
+
+        String path = req.getRequestURI();
+
+        // FIXME: implementation to be revised better
+        if (path.contains("/rest/user/login")) {
+            return true;
+        }
+
+        if (path.contains("/rest/user/refresh")) {
+            return true;
+        }
+
+        return false;
+    }
+}
