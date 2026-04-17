@@ -4,8 +4,6 @@ package com.swad.taptable.util;
  * Contains constants for the actions performed by the application.
  */
 public final class Actions {
-    // AUTHENTICATION ACTIONS
-
     /**
      * The authentication of a user
      */
@@ -25,9 +23,4 @@ public final class Actions {
      * The update of a user password
      */
     public static final String UPDATE_PASSWORD = "UPDATE_PASSWORD";
-
-    /**
-     * The refresh of a user access token
-     */
-    public static final String REFRESH_TOKEN = "REFRESH_TOKEN";
 }
