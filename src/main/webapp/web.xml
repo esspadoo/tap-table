@@ -19,6 +19,11 @@
         <param-name>db.password</param-name>
         <param-value>admin</param-value>
     </context-param>
+    <context-param>
+        <param-name>jwt.secret</param-name>
+        <param-value>change-me-in-production</param-value> <!-- TODO: to be changed -->
+    </context-param>
+
 
     <!-- Servlets -->
     <!-- <servlet>
