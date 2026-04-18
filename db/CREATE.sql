@@ -1,48 +1,52 @@
 -- WEBAPP USER
-CREATE ROLE webapp
-WITH LOGIN
+CREATE ROLE webapp 
+WITH LOGIN 
 PASSWORD 'password'
 NOSUPERUSER
 NOCREATEDB
 NOCREATEROLE
 NOINHERIT
 -- CONNECTION LIMIT 5 TODO: understand how many concurrent connections we need and set the limit accordingly to HikariCP configuration (maximumPoolSize = 10 default)
-;
+; 
 
 -- USERS
-CREATE TYPE USER_ROLE AS ENUM ('staff', 'customer');
+CREATE TYPE USER_ROLE AS ENUM ('STAFF', 'CUSTOMER', 'ADMIN');
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(20) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL,
     surname VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(25) NOT NULL UNIQUE,
     role USER_ROLE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- PROMOTIONS
+CREATE TABLE promotions (
+                            id SERIAL PRIMARY KEY,
+                            code VARCHAR(20) NOT NULL UNIQUE,
+                            type VARCHAR(20) NOT NULL, -- TODO: capire se fare enum
+                            description VARCHAR(20) NOT NULL,
+                            valid_from TIMESTAMP NOT NULL,
+                            valid_to TIMESTAMP NOT NULL,
+                            CHECK (valid_to > valid_from) -- TODO: check if timestamp comparison works
+);
+
 -- ORDERS
-CREATE TYPE ORDER_STATUS AS ENUM ('pending', 'completed', 'cancelled');
+CREATE TYPE ORDER_STATUS AS ENUM ('PENDING', 'COMPLETED', 'CANCELLED');
 CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
+    promotion_id INTEGER,
     total_amount DECIMAL(10, 2) NOT NULL,
     status ORDER_STATUS NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
-
--- PROMOTIONS
-CREATE TABLE promotions (
-    id SERIAL PRIMARY KEY,
-    code VARCHAR(20) NOT NULL UNIQUE,
-    type VARCHAR(20) NOT NULL, -- TODO: capire se fare enum
-    description VARCHAR(20) NOT NULL,
-    valid_from TIMESTAMP NOT NULL,
-    valid_to TIMESTAMP NOT NULL,
-    CHECK (valid_to > valid_from) -- TODO: check if timestamp comparison works
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (promotion_id) REFERENCES promotions(id)
 );
 
 -- ITEMS
@@ -69,7 +73,7 @@ CREATE TABLE order_items (
 );
 
 -- INGREDIENTS
-CREATE TYPE ALLERGEN AS ENUM ('cereals', 'crustaceans', 'eggs', 'fish', 'peanuts', 'soybeans', 'milk', 'nuts', 'celery', 'mustard', 'sesame seeds', 'sulphur dioxide and sulphites', 'lupin', 'molluscs'); -- https://www.fellernet.it/barra2/Allergeni%204%20lingue.pdf
+CREATE TYPE ALLERGEN AS ENUM ('cereals', 'crustaceans', 'eggs', 'fish', 'peanuts', 'soybeans', 'milk', 'nuts', 'celery', 'mustard', 'sesame_seeds', 'sulphur_dioxide_and_sulphites', 'lupin', 'molluscs'); -- https://www.fellernet.it/barra2/Allergeni%204%20lingue.pdf
 CREATE TABLE ingredients (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -91,18 +95,18 @@ CREATE TABLE item_ingredients (
 
 -- CATEGORIES
 CREATE TABLE categories(
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE
+    name VARCHAR(255) NOT NULL UNIQUE PRIMARY KEY,
+    description VARCHAR(255) NOT NULL
 );
 
 -- ITEM_CATEGORIES
 CREATE TABLE item_categories (
     id SERIAL PRIMARY KEY,
     item_id INTEGER NOT NULL,
-    category_id INTEGER NOT NULL,
+    category_id VARCHAR(255) NOT NULL,
     UNIQUE (item_id, category_id),
     FOREIGN KEY (item_id) REFERENCES items(id),
-    FOREIGN KEY (category_id) REFERENCES categories(id)
+    FOREIGN KEY (category_id) REFERENCES categories(name)
 );
 
 -- REFRESH TOKENS
