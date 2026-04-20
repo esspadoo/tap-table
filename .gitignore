@@ -1,11 +1,15 @@
-# Ignore MacOS system files
+# MacOS system files
 **/.DS_Store
 
-# Ignore IntelliJ IDEA project files
+# IntelliJ IDEA project files
 .idea
 
-# Ignore target folder
+# Target folder
 target/*
 
-# Ignore .mvn folder
+# .mvn folder
 .mvn/
+
+# Logs
+logs/**.log
+logs/**/**.log.*
