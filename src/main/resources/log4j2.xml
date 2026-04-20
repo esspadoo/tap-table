@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- status="WARN" suppresses Log4j's own internal messages below WARN level.
+     monitorInterval="0" disables polling and hot-reload of this file at runtime. -->
+<Configuration status="WARN" monitorInterval="0" name="taptable"
+               xmlns="https://logging.apache.org/xml/ns"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-config-2.xsd">
+
+    <Appenders>
+
+        <!-- STD:OUT CONFIGURATION-->
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%date{DEFAULT} %level [%thread] %class{1}.%method(%file:%line)%n\tIP = %MDC{IP}; USER = %MDC{USER}; ACTION = %MDC{ACTION}; RESOURCE = %MDC{RESOURCE}%n\t%message%n\t%throwable%" />
+        </Console>
+
+        <!-- LOG FILES CONFIGURATION -->
+        <RollingRandomAccessFile name="MAIN"
+                                 fileName="${sys:catalina.base}/webapps/logs/taptable/taptable.log"
+                                 filePattern="${sys:catalina.base}/webapps/logs/taptable/$${date:yyyy-MM}/taptable-%d{yyyyMMdd}-%i.log.gz">
+            <PatternLayout
+                    pattern="%date{DEFAULT} %level [%thread] %class{1}.%method(%file:%line)%n\tIP = %MDC{IP}; USER = %MDC{USER}; ACTION = %MDC{ACTION}; RESOURCE = %MDC{RESOURCE}%n\t%message%n\t%throwable%" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="250 MB" />
+            </Policies>
+        </RollingRandomAccessFile>
+
+    </Appenders>
+
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="MAIN" level="INFO" />
+            <AppenderRef ref="STDOUT" level="INFO" />
+        </Root>
+
+    </Loggers>
+
+</Configuration>
