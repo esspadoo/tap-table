@@ -6,6 +6,13 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * DAO for the registration of a new user. Inserts a new row into the users table and returns the
+ * generated user ID.
+ *
+ * @see RegisterUserRR
+ * @author SWAD Team
+ */
 public class RegisterUserDAO extends AbstractDAO<Integer> {
 
   private static final String STATEMENT =
