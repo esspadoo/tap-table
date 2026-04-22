@@ -13,7 +13,7 @@ import org.apache.logging.log4j.message.StringFormatterMessageFactory;
  * Acquires and exposes the container-managed DataSource via JNDI.
  *
  * <p>
- * Connection pool lifecycle (sizing, timeouts, credentials) is fully owned by Tomcat — configured
+ * Connection pool lifecycle (sizing, timeouts, credentials) is fully owned by Tomcat - configured
  * in {@code context.xml} outside the WAR. This class only performs the lookup and delegates every
  * call to the container.
  */
@@ -28,7 +28,7 @@ public final class ConnectionPoolSingleton {
 
   static {
     try {
-      ds = (DataSource) new InitialContext().lookup(JNDI_NAME); // FIXME: missing context.xml
+      ds = (DataSource) new InitialContext().lookup(JNDI_NAME);
       LOGGER.info("Connection pool to the database successfully acquired.");
     } catch (NamingException e) {
       LOGGER.fatal("Unable to acquire the connection pool to the database.", e);
