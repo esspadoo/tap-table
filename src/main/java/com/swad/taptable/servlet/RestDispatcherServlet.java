@@ -10,12 +10,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 import com.swad.taptable.resources.Message;
+import com.swad.taptable.rest.user.AuthenticateUserRR;
+import com.swad.taptable.rest.user.RegisterUserRR;
 import com.swad.taptable.util.ErrorCodes;
 import com.swad.taptable.util.LogContext;
 
 /**
- * The main servlet responsible for dispatching REST requests to the appropriate handlers.
- * 
+ * The main servlet responsible for dispatching REST requests to the appropriate
+ * handlers.
+ *
  * @author SWAD Team
  */
 public final class RestDispatcherServlet extends HttpServlet {
@@ -25,6 +28,10 @@ public final class RestDispatcherServlet extends HttpServlet {
 
     private static final String JSON_UTF_8_MEDIA_TYPE = "application/json; charset=utf-8";
 
+    private final Router router = new Router()
+            .post("/rest/user/login", (req, res) -> new AuthenticateUserRR(req, res).serve())
+            .post("/rest/user/register", (req, res) -> new RegisterUserRR(req, res).serve());
+
     @Override
     protected void service(final HttpServletRequest req, final HttpServletResponse res)
             throws IOException {
@@ -33,13 +40,12 @@ public final class RestDispatcherServlet extends HttpServlet {
         final OutputStream out = res.getOutputStream();
 
         try {
-            if (processUserRoutes(req, res)) {
+            if (router.dispatch(req, res)) {
                 return;
             }
 
             LOGGER.warn("Unknown resource requested: %s.", req.getRequestURI());
-            final Message m = new Message("Unknown resource requested.",
-                    ErrorCodes.UNKNOWN_RESOURCE_REQUESTED,
+            final Message m = new Message("Unknown resource requested.", ErrorCodes.UNKNOWN_RESOURCE_REQUESTED,
                     String.format("Requested resource is %s.", req.getRequestURI()));
             res.setStatus(HttpServletResponse.SC_NOT_FOUND);
             res.setContentType(JSON_UTF_8_MEDIA_TYPE);
@@ -47,8 +53,7 @@ public final class RestDispatcherServlet extends HttpServlet {
 
         } catch (Throwable t) {
             LOGGER.error("Unexpected error while processing the REST resource.", t);
-            final Message m =
-                    new Message("Unexpected error.", ErrorCodes.UNEXPECTED_ERROR, t.getMessage());
+            final Message m = new Message("Unexpected error.", ErrorCodes.UNEXPECTED_ERROR, t.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(out);
         } finally {
@@ -58,27 +63,5 @@ public final class RestDispatcherServlet extends HttpServlet {
             }
             LogContext.removeIPAddress();
         }
-    }
-
-    /**
-     * Routes requests under {@code /rest/user/}.
-     *
-     * @return {@code true} if the request matched a known route.
-     */
-    private boolean processUserRoutes(final HttpServletRequest req, final HttpServletResponse res)
-            throws Exception {
-
-        String path = req.getRequestURI();
-
-        // FIXME: implementation to be revised better
-        if (path.contains("/rest/user/login")) {
-            return true;
-        }
-
-        if (path.contains("/rest/user/refresh")) {
-            return true;
-        }
-
-        return false;
     }
 }
