@@ -53,165 +53,164 @@ import com.swad.taptable.util.ConnectionPoolSingleton;
  */
 public abstract class AbstractDAO<T> implements DataAccessObject<T> {
 
-    /**
-     * A LOGGER available for all the subclasses.
-     */
-    protected static final Logger LOGGER =
-            LogManager.getLogger(AbstractDAO.class, StringFormatterMessageFactory.INSTANCE);
+  /**
+   * A LOGGER available for all the subclasses.
+   */
+  protected static final Logger LOGGER =
+      LogManager.getLogger(AbstractDAO.class, StringFormatterMessageFactory.INSTANCE);
+
+  /**
+   * The connection to be used to access the database.
+   */
+  protected final Connection con;
+
+  /**
+   * The output parameter, if any
+   */
+  protected T outputParam = null;
+
+  /**
+   * Indicates whether the database has been already accessed or not.
+   */
+  private boolean accessed = false;
+
+  /**
+   * A lock for synchronization.
+   */
+  private final Object lock = new Object();
+
+  /**
+   * Creates a new DAO object, acquiring a connection from the pool.
+   */
+  protected AbstractDAO() {
+
+    try {
+      con = ConnectionPoolSingleton.getConnection(); // TODO: ask professor for the validity
+                                                     // of this
+                                                     // approach
+    } catch (final SQLException e) {
+      // TODO: understand wheter to use error or fatal (ask the team and professor)
+      LOGGER.error("Unable to acquire a connection from the pool.", e);
+
+      // TODO: handle by throwing the SQLException in order to handle it and return 500 error
+      // for the moment, throws a RuntimeException to avoid the need of declaring the
+      // SQLException in the signature of the constructor, which would be a problem for the
+      // sub-classes, that would have to declare it as well
+      throw new RuntimeException("Unable to acquire a connection from the pool.", e);
+    }
+
+    try {
+      con.setAutoCommit(true);
+      LOGGER.debug("Auto-commit set to default value true.");
+    } catch (final SQLException e) {
+      LOGGER.warn("Unable to set connection auto-commit to true.", e);
+    }
+
+  }
+
+  /**
+   * Provides a consistent way of accessing the database and managing exceptions. The actual logic
+   * for accessing the database is defined in {@link #doAccess()}, which is called by this method.
+   */
+  public final DataAccessObject<T> access() throws SQLException {
 
     /**
-     * The connection to be used to access the database.
+     * The synchronization is needed to prevent multiple calls to {@code access()} on the same
+     * object, which is not allowed.
      */
-    protected final Connection con;
+    synchronized (lock) {
+      try {
+        if (accessed) {
+          LOGGER.error("Cannot use a DataAccessObject more than once.");
+          throw new SQLException("Cannot use a DataAccessObject more than once.");
+        }
+      } finally {
+        accessed = true;
+      }
+    }
 
     /**
-     * The output parameter, if any
+     * The logic is the following: the actual access to the database is performed by
+     * {@link #doAccess()}, which is called in the try block. If any exception is thrown while
+     * accessing the database, it is caught in the catch block, where the transaction is rolled
+     * back, if needed, and the connection is closed. If the access to the database is successful,
+     * the connection is closed in the try block.`
      */
-    protected T outputParam = null;
+    try {
+      doAccess();
 
-    /**
-     * Indicates whether the database has been already accessed or not.
-     */
-    private boolean accessed = false;
+      /**
+       * If we are here, the access to the database was successful, so we can just close the
+       * connection. If the connection is in auto-commit mode, there is no transaction to commit, so
+       * we can just close the connection. Otherwise, we have to commit the transaction and then
+       * close the connection.
+       */
+      try {
+        con.close();
+        LOGGER.debug("Connection successfully closed.");
+      } catch (final SQLException e) {
+        LOGGER.error("Unable to close the connection to the database.", e);
+        throw e;
+      }
+    } catch (final Throwable t) {
 
-    /**
-     * A lock for synchronization.
-     */
-    private final Object lock = new Object();
+      LOGGER.error("Unable to perform the requested database access operation.", t);
 
-    /**
-     * Creates a new DAO object, acquiring a connection from the pool.
-     */
-    protected AbstractDAO() {
-
+      /**
+       * If the connection is in auto-commit mode, there is no transaction to roll-back, so we can
+       * just close the connection. Otherwise, we have to roll-back the transaction and then close
+       * the connection.
+       */
+      try {
+        if (!con.getAutoCommit()) {
+          con.rollback();
+          LOGGER.info("Transaction successfully rolled-back.");
+        }
+      } catch (final SQLException e) {
+        LOGGER.error("Unable to roll-back the transaction.", e);
+      } finally {
         try {
-            con = ConnectionPoolSingleton.getConnection(); // TODO: ask professor for the validity
-                                                           // of this
-                                                           // approach
+          con.close();
+          LOGGER.debug("Connection successfully closed.");
         } catch (final SQLException e) {
-            // TODO: understand wheter to use error or fatal (ask the team and professor)
-            LOGGER.error("Unable to acquire a connection from the pool.", e);
-
-            // TODO: handle by throwing the SQLException in order to handle it and return 500 error
-            // for the moment, throws a RuntimeException to avoid the need of declaring the
-            // SQLException in the signature of the constructor, which would be a problem for the
-            // sub-classes, that would have to declare it as well
-            throw new RuntimeException("Unable to acquire a connection from the pool.", e);
+          LOGGER.error("Unable to close the connection to the database.", e);
         }
 
-        try {
-            con.setAutoCommit(true);
-            LOGGER.debug("Auto-commit set to default value true.");
-        } catch (final SQLException e) {
-            LOGGER.warn("Unable to set connection auto-commit to true.", e);
-        }
+      }
 
+      if (t instanceof SQLException) {
+        throw (SQLException) t;
+      } else {
+        throw new SQLException("Unable to perform the requested database access operation.", t);
+      }
     }
 
-    /**
-     * Provides a consistent way of accessing the database and managing exceptions. The actual logic
-     * for accessing the database is defined in {@link #doAccess()}, which is called by this method.
-     */
-    public final DataAccessObject<T> access() throws SQLException {
+    return this;
+  }
 
-        /**
-         * The synchronization is needed to prevent multiple calls to {@code access()} on the same
-         * object, which is not allowed.
-         */
-        synchronized (lock) {
-            try {
-                if (accessed) {
-                    LOGGER.error("Cannot use a DataAccessObject more than once.");
-                    throw new SQLException("Cannot use a DataAccessObject more than once.");
-                }
-            } finally {
-                accessed = true;
-            }
-        }
 
-        /**
-         * The logic is the following: the actual access to the database is performed by
-         * {@link #doAccess()}, which is called in the try block. If any exception is thrown while
-         * accessing the database, it is caught in the catch block, where the transaction is rolled
-         * back, if needed, and the connection is closed. If the access to the database is
-         * successful, the connection is closed in the try block.`
-         */
-        try {
-            doAccess();
+  @Override
+  public final T getOutputParam() {
 
-            /**
-             * If we are here, the access to the database was successful, so we can just close the
-             * connection. If the connection is in auto-commit mode, there is no transaction to
-             * commit, so we can just close the connection. Otherwise, we have to commit the
-             * transaction and then close the connection.
-             */
-            try {
-                con.close();
-                LOGGER.debug("Connection successfully closed.");
-            } catch (final SQLException e) {
-                LOGGER.error("Unable to close the connection to the database.", e);
-                throw e;
-            }
-        } catch (final Throwable t) {
-
-            LOGGER.error("Unable to perform the requested database access operation.", t);
-
-            /**
-             * If the connection is in auto-commit mode, there is no transaction to roll-back, so we
-             * can just close the connection. Otherwise, we have to roll-back the transaction and
-             * then close the connection.
-             */
-            try {
-                if (!con.getAutoCommit()) {
-                    con.rollback();
-                    LOGGER.info("Transaction successfully rolled-back.");
-                }
-            } catch (final SQLException e) {
-                LOGGER.error("Unable to roll-back the transaction.", e);
-            } finally {
-                try {
-                    con.close();
-                    LOGGER.debug("Connection successfully closed.");
-                } catch (final SQLException e) {
-                    LOGGER.error("Unable to close the connection to the database.", e);
-                }
-
-            }
-
-            if (t instanceof SQLException) {
-                throw (SQLException) t;
-            } else {
-                throw new SQLException("Unable to perform the requested database access operation.",
-                        t);
-            }
-        }
-
-        return this;
+    synchronized (lock) {
+      if (!accessed) {
+        LOGGER.error("Cannot retrieve the output parameter before accessing the database.");
+        throw new IllegalStateException(
+            "Cannot retrieve the output parameter before accessing the database.");
+      }
     }
 
+    return outputParam;
+  }
 
-    @Override
-    public final T getOutputParam() {
-
-        synchronized (lock) {
-            if (!accessed) {
-                LOGGER.error("Cannot retrieve the output parameter before accessing the database.");
-                throw new IllegalStateException(
-                        "Cannot retrieve the output parameter before accessing the database.");
-            }
-        }
-
-        return outputParam;
-    }
-
-    /**
-     * Performs the actual logic needed for accessing the database.
-     *
-     * Subclasses have to implement this method in order to define the actual strategy for accessing
-     * the database.
-     *
-     * @throws Exception if there is any issue.
-     */
-    protected abstract void doAccess() throws Exception;
+  /**
+   * Performs the actual logic needed for accessing the database.
+   *
+   * Subclasses have to implement this method in order to define the actual strategy for accessing
+   * the database.
+   *
+   * @throws Exception if there is any issue.
+   */
+  protected abstract void doAccess() throws Exception;
 
 }

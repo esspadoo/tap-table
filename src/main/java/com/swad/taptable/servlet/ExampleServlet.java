@@ -17,14 +17,14 @@ import java.io.IOException;
 @WebServlet("/example")
 public class ExampleServlet extends HttpServlet {
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse res) {
-        // TODO
-    }
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse res) {
+    // TODO
+  }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse res)
-            throws ServletException, IOException {
-        // TODO
-    }
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse res)
+      throws ServletException, IOException {
+    // TODO
+  }
 }

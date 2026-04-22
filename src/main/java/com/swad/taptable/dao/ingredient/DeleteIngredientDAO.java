@@ -7,24 +7,23 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DeleteIngredientDAO extends AbstractDAO<Boolean> {
-    private final Ingredient ingredient;
+  private final Ingredient ingredient;
 
-    public DeleteIngredientDAO(Ingredient ingredient) {
-        this.ingredient = ingredient;
+  public DeleteIngredientDAO(Ingredient ingredient) {
+    this.ingredient = ingredient;
+  }
+
+  @Override
+  protected void doAccess() throws Exception {
+    final String STATEMENT = "DELETE FROM ingredients " + "WHERE id = ?";
+
+    try (PreparedStatement preparedStatement = con.prepareStatement(STATEMENT)) {
+      preparedStatement.setInt(1, ingredient.getId());
+      preparedStatement.executeUpdate();
+      outputParam = true;
+    } catch (SQLException e) {
+      outputParam = false;
+      throw new Exception("Error while deleting ingredient");
     }
-
-    @Override
-    protected void doAccess() throws Exception {
-        final String STATEMENT = "DELETE FROM ingredients " +
-                                 "WHERE id = ?";
-
-        try (PreparedStatement preparedStatement = con.prepareStatement(STATEMENT)) {
-            preparedStatement.setInt(1, ingredient.getId());
-            preparedStatement.executeUpdate();
-            outputParam = true;
-        }catch (SQLException e){
-            outputParam = false;
-            throw new Exception("Error while deleting ingredient");
-        }
-    }
+  }
 }

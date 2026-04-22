@@ -21,13 +21,13 @@ import com.swad.taptable.resources.Resource;
  */
 @FunctionalInterface
 public interface RouterHandler {
-    /**
-     * Handles a REST request for a specific route. Implementations of this method should contain the
-     * logic for serving {@link Resource#serve()} the specific
-     *
-     * @param req the HTTP request
-     * @param res the response to be sent back to the client
-     * @throws Exception if any (known) error occurs while processing the request
-     */
-    void handle(HttpServletRequest req, HttpServletResponse res) throws Exception;
+  /**
+   * Handles a REST request for a specific route. Implementations of this method should contain the
+   * logic for serving {@link Resource#serve()} the specific
+   *
+   * @param req the HTTP request
+   * @param res the response to be sent back to the client
+   * @throws Exception if any (known) error occurs while processing the request
+   */
+  void handle(HttpServletRequest req, HttpServletResponse res) throws Exception;
 }

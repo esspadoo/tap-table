@@ -12,40 +12,33 @@ import java.util.List;
 
 public class GetIngredientsDAO extends AbstractDAO<List<Ingredient>> {
 
-    public GetIngredientsDAO() {
-    }
+  public GetIngredientsDAO() {}
 
-    @Override
-    protected void doAccess() throws Exception {
-        final String STATEMENT = "SELECT id, name, allergen, is_frozen " +
-                "FROM ingredients " +
-                "ORDER BY id";
+  @Override
+  protected void doAccess() throws Exception {
+    final String STATEMENT =
+        "SELECT id, name, allergen, is_frozen " + "FROM ingredients " + "ORDER BY id";
 
-        List<Ingredient> ingredients = new ArrayList<>();
+    List<Ingredient> ingredients = new ArrayList<>();
 
-        try (PreparedStatement ps = con.prepareStatement(STATEMENT);
-             ResultSet rs = ps.executeQuery()) {
+    try (PreparedStatement ps = con.prepareStatement(STATEMENT); ResultSet rs = ps.executeQuery()) {
 
-            while (rs.next()) {
-                List<Allergen> allergens = new ArrayList<>();
-                Array allergenArray = rs.getArray("allergen");
+      while (rs.next()) {
+        List<Allergen> allergens = new ArrayList<>();
+        Array allergenArray = rs.getArray("allergen");
 
-                if (allergenArray != null) {
-                    String[] allergenStrings = (String[]) allergenArray.getArray();
-                    for (String a : allergenStrings) {
-                        allergens.add(Allergen.valueOf(a));
-                    }
-                }
-
-                ingredients.add(new Ingredient(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        allergens,
-                        rs.getBoolean("is_frozen")
-                ));
-            }
+        if (allergenArray != null) {
+          String[] allergenStrings = (String[]) allergenArray.getArray();
+          for (String a : allergenStrings) {
+            allergens.add(Allergen.valueOf(a));
+          }
         }
 
-        this.outputParam = ingredients;
+        ingredients.add(new Ingredient(rs.getInt("id"), rs.getString("name"), allergens,
+            rs.getBoolean("is_frozen")));
+      }
     }
+
+    this.outputParam = ingredients;
+  }
 }

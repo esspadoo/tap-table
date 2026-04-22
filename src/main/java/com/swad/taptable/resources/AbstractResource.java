@@ -17,58 +17,58 @@ import java.io.OutputStream;
  */
 public abstract class AbstractResource implements Resource {
 
-    /**
-     * A LOGGER available for all the subclasses.
-     */
-    protected static final Logger LOGGER =
-            LogManager.getLogger(AbstractResource.class, StringFormatterMessageFactory.INSTANCE);
+  /**
+   * A LOGGER available for all the subclasses.
+   */
+  protected static final Logger LOGGER =
+      LogManager.getLogger(AbstractResource.class, StringFormatterMessageFactory.INSTANCE);
 
-    /**
-     * The JSON factory to be used for creating JSON parsers and generators.
-     */
-    protected static final JsonFactory JSON_FACTORY;
+  /**
+   * The JSON factory to be used for creating JSON parsers and generators.
+   */
+  protected static final JsonFactory JSON_FACTORY;
 
-    static {
-        // set up the JSON factory
-        JSON_FACTORY = new JsonFactory();
-        JSON_FACTORY.disable(JsonGenerator.Feature.AUTO_CLOSE_TARGET);
-        JSON_FACTORY.disable(JsonParser.Feature.AUTO_CLOSE_SOURCE);
+  static {
+    // set up the JSON factory
+    JSON_FACTORY = new JsonFactory();
+    JSON_FACTORY.disable(JsonGenerator.Feature.AUTO_CLOSE_TARGET);
+    JSON_FACTORY.disable(JsonParser.Feature.AUTO_CLOSE_SOURCE);
 
-        LOGGER.debug("JSON factory successfully setup.");
+    LOGGER.debug("JSON factory successfully setup.");
+  }
+
+  /**
+   * This method is final since it provides a common implementation for all the subclasses, while
+   * the actual logic for writing JSON is delegated to the {@code writeJSON} method, which is
+   * abstract and has to be implemented by the subclasses.
+   */
+  @Override
+  public final void toJSON(final OutputStream out) throws IOException {
+
+    if (out == null) {
+      LOGGER.error("The output stream cannot be null.");
+      throw new IOException("The output stream cannot be null.");
     }
 
-    /**
-     * This method is final since it provides a common implementation for all the subclasses, while
-     * the actual logic for writing JSON is delegated to the {@code writeJSON} method, which is
-     * abstract and has to be implemented by the subclasses.
-     */
-    @Override
-    public final void toJSON(final OutputStream out) throws IOException {
-
-        if (out == null) {
-            LOGGER.error("The output stream cannot be null.");
-            throw new IOException("The output stream cannot be null.");
-        }
-
-        try {
-            writeJSON(out);
-        } catch (Exception e) {
-            LOGGER.error("Unable to serialize the resource to JSON.", e);
-            throw new IOException("Unable to serialize the resource to JSON.", e);
-        }
-
+    try {
+      writeJSON(out);
+    } catch (Exception e) {
+      LOGGER.error("Unable to serialize the resource to JSON.", e);
+      throw new IOException("Unable to serialize the resource to JSON.", e);
     }
 
-    /**
-     * Performs the actual writing of JSON.
-     *
-     * Subclasses have to implement this method to provide the actual logic needed for representing
-     * the {@code Resource} to JSON.
-     *
-     * @param out the stream to which the JSON representation of the {@code Resource} has to be
-     *        written.
-     *
-     * @throws Exception if something goes wrong during writing.
-     */
-    protected abstract void writeJSON(OutputStream out) throws Exception;
+  }
+
+  /**
+   * Performs the actual writing of JSON.
+   *
+   * Subclasses have to implement this method to provide the actual logic needed for representing
+   * the {@code Resource} to JSON.
+   *
+   * @param out the stream to which the JSON representation of the {@code Resource} has to be
+   *        written.
+   *
+   * @throws Exception if something goes wrong during writing.
+   */
+  protected abstract void writeJSON(OutputStream out) throws Exception;
 }

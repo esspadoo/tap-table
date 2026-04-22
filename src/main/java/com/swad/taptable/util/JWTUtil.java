@@ -18,57 +18,56 @@ import java.time.temporal.ChronoUnit;
  */
 public final class JWTUtil {
 
-    /** The name of the cookie used to store the JWT token. */
-    public static final String COOKIE_NAME = "auth_token";
+  /** The name of the cookie used to store the JWT token. */
+  public static final String COOKIE_NAME = "auth_token";
 
-    /** Token expiry in seconds (8 hours). */
-    public static final int EXPIRY_SECONDS = 8 * 60 * 60;
+  /** Token expiry in seconds (8 hours). */
+  public static final int EXPIRY_SECONDS = 8 * 60 * 60;
 
-    private static Algorithm algorithm;
-    private static JWTVerifier verifier;
+  private static Algorithm algorithm;
+  private static JWTVerifier verifier;
 
-    private JWTUtil() {}
+  private JWTUtil() {}
 
-    /**
-     * Initializes the JWTUtil with the given secret key. Called once by
-     * {@link AppContextListener#contextInitialized} at application startup.
-     *
-     * @param secret the secret key for signing and verifying JWTs.
-     */
-    public static void init(final String secret) {
-        if (secret == null || secret.isBlank()) {
-            throw new IllegalStateException("jwt.secret context parameter is missing or blank");
-        }
-        algorithm = Algorithm.HMAC256(secret);
-        verifier = JWT.require(algorithm).build();
+  /**
+   * Initializes the JWTUtil with the given secret key. Called once by
+   * {@link AppContextListener#contextInitialized} at application startup.
+   *
+   * @param secret the secret key for signing and verifying JWTs.
+   */
+  public static void init(final String secret) {
+    if (secret == null || secret.isBlank()) {
+      throw new IllegalStateException("jwt.secret context parameter is missing or blank");
     }
+    algorithm = Algorithm.HMAC256(secret);
+    verifier = JWT.require(algorithm).build();
+  }
 
-    /**
-     * Creates a signed JWT containing the given user id. Expires in 8 hours.
-     *
-     * @param userId the authenticated user's id.
-     * @return a signed JWT string.
-     */
-    public static String generateToken(final int userId) {
-        if (algorithm == null) {
-            throw new IllegalStateException("JWTUtil.init() has not been called");
-        }
-        return JWT.create().withClaim("user_id", userId)
-                .withExpiresAt(Instant.now().plus(EXPIRY_SECONDS, ChronoUnit.SECONDS))
-                .sign(algorithm);
+  /**
+   * Creates a signed JWT containing the given user id. Expires in 8 hours.
+   *
+   * @param userId the authenticated user's id.
+   * @return a signed JWT string.
+   */
+  public static String generateToken(final int userId) {
+    if (algorithm == null) {
+      throw new IllegalStateException("JWTUtil.init() has not been called");
     }
+    return JWT.create().withClaim("user_id", userId)
+        .withExpiresAt(Instant.now().plus(EXPIRY_SECONDS, ChronoUnit.SECONDS)).sign(algorithm);
+  }
 
-    /**
-     * Verifies the token signature and expiry.
-     *
-     * @param token the raw JWT string.
-     * @return the decoded token on success.
-     * @throws JWTVerificationException if the signature is wrong or the token is expired.
-     */
-    public static DecodedJWT verify(final String token) throws JWTVerificationException {
-        if (verifier == null) {
-            throw new IllegalStateException("JWTUtil.init() has not been called");
-        }
-        return verifier.verify(token);
+  /**
+   * Verifies the token signature and expiry.
+   *
+   * @param token the raw JWT string.
+   * @return the decoded token on success.
+   * @throws JWTVerificationException if the signature is wrong or the token is expired.
+   */
+  public static DecodedJWT verify(final String token) throws JWTVerificationException {
+    if (verifier == null) {
+      throw new IllegalStateException("JWTUtil.init() has not been called");
     }
+    return verifier.verify(token);
+  }
 }

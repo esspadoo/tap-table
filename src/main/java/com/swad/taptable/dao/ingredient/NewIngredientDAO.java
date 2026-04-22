@@ -32,9 +32,8 @@ public class NewIngredientDAO extends AbstractDAO<Ingredient> {
     PreparedStatement pstmt = con.prepareStatement(STATEMENT);
 
     try {
-      final String[] allergenNames = ingredient.getAllergens().stream()
-          .map(Enum::name)
-          .toArray(String[]::new);
+      final String[] allergenNames =
+          ingredient.getAllergens().stream().map(Enum::name).toArray(String[]::new);
       final Array sqlAllergens = con.createArrayOf("allergen", allergenNames);
 
       pstmt.setString(1, ingredient.getName());
