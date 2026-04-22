@@ -5,7 +5,7 @@ import org.apache.logging.log4j.ThreadContext;
 
 /**
  * Provides the log context for the application on a per-thread basis.
- *
+ * 
  * @author SWAD Team
  */
 public final class LogContext {
