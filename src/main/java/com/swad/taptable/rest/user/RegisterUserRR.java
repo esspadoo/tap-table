@@ -1,7 +1,7 @@
 package com.swad.taptable.rest.user;
 
 import com.swad.taptable.dao.RegisterUserDAO;
-import com.swad.taptable.exception.MalformedJSONException;
+import com.swad.taptable.exception.json.UnexpectedKeyException;
 import com.swad.taptable.resources.Message;
 import com.swad.taptable.resources.User;
 import com.swad.taptable.rest.AbstractRR;
@@ -55,7 +55,7 @@ public final class RegisterUserRR extends AbstractRR {
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       res.setContentType(JSON_UTF_8_MEDIA_TYPE);
       return;
-    } catch (MalformedJSONException ex) {
+    } catch (UnexpectedKeyException ex) {
       LOGGER.warn("Malformed JSON in registration request: %s", ex.getMessage());
       new Message("Malformed request body.", ErrorCodes.WRONG_RESOURCE_PROVIDED, ex.getMessage())
           .toJSON(res.getOutputStream());
@@ -70,7 +70,7 @@ public final class RegisterUserRR extends AbstractRR {
       LOGGER.warn("Registration request missing required fields.");
       new Message("Missing required fields.", ErrorCodes.WRONG_RESOURCE_PROVIDED,
           "Fields 'username', 'email', 'password', 'name', 'surname', and 'phone_number' are required.")
-          .toJSON(res.getOutputStream());
+              .toJSON(res.getOutputStream());
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       res.setContentType(JSON_UTF_8_MEDIA_TYPE);
       return;
@@ -90,7 +90,7 @@ public final class RegisterUserRR extends AbstractRR {
           .warn("Registration request contains a password that does not meet policy requirements.");
       new Message("Invalid password.", ErrorCodes.WRONG_RESOURCE_PROVIDED,
           "Password must be 8-16 characters and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.")
-          .toJSON(res.getOutputStream());
+              .toJSON(res.getOutputStream());
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       res.setContentType(JSON_UTF_8_MEDIA_TYPE);
       return;
@@ -106,8 +106,7 @@ public final class RegisterUserRR extends AbstractRR {
             ErrorCodes.RESOURCE_ALREADY_EXISTS, null).toJSON(res.getOutputStream());
         res.setStatus(HttpServletResponse.SC_CONFLICT);
       } else {
-        // AbstractDAO already logged the full stack trace; just add request-level context
-        // here.
+        // AbstractDAO already logged the full stack trace; just add request-level context here.
         LOGGER.warn("Unexpected DB error during registration for username '%s'.",
             user.getUsername());
         new Message("Registration failed: database error.", ErrorCodes.UNEXPECTED_DB_ERROR,
@@ -122,7 +121,7 @@ public final class RegisterUserRR extends AbstractRR {
     LOGGER.info("User %d registered successfully.", userId);
     res.setStatus(HttpServletResponse.SC_CREATED);
     res.setContentType(JSON_UTF_8_MEDIA_TYPE);
-    new User.Builder().id(userId.longValue()).build().toJSON(res.getOutputStream());
+    new User.Builder().id(userId).build().toJSON(res.getOutputStream());
   }
 
   private static boolean isMissing(final String s) {

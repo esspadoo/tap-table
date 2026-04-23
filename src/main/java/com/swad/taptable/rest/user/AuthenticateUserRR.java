@@ -1,7 +1,7 @@
 package com.swad.taptable.rest.user;
 
 import com.swad.taptable.dao.AuthenticateUserDAO;
-import com.swad.taptable.exception.MalformedJSONException;
+import com.swad.taptable.exception.json.UnexpectedKeyException;
 import com.swad.taptable.resources.Credentials;
 import com.swad.taptable.resources.Message;
 import com.swad.taptable.rest.AbstractRR;
@@ -36,10 +36,6 @@ public final class AuthenticateUserRR extends AbstractRR {
 
     final Credentials credentials;
 
-    // Deserialization of credentials from request body. We catch both IOException (for general
-    // I/O
-    // issues) and MalformedJSONException (for JSON parsing issues) to provide precise error
-    // handling and messaging.
     try {
       credentials = Credentials.fromJSON(req.getInputStream());
     } catch (IOException ex) {
@@ -49,7 +45,7 @@ public final class AuthenticateUserRR extends AbstractRR {
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       res.setContentType(JSON_UTF_8_MEDIA_TYPE);
       return;
-    } catch (MalformedJSONException ex) {
+    } catch (UnexpectedKeyException ex) {
       LOGGER.error("Malformed JSON in login request: %s", ex.getMessage());
       new Message("Malformed request body.", ErrorCodes.WRONG_RESOURCE_PROVIDED, ex.getMessage())
           .toJSON(res.getOutputStream());
