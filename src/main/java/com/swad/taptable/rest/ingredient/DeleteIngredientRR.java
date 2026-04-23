@@ -1,0 +1,104 @@
+package com.swad.taptable.rest.ingredient;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import com.swad.taptable.dao.ingredient.DeleteIngredientDAO;
+import com.swad.taptable.resources.Ingredient;
+import com.swad.taptable.resources.Message;
+import com.swad.taptable.resources.UserRole;
+import com.swad.taptable.rest.AbstractRR;
+import com.swad.taptable.util.Actions;
+import com.swad.taptable.util.ErrorCodes;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+/**
+ * Rest resource for deleting an ingredient given its id.
+ * 
+ * <p>
+ * The {@code id}, passed as a path parameter, is used to identify the ingredient to be deleted. If
+ * the id provided is numerical only (alphanumerical), the response status is set to {@code 400}
+ * (Bad Request). If the ingredient is successfully deleted, the response status is set to
+ * {@code 200} (OK). If the ingredient with the specified id does not exist, the response status is
+ * set to {@code 404} (Not Found). If any server side error occurs (e.g. database) during the
+ * deletion process, the response status is set to {@code 500} (Internal Server Error).
+ * </p>
+ * 
+ * @author SWAD Team
+ */
+public class DeleteIngredientRR extends AbstractRR {
+    /**
+     * Creates a new {@code DeleteIngredientRR} object.
+     * 
+     * @param req the HTTP request
+     * @param res the HTTP response
+     */
+    public DeleteIngredientRR(final HttpServletRequest req, final HttpServletResponse res) {
+        super(Actions.DELETE_INGREDIENT, req, res);
+    }
+
+    @Override
+    protected void doServe() throws IOException {
+        try {
+            final int ingredientId = Integer.parseInt((String) req.getAttribute("ingredient_id"));
+            final int userId = Integer.parseInt((String) req.getAttribute("user_id"));
+            final UserRole userRole = UserRole.valueOf((String) req.getAttribute("user_role"));
+
+            try {
+                // Log the attempt to delete the ingredient with the specified id by an user
+                if (userRole == UserRole.CUSTOMER) {
+                    LOGGER.warn("User %d with role CUSTOMER attempted to delete ingredient %d.",
+                            userId, ingredientId);
+                    res.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    res.setContentType(JSON_UTF_8_MEDIA_TYPE);
+                    Message m = new Message("You do not have permission to perform this operation.",
+                            ErrorCodes.FORBIDDEN_OPERATION, null);
+                    m.toJSON(res.getOutputStream());
+                    // Return early since the user is not authorized to delete ingredients
+                    return;
+                }
+
+                // Proceed with the deletion since the user is authorized
+                final DeleteIngredientDAO dao = new DeleteIngredientDAO(ingredientId);
+
+                final Ingredient deletedIngredient = dao.access().getOutputParam();
+
+                // Check if the ingredient was not deleted
+                if (deletedIngredient == null) {
+
+                    // Log the case when the ingredient with the specified id is not found
+                    LOGGER.warn("Ingredient with id %d not found.", ingredientId);
+                    Message m = new Message(
+                            String.format("Ingredient with id %d not found", ingredientId),
+                            ErrorCodes.RESOURCE_NOT_FOUND, null);
+                    res.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    m.toJSON(res.getOutputStream());
+                    return;
+                }
+
+                // Log the successful deletion and return the deleted ingredient in the response
+                LOGGER.debug("Ingredient with id %d successfully deleted.", ingredientId);
+                res.setStatus(HttpServletResponse.SC_OK);
+                res.setContentType(JSON_UTF_8_MEDIA_TYPE);
+                deletedIngredient.toJSON(res.getOutputStream());
+
+            } catch (final SQLException ex) {
+                // FIXME: check the code for known error that could happen and handle them properly
+                // SQLException is already logged by the DAO
+                Message m = new Message("Unexpected database error: no. " + ex.getErrorCode(),
+                        ErrorCodes.UNEXPECTED_DB_ERROR, ex.getMessage());
+                res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                m.toJSON(res.getOutputStream());
+            }
+        } catch (final NumberFormatException ex) {
+            // Log the exception and return an error message with the appropriate error code
+            LOGGER.error("Invalid ingredient id format: %s", req.getPathInfo());
+            Message m = new Message("Invalid ingredient id format: " + req.getPathInfo(),
+                    ErrorCodes.INVALID_INPUT_PARAMETER, ex.getMessage());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            m.toJSON(res.getOutputStream());
+        }
+    }
+
+
+}
