@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.swad.taptable.resources.UserRole;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -44,16 +45,17 @@ public final class JWTUtil {
   }
 
   /**
-   * Creates a signed JWT containing the given user id. Expires in 8 hours.
+   * Creates a signed JWT containing the given user id and role. Expires in 8 hours.
    *
    * @param userId the authenticated user's id.
+   * @param role the authenticated user's role.
    * @return a signed JWT string.
    */
-  public static String generateToken(final int userId) {
+  public static String generateToken(final int userId, final UserRole role) {
     if (algorithm == null) {
       throw new IllegalStateException("JWTUtil.init() has not been called");
     }
-    return JWT.create().withClaim("user_id", userId)
+    return JWT.create().withClaim("user_id", userId).withClaim("user_role", role.name())
         .withExpiresAt(Instant.now().plus(EXPIRY_SECONDS, ChronoUnit.SECONDS)).sign(algorithm);
   }
 

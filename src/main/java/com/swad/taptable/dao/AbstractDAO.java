@@ -85,8 +85,7 @@ public abstract class AbstractDAO<T> implements DataAccessObject<T> {
   protected AbstractDAO() {
 
     try {
-      con = ConnectionPoolSingleton.getConnection(); // TODO: ask professor for the validity
-                                                     // of this
+      con = ConnectionPoolSingleton.getConnection(); // TODO: ask professor for the validity of this
                                                      // approach
     } catch (final SQLException e) {
       // TODO: understand wheter to use error or fatal (ask the team and professor)
@@ -109,8 +108,24 @@ public abstract class AbstractDAO<T> implements DataAccessObject<T> {
   }
 
   /**
-   * Provides a consistent way of accessing the database and managing exceptions. The actual logic
-   * for accessing the database is defined in {@link #doAccess()}, which is called by this method.
+   * Provides a consistent way of accessing the database and managing exceptions.
+   * 
+   * <p>
+   * The actual logic for accessing the database is defined in {@link #doAccess()}, which is called
+   * by this method.
+   * </p>
+   * 
+   * <p>
+   * If any kind of exception is thrown while accessing the database, it is caught and handled in
+   * this method, which takes care of rolling back the transaction, if needed, and closing the
+   * connection. If the access to the database is successful, the connection is closed in this
+   * method as well.
+   * </p>
+   * 
+   * <p>
+   * If the access method throws an SQLException, it is re-thrown to be handled by the upper layers.
+   * If it throws any other kind of exception, it is wrapped in an SQLException and then re-thrown.
+   * </p>
    */
   public final DataAccessObject<T> access() throws SQLException {
 
@@ -157,9 +172,9 @@ public abstract class AbstractDAO<T> implements DataAccessObject<T> {
       LOGGER.error("Unable to perform the requested database access operation.", t);
 
       /**
-       * If the connection is in auto-commit mode, there is no transaction to roll-back, so we can
-       * just close the connection. Otherwise, we have to roll-back the transaction and then close
-       * the connection.
+       * If the connection is in auto-commit mode (spoiler: always), there is no transaction to
+       * roll-back, so we can just close the connection. Otherwise, we have to roll-back the
+       * transaction and then close the connection.
        */
       try {
         if (!con.getAutoCommit()) {
@@ -212,5 +227,4 @@ public abstract class AbstractDAO<T> implements DataAccessObject<T> {
    * @throws Exception if there is any issue.
    */
   protected abstract void doAccess() throws Exception;
-
 }

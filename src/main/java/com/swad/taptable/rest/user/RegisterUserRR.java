@@ -48,12 +48,13 @@ public final class RegisterUserRR extends AbstractRR {
 
     try {
       user = User.fromJSON(req.getInputStream());
-    } catch (IOException ex) {
-      LOGGER.warn("Malformed JSON in registration request.", ex);
-      new Message("Malformed request body.", ErrorCodes.WRONG_RESOURCE_PROVIDED, ex.getMessage())
-          .toJSON(res.getOutputStream());
+    } catch (IOException e) {
+      LOGGER.warn("Malformed JSON in registration request.", e);
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      Message m = new Message("Malformed request body.", ErrorCodes.WRONG_RESOURCE_PROVIDED,
+          e.getMessage());
       res.setContentType(JSON_UTF_8_MEDIA_TYPE);
+      m.toJSON(res.getOutputStream());
       return;
     } catch (UnexpectedKeyException ex) {
       LOGGER.warn("Malformed JSON in registration request: %s", ex.getMessage());
@@ -117,7 +118,6 @@ public final class RegisterUserRR extends AbstractRR {
       return;
     }
 
-    // --- 4. Respond ---
     LOGGER.info("User %d registered successfully.", userId);
     res.setStatus(HttpServletResponse.SC_CREATED);
     res.setContentType(JSON_UTF_8_MEDIA_TYPE);

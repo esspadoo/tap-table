@@ -1,9 +1,10 @@
 package com.swad.taptable.rest.user;
 
-import com.swad.taptable.dao.AuthenticateUserDAO;
+import com.swad.taptable.dao.user.AuthenticateUserDAO;
 import com.swad.taptable.exception.json.UnexpectedKeyException;
 import com.swad.taptable.resources.Credentials;
 import com.swad.taptable.resources.Message;
+import com.swad.taptable.resources.User;
 import com.swad.taptable.rest.AbstractRR;
 import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
@@ -38,62 +39,64 @@ public final class AuthenticateUserRR extends AbstractRR {
 
     try {
       credentials = Credentials.fromJSON(req.getInputStream());
-    } catch (IOException ex) {
-      LOGGER.error("Malformed JSON in login request: %s", ex);
-      new Message("Malformed request body.", ErrorCodes.WRONG_RESOURCE_PROVIDED, ex.getMessage())
-          .toJSON(res.getOutputStream());
+    } catch (IOException e) {
+      LOGGER.error("Failed to parse JSON login request: %s", e.getMessage());
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      Message m = new Message("Malformed JSON in request body.", ErrorCodes.INVALID_INPUT_PARAMETER,
+          e.getMessage());
       res.setContentType(JSON_UTF_8_MEDIA_TYPE);
+      m.toJSON(res.getOutputStream());
       return;
-    } catch (UnexpectedKeyException ex) {
-      LOGGER.error("Malformed JSON in login request: %s", ex.getMessage());
-      new Message("Malformed request body.", ErrorCodes.WRONG_RESOURCE_PROVIDED, ex.getMessage())
-          .toJSON(res.getOutputStream());
+    } catch (UnexpectedKeyException e) {
+      LOGGER.error("Unexpected key in JSON login request: %s", e.getMessage());
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      Message m = new Message("Malformed request body.", ErrorCodes.WRONG_RESOURCE_PROVIDED,
+          e.getMessage());
       res.setContentType(JSON_UTF_8_MEDIA_TYPE);
+      m.toJSON(res.getOutputStream());
       return;
     }
 
     if (isMissing(credentials.getEmail()) || isMissing(credentials.getPassword())) {
       LOGGER.error("Login request missing email or password.");
-      new Message("Missing email or password.", ErrorCodes.WRONG_RESOURCE_PROVIDED,
-          "Fields 'email' and 'password' are required.").toJSON(res.getOutputStream());
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      Message m = new Message("Missing email or password.", ErrorCodes.WRONG_RESOURCE_PROVIDED,
+          "Fields 'email' and 'password' are required.");
       res.setContentType(JSON_UTF_8_MEDIA_TYPE);
+      m.toJSON(res.getOutputStream());
       return;
     }
 
-    final Integer userId;
+    final User user;
     try {
-      userId = new AuthenticateUserDAO(credentials.getEmail(), credentials.getPassword()).access()
+      user = new AuthenticateUserDAO(credentials.getEmail(), credentials.getPassword()).access()
           .getOutputParam();
     } catch (SQLException ex) {
-      // AbstractDAO already logged the full stack trace; just add request-level context here.
       LOGGER.warn("Unexpected DB error during login for email '%s'.", credentials.getEmail());
-      new Message("Login failed: database error.", ErrorCodes.UNEXPECTED_DB_ERROR, ex.getMessage())
-          .toJSON(res.getOutputStream());
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      Message m = new Message("Login failed: database error.", ErrorCodes.UNEXPECTED_DB_ERROR,
+          ex.getMessage());
       res.setContentType(JSON_UTF_8_MEDIA_TYPE);
+      m.toJSON(res.getOutputStream());
       return;
     }
 
-    if (userId == null) {
+    if (user == null) {
       LOGGER.warn("Failed login attempt for email '%s'.", credentials.getEmail());
-      new Message("Invalid email or password.", ErrorCodes.INVALID_CREDENTIALS, null)
-          .toJSON(res.getOutputStream());
       res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      Message m = new Message("Invalid email or password.", ErrorCodes.INVALID_CREDENTIALS, null);
       res.setContentType(JSON_UTF_8_MEDIA_TYPE);
+      m.toJSON(res.getOutputStream());
       return;
     }
 
-    // --- 4. Issue JWT ---
-    final String jwt = JWTUtil.generateToken(userId);
+    final String jwt = JWTUtil.generateToken(user.getId(), user.getRole());
 
     // TODO: add Secure flag when running over HTTPS in production.
     res.addHeader("Set-Cookie", JWTUtil.COOKIE_NAME + "=" + jwt
         + "; Path=/; HttpOnly; SameSite=Strict; Max-Age=" + JWTUtil.EXPIRY_SECONDS);
 
-    LOGGER.info("User %d logged in successfully.", userId);
+    LOGGER.debug("User %d logged in successfully.", user.getId());
     res.setStatus(HttpServletResponse.SC_OK);
   }
 
