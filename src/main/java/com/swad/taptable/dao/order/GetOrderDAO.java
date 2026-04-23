@@ -25,9 +25,10 @@ public class GetOrderDAO extends AbstractDAO<Order> {
     preparedStatement.setInt(1, orderId);
     try (ResultSet resultSet = preparedStatement.executeQuery()) {
       while (resultSet.next()) {
-        orders.add(new Order(resultSet.getInt("id"), (OrderStatus) resultSet.getObject("status"),
-            resultSet.getFloat("total_amount"), resultSet.getInt("user_id"),
-            resultSet.getInt("promotion_id")));
+        orders.add(new Order.Builder().id(resultSet.getInt("id"))
+                .status((OrderStatus) resultSet.getObject("status"))
+                .totalPrice(resultSet.getFloat("total_amount")).userId(resultSet.getInt("user_id"))
+                .promotionId(resultSet.getInt("promotion_id")).build());
       }
     } catch (SQLException e) {
       throw new SQLException("Order not found.");

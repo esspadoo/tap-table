@@ -20,11 +20,12 @@ public class GetOrdersDAO extends AbstractDAO<List<Order>> {
     List<Order> orders = new ArrayList<>();
 
     try (PreparedStatement preparedStatement = con.prepareStatement(STATEMENT);
-        ResultSet resultSet = preparedStatement.executeQuery()) {
+         ResultSet resultSet = preparedStatement.executeQuery()) {
       while (resultSet.next()) {
-        orders.add(new Order(resultSet.getInt("id"), (OrderStatus) resultSet.getObject("status"),
-            resultSet.getFloat("total_amount"), resultSet.getInt("user_id"),
-            resultSet.getInt("promotion_id")));
+        orders.add(new Order.Builder().id(resultSet.getInt("id"))
+                .status((OrderStatus) resultSet.getObject("status"))
+                .totalPrice(resultSet.getFloat("total_amount")).userId(resultSet.getInt("user_id"))
+                .promotionId(resultSet.getInt("promotion_id")).build());
       }
     } catch (SQLException e) {
       throw new SQLException("Unable to access orders table");
