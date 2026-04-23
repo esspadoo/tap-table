@@ -1,4 +1,9 @@
 {
   "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
-  "editor.defaultFormatter": "redhat.java"
+  "editor.defaultFormatter": "redhat.java",
+  "editor.formatOnSave": true,
+
+  "latex-workshop.latex.outDir": "%DIR%/out",
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.view.pdf.viewer": "tab"
 }
