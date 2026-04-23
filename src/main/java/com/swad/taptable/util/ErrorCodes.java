@@ -57,6 +57,13 @@ public class ErrorCodes {
   public static final String INVALID_ACCESS_TOKEN = "E4A3";
 
   /**
+   * Error code for insufficient permissions to perform the requested operation.
+   *
+   * HTTP status code: 403 Forbidden
+   */
+  public static final String FORBIDDEN_OPERATION = "E4A4";
+
+  /**
    * <pre>
    * Error code for the case when the requested resource is not found on the server.
    *
