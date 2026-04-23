@@ -7,43 +7,47 @@ import com.swad.taptable.resources.Ingredient;
 import java.sql.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GetIngredientDAO extends AbstractDAO<Ingredient> {
+  // We know that we can avoid to get the id from the select, but it isn't a big deal
+  private static final String STATEMENT =
+          "SELECT id, name, allergen, is_frozen FROM ingredients WHERE id = ?";
+
   private final int ingredientId;
 
-  public GetIngredientDAO(int ingredientId) {
+  public GetIngredientDAO(final int ingredientId) {
     this.ingredientId = ingredientId;
   }
 
   @Override
   protected void doAccess() throws Exception {
-    final String STATEMENT =
-        "SELECT id, name, allergen, is_frozen " + "FROM ingredients WHERE id = ?";
+    Ingredient i = null;
 
     try (PreparedStatement ps = con.prepareStatement(STATEMENT)) {
       ps.setInt(1, ingredientId);
-      ResultSet rs = ps.executeQuery();
 
-      if (rs.next()) {
-        // Leggi l'array di allergeni da PostgreSQL
-        List<Allergen> allergens = new ArrayList<>();
-        Array allergenArray = rs.getArray("allergen");
+      try (ResultSet rs = ps.executeQuery()) {
+        // We expect only one result since id is unique, so we can use if instead of while.
+        if (rs.next()) {
+          // Create a list to hold the allergens
+          List<Allergen> allergens = new ArrayList<>();
+          Array allergenArray = rs.getArray("allergen");
 
-        if (allergenArray != null) {
-          String[] allergenStrings = (String[]) allergenArray.getArray();
-          for (String a : allergenStrings) {
-            allergens.add(Allergen.valueOf(a));
+          if (allergenArray != null) {
+            for (String a : (String[]) allergenArray.getArray()) {
+              allergens.add(Allergen.valueOf(a));
+            }
           }
-        }
 
-        this.outputParam = new Ingredient(rs.getInt("id"), rs.getString("name"), allergens,
-            rs.getBoolean("is_frozen"));
+          // Create the ingredient object with the retrieved values
+          i = new Ingredient(rs.getInt("id"), rs.getString("name"), allergens,
+                  rs.getBoolean("is_frozen"));
+        }
       }
-    } catch (SQLException e) {
-      throw new SQLException("Error accessing ingredient with id " + ingredientId);
     }
+
+    outputParam = i;
   }
 }
