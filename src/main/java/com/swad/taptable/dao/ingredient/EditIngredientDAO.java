@@ -1,47 +1,64 @@
 package com.swad.taptable.dao.ingredient;
 
 import com.swad.taptable.dao.AbstractDAO;
-import com.swad.taptable.exception.NotValidIngredientException;
+import com.swad.taptable.resources.Allergen;
 import com.swad.taptable.resources.Ingredient;
 
 import java.sql.Array;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EditIngredientDAO extends AbstractDAO<Ingredient> {
 
-  private final Ingredient editedIngredient;
+  private static final String STATEMENT =
+      "UPDATE ingredients SET name=?, is_frozen=?, allergen=? WHERE id=? RETURNING *";
 
-  private final String STATEMENT =
-      "UPDATE ingredients SET name=?, is_frozen=?, allergen=? WHERE id=?";
+  private final Ingredient ingredient;
 
   /**
    * Creates a new DAO object.
    *
    * @param editedIngredient the ingredient with updated values.
    */
-  public EditIngredientDAO(final Ingredient editedIngredient) throws NotValidIngredientException {
-    if (editedIngredient == null) {
-      throw new NotValidIngredientException("Invalid ingredient");
-    }
-
-    this.editedIngredient = editedIngredient;
+  public EditIngredientDAO(final Ingredient ingredient) {
+    this.ingredient = ingredient;
   }
 
   @Override
   protected void doAccess() throws Exception {
-    PreparedStatement ps = con.prepareStatement(STATEMENT);
 
-    // FIXME: to be fixed
-    final String[] allergenNames =
-        editedIngredient.getAllergens().stream().map(Enum::name).toArray(String[]::new);
-    final Array sqlAllergens = con.createArrayOf("allergen", allergenNames);
+    Ingredient i = null;
 
-    ps.setString(1, editedIngredient.getName());
-    ps.setBoolean(2, editedIngredient.isFrozen());
-    ps.setArray(3, sqlAllergens);
-    ps.setInt(4, editedIngredient.getId());
+    try (PreparedStatement pstmt = con.prepareStatement(STATEMENT)) {
+      final String[] allergenNames = ingredient.getAllergens() != null
+          ? ingredient.getAllergens().stream().map(Enum::name).toArray(String[]::new)
+          : new String[0];
+      final Array sqlAllergens = con.createArrayOf("allergen", allergenNames);
 
-    ps.execute();
-    ps.close();
+      pstmt.setString(1, ingredient.getName());
+      pstmt.setBoolean(2, ingredient.isFrozen());
+      pstmt.setArray(3, sqlAllergens);
+      pstmt.setInt(4, ingredient.getId());
+
+      try (ResultSet rs = pstmt.executeQuery()) {
+        if (rs.next()) {
+          // Create a list to hold the allergens
+          List<Allergen> allergens = new ArrayList<>();
+          Array allergenArray = rs.getArray("allergen");
+          if (allergenArray != null) {
+            for (String a : (String[]) allergenArray.getArray()) {
+              allergens.add(Allergen.valueOf(a));
+            }
+          }
+
+          i = new Ingredient(rs.getInt("id"), rs.getString("name"), allergens,
+              rs.getBoolean("is_frozen"));
+        }
+      }
+    }
+
+    outputParam = i;
   }
 }
