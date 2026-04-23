@@ -3,7 +3,7 @@ package com.swad.taptable.resources;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-import com.swad.taptable.exception.MalformedJSONException;
+import com.swad.taptable.exception.json.UnexpectedKeyException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
  * @author SWAD Team
  */
 public class User extends AbstractResource {
-  private final Long id;
+  private final Integer id;
   private final String username;
   private final String email;
   private final String name;
@@ -49,7 +49,7 @@ public class User extends AbstractResource {
     this.updatedAt = b.updatedAt;
   }
 
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
@@ -101,7 +101,7 @@ public class User extends AbstractResource {
    */
   public static final class Builder {
 
-    private Long id;
+    private Integer id;
     private String username;
     private String email;
     private String name;
@@ -120,7 +120,7 @@ public class User extends AbstractResource {
      * @param id the id to set
      * @return the builder for chaining
      */
-    public Builder id(final Long id) {
+    public Builder id(final Integer id) {
       this.id = id;
       return this;
     }
@@ -300,7 +300,7 @@ public class User extends AbstractResource {
    * @return a new {@code User} with a plain-text password.
    * @throws IOException if there is an error reading from the stream or parsing the JSON.
    */
-  public static User fromJSON(final InputStream in) throws IOException, MalformedJSONException {
+  public static User fromJSON(final InputStream in) throws IOException, UnexpectedKeyException {
     final Builder b = new Builder();
 
     final JsonParser jp = JSON_FACTORY.createParser(in);
@@ -316,34 +316,35 @@ public class User extends AbstractResource {
       switch (jp.currentName()) {
         case "username":
           jp.nextToken();
-          b.username(jp.getText());
+          b.username(jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText());
           break;
         case "email":
           jp.nextToken();
-          b.email(jp.getText());
+          b.email(jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText());
           break;
         case "name":
           jp.nextToken();
-          b.name(jp.getText());
+          b.name(jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText());
           break;
         case "surname":
           jp.nextToken();
-          b.surname(jp.getText());
+          b.surname(jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText());
           break;
         case "phone_number":
           jp.nextToken();
-          b.phoneNumber(jp.getText());
+          b.phoneNumber(jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText());
           break;
         case "role":
           jp.nextToken();
-          b.role(UserRole.valueOf(jp.getText()));
+          b.role(jp.getCurrentToken() == JsonToken.VALUE_NULL ? null
+              : UserRole.valueOf(jp.getText()));
           break;
         case "password":
           jp.nextToken();
-          b.password(jp.getText());
+          b.password(jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText());
           break;
         default:
-          throw new MalformedJSONException("Unexpected field found:" + jp.currentName());
+          throw new UnexpectedKeyException("Unexpected key in JSON: " + jp.currentName());
       }
     }
 
