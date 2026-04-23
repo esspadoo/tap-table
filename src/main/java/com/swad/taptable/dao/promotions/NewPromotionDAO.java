@@ -1,15 +1,16 @@
 package com.swad.taptable.dao.promotions;
 
 import com.swad.taptable.dao.AbstractDAO;
-import com.swad.taptable.exception.NotValidPromotionException;
 import com.swad.taptable.resources.Promotion;
-
 import java.sql.PreparedStatement;
-import java.time.LocalDateTime;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 
 public class NewPromotionDAO extends AbstractDAO<Promotion> {
 
-  private static final String STATEMENT = "INSERT INTO promotions VALUES (?, ?, ?, ?, ?)";
+  private static final String STATEMENT =
+      "INSERT INTO promotions(code, type, description, valid_from, valid_to) VALUES (?, ?, ?, ?, ?) RETURNING *";
 
   private final Promotion promotion;
 
@@ -18,37 +19,32 @@ public class NewPromotionDAO extends AbstractDAO<Promotion> {
    *
    * @param promotion the promotion to be stored into the database.
    */
-  protected NewPromotionDAO(final Promotion promotion) throws NotValidPromotionException {
-    if (promotion == null) {
-      throw new NotValidPromotionException("Invalid promotion");
-    }
-
-    if (promotion.getValidTo().isAfter(LocalDateTime.now())
-        || promotion.getValidFrom().isAfter(LocalDateTime.now())) {
-      throw new NotValidPromotionException("Promotion code expired");
-    }
-
+  public NewPromotionDAO(final Promotion promotion) {
     this.promotion = promotion;
   }
 
   @Override
-  protected void doAccess() throws Exception {
-    PreparedStatement pstmt = null;
+  protected void doAccess() throws SQLException {
+    Promotion p = null;
 
-    try {
-      pstmt = con.prepareStatement(STATEMENT);
+    try (PreparedStatement pstmt = con.prepareStatement(STATEMENT);) {
 
       pstmt.setString(1, promotion.getCode());
       pstmt.setString(2, promotion.getType());
       pstmt.setString(3, promotion.getDescription());
-      pstmt.setObject(4, promotion.getValidFrom());
-      pstmt.setObject(5, promotion.getValidTo());
+      pstmt.setTimestamp(4, Timestamp.valueOf(promotion.getValidFrom()));
+      pstmt.setTimestamp(5, Timestamp.valueOf(promotion.getValidTo()));
 
-      pstmt.execute();
-    } finally {
-      if (pstmt != null) {
-        pstmt.close();
+      try (ResultSet rs = pstmt.executeQuery();) {
+        if (rs.next()) {
+          throw new SQLException("Error while inserting the promotion");
+        }
+        p = new Promotion(rs.getString("code"), rs.getString("type"), rs.getString("description"),
+            rs.getTimestamp("valid_from").toLocalDateTime(),
+            rs.getTimestamp("valid_to").toLocalDateTime());
       }
     }
+
+    outputParam = p;
   }
 }
