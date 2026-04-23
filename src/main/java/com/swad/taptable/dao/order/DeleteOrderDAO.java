@@ -5,7 +5,9 @@ import com.swad.taptable.dao.AbstractDAO;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+// Done
 public class DeleteOrderDAO extends AbstractDAO<Boolean> {
+  private static final String STATEMENT = "DELETE FROM orders WHERE id = ?";
   private final int orderId;
 
   public DeleteOrderDAO(int orderId) {
@@ -14,15 +16,17 @@ public class DeleteOrderDAO extends AbstractDAO<Boolean> {
 
   @Override
   protected void doAccess() throws Exception {
-    final String STATEMENT = "DELETE FROM orders WHERE id = ?";
-
     try (PreparedStatement preparedStatement = con.prepareStatement(STATEMENT)) {
       preparedStatement.setInt(1, orderId);
-      preparedStatement.executeUpdate();
-      outputParam = true;
-    } catch (SQLException ex) {
-      outputParam = false;
-      throw new SQLException("can't delete order with id " + orderId);
+
+      /**
+       * Check if the order was successfully deleted. If affectedRows is 1, it means that one row
+       * was deleted, which is the expected outcome. If it's 0, it means that no rows were deleted
+       */
+      int affectedRows = preparedStatement.executeUpdate();
+      outputParam = affectedRows == 1;
+    } catch (SQLException e) {
+      throw e;
     }
   }
 }
