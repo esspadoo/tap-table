@@ -3,10 +3,9 @@ package com.swad.taptable.resources;
 import java.io.IOException;
 import java.io.OutputStream;
 
-
 /**
  * Represents a resource able to serialize itself to JSON.
- * 
+ *
  * @author SWAD Team
  */
 public interface Resource {
@@ -20,5 +19,4 @@ public interface Resource {
    * @throws IOException if something goes wrong while serializing the {@code Resource}.
    */
   void toJSON(OutputStream out) throws IOException;
-
 }
