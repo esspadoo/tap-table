@@ -2,7 +2,7 @@ package com.swad.taptable.resources;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-import com.swad.taptable.exception.MalformedJSONException;
+import com.swad.taptable.exception.json.UnexpectedKeyException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -58,7 +58,7 @@ public class Credentials extends AbstractResource {
    * @throws IOException if there is an error reading from the input stream or parsing the JSON.
    */
   public static Credentials fromJSON(final InputStream in)
-      throws IOException, MalformedJSONException {
+      throws IOException, UnexpectedKeyException {
     String jEmail = null;
     String jPassword = null;
 
@@ -72,15 +72,14 @@ public class Credentials extends AbstractResource {
       switch (jp.currentName()) {
         case "email":
           jp.nextToken();
-          jEmail = jp.getText();
+          jEmail = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText();
           break;
         case "password":
           jp.nextToken();
-          jPassword = jp.getText();
+          jPassword = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText();
           break;
         default:
-          throw new MalformedJSONException(
-              String.format("Unexpected field '%s' in credentials JSON.", jp.currentName()));
+          throw new UnexpectedKeyException("Unexpected key in JSON: " + jp.currentName());
       }
     }
 
