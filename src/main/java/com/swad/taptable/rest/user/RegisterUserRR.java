@@ -1,6 +1,6 @@
 package com.swad.taptable.rest.user;
 
-import com.swad.taptable.dao.RegisterUserDAO;
+import com.swad.taptable.dao.user.RegisterUserDAO;
 import com.swad.taptable.exception.json.UnexpectedKeyException;
 import com.swad.taptable.resources.Message;
 import com.swad.taptable.resources.User;

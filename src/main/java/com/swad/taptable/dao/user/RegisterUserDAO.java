@@ -1,7 +1,7 @@
-package com.swad.taptable.dao;
+package com.swad.taptable.dao.user;
 
+import com.swad.taptable.dao.AbstractDAO;
 import com.swad.taptable.resources.User;
-import com.swad.taptable.rest.user.RegisterUserRR;
 import org.mindrot.jbcrypt.BCrypt;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,14 +10,13 @@ import java.sql.ResultSet;
  * DAO for the registration of a new user. Inserts a new row into the users table and returns the
  * generated user ID.
  *
- * @see RegisterUserRR
  * @author SWAD Team
  */
 public class RegisterUserDAO extends AbstractDAO<Integer> {
 
   private static final String STATEMENT =
-      "INSERT INTO users (username, email, name, surname, phone_number, role, password_hash) "
-          + "VALUES (?, ?, ?, ?, ?, 'CUSTOMER'::USER_ROLE, ?) RETURNING id";
+          "INSERT INTO users (username, email, name, surname, phone_number, role, password_hash) "
+                  + "VALUES (?, ?, ?, ?, ?, 'CUSTOMER'::USER_ROLE, ?) RETURNING id";
 
   private final User user;
 
