@@ -3,12 +3,11 @@ package com.swad.taptable.resources;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-import com.swad.taptable.exception.NotValidIngredientException;
+import com.swad.taptable.exception.json.UnexpectedKeyException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,13 +17,13 @@ import java.util.List;
  */
 public class Ingredient extends AbstractResource {
 
-  private final int id;
+  private final Integer id;
 
   private final String name;
 
   private final List<Allergen> allergens;
 
-  private final boolean isFrozen;
+  private final Boolean frozen;
 
   /**
    * Creates a new {@code Ingredient}.
@@ -32,14 +31,14 @@ public class Ingredient extends AbstractResource {
    * @param id the unique identifier of the ingredient.
    * @param name the name of the ingredient.
    * @param allergens the allergens associated with the ingredient; {@code null} or empty if none.
-   * @param isFrozen whether the ingredient is frozen.
+   * @param frozen whether the ingredient is frozen.
    */
-  public Ingredient(final int id, final String name, final List<Allergen> allergens,
-      final boolean isFrozen) {
+  public Ingredient(final Integer id, final String name, final List<Allergen> allergens,
+      final Boolean frozen) {
     this.id = id;
     this.name = name;
-    this.allergens = allergens != null ? Collections.unmodifiableList(allergens) : List.of();
-    this.isFrozen = isFrozen;
+    this.allergens = allergens != null ? List.copyOf(allergens) : null;
+    this.frozen = frozen;
   }
 
   /**
@@ -47,7 +46,7 @@ public class Ingredient extends AbstractResource {
    *
    * @return the id.
    */
-  public int getId() {
+  public Integer getId() {
     return id;
   }
 
@@ -74,8 +73,8 @@ public class Ingredient extends AbstractResource {
    *
    * @return {@code true} if frozen, {@code false} otherwise.
    */
-  public boolean isFrozen() {
-    return isFrozen;
+  public Boolean isFrozen() {
+    return frozen;
   }
 
   @Override
@@ -84,17 +83,30 @@ public class Ingredient extends AbstractResource {
 
     jg.writeStartObject();
 
-    jg.writeNumberField("id", id);
+    if (id == null)
+      jg.writeNullField("id");
+    else
+      jg.writeNumberField("id", id);
 
-    jg.writeStringField("name", name);
+    if (name == null)
+      jg.writeNullField("name");
+    else
+      jg.writeStringField("name", name);
 
-    jg.writeArrayFieldStart("allergens");
-    for (final Allergen a : allergens) {
-      jg.writeString(a.name());
+    if (allergens == null) {
+      jg.writeNullField("allergens");
+    } else {
+      jg.writeArrayFieldStart("allergens");
+      for (final Allergen a : allergens) {
+        jg.writeString(a.name());
+      }
+      jg.writeEndArray();
     }
-    jg.writeEndArray();
 
-    jg.writeBooleanField("is_frozen", isFrozen);
+    if (frozen == null)
+      jg.writeNullField("is_frozen");
+    else
+      jg.writeBooleanField("is_frozen", frozen);
 
     jg.writeEndObject();
 
@@ -102,30 +114,25 @@ public class Ingredient extends AbstractResource {
   }
 
   /**
-   * Parses a JSON input stream to create an instance of {@code Ingredient}. The expected JSON
-   * format mirrors the output of {@link #writeJSON}, i.e.:
+   * Parses a JSON input stream to create an instance of {@code Ingredient}
    *
-   * <pre>
-   * { "id": 1, "name": "flour", "allergens": ["cereals", "eggs"], "is_frozen": false }
-   * </pre>
-   *
+   * <p>
    * The {@code allergens} array may be empty.
-   *
+   * <p>
+   * 
    * @param in the input stream containing the JSON payload.
    * @return a new {@code Ingredient} built from the parsed fields.
    * @throws IOException if there is an error reading from the stream or parsing the JSON.
    * @throws NotValidIngredientException if the payload contains unexpected fields, unknown allergen
    *         values, or is missing required fields.
    */
-  public static Ingredient fromJson(final InputStream in)
-      throws IOException, NotValidIngredientException {
+  public static Ingredient fromJSON(final InputStream in)
+      throws IOException, UnexpectedKeyException {
 
-    int jId = -1;
+    Integer jId = null;
     String jName = null;
-    final List<Allergen> jAllergens = new ArrayList<>();
-    boolean jIsFrozen = false;
-    boolean idSet = false;
-    boolean frozenSet = false;
+    List<Allergen> jAllergens = null;
+    Boolean jIsFrozen = null;
 
     try {
       final JsonParser jp = JSON_FACTORY.createParser(in);
@@ -138,46 +145,34 @@ public class Ingredient extends AbstractResource {
         switch (jp.currentName()) {
           case "id":
             jp.nextToken();
-            jId = jp.getIntValue();
-            idSet = true;
+            jId = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getIntValue();
             break;
           case "name":
             jp.nextToken();
-            jName = jp.getText();
+            jName = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText();
             break;
           case "allergens":
-            jp.nextToken(); // START_ARRAY
+            if (jp.nextToken() == JsonToken.VALUE_NULL)
+              break;
+
+            jAllergens = new ArrayList<>();
+
             while (jp.nextToken() != JsonToken.END_ARRAY) {
-              if (jp.getCurrentToken() == JsonToken.VALUE_NULL) {
-                continue;
-              }
-              try {
-                jAllergens.add(Allergen.valueOf(jp.getText()));
-              } catch (IllegalArgumentException e) {
-                throw new NotValidIngredientException("Unknown allergen: " + jp.getText());
-              }
+              jAllergens.add(Allergen.valueOf(jp.getText()));
             }
+
             break;
           case "is_frozen":
             jp.nextToken();
-            jIsFrozen = jp.getBooleanValue();
-            frozenSet = true;
+            jIsFrozen = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getBooleanValue();
             break;
           default:
-            LOGGER.warn("Unexpected field in ingredient payload: %s", jp.currentName());
-            throw new NotValidIngredientException("Unexpected field: " + jp.currentName());
+            throw new UnexpectedKeyException("Unexpected field: " + jp.currentName());
         }
       }
-    } catch (NotValidIngredientException e) {
-      LOGGER.error("Not valid ingredient payload: ", e);
-      throw e;
     } catch (IOException e) {
       LOGGER.error("Unable to parse an Ingredient object from JSON.", e);
       throw e;
-    }
-
-    if (!idSet || jName == null || !frozenSet) {
-      throw new NotValidIngredientException("Missing required fields in ingredient payload.");
     }
 
     return new Ingredient(jId, jName, jAllergens, jIsFrozen);

@@ -1,8 +1,11 @@
 package com.swad.taptable.resources;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.swad.taptable.exception.NotValidPromotionException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+import com.swad.taptable.exception.json.UnexpectedKeyException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
 
@@ -34,13 +37,7 @@ public class Promotion extends AbstractResource {
    * @throws NotValidPromotionException if {@code validTo} is not after {@code validFrom}.
    */
   public Promotion(final String code, final String type, final String description,
-      final LocalDateTime validFrom, final LocalDateTime validTo)
-      throws NotValidPromotionException {
-
-    if (!validTo.isAfter(validFrom)) {
-      throw new NotValidPromotionException("Promotion dates not valid.");
-    }
-
+      final LocalDateTime validFrom, final LocalDateTime validTo) {
     this.code = code;
     this.type = type;
     this.description = description;
@@ -99,18 +96,79 @@ public class Promotion extends AbstractResource {
 
     jg.writeStartObject();
 
-    jg.writeStringField("code", code);
+    if (code == null)
+      jg.writeNullField("code");
+    else
+      jg.writeStringField("code", code);
 
-    jg.writeStringField("type", type);
+    if (type == null)
+      jg.writeNullField("type");
+    else
+      jg.writeStringField("type", type);
 
-    jg.writeStringField("description", description);
+    if (description == null)
+      jg.writeNullField("description");
+    else
+      jg.writeStringField("description", description);
 
-    jg.writeStringField("valid_from", validFrom.toString());
+    if (validFrom == null)
+      jg.writeNullField("valid_from");
+    else
+      jg.writeStringField("valid_from", validFrom.toString());
 
-    jg.writeStringField("valid_to", validTo.toString());
+    if (validTo == null)
+      jg.writeNullField("valid_to");
+    else
+      jg.writeStringField("valid_to", validTo.toString());
 
     jg.writeEndObject();
 
     jg.flush();
+  }
+
+  public static Promotion fromJSON(final InputStream in)
+      throws IOException, UnexpectedKeyException {
+    final JsonParser jp = JSON_FACTORY.createParser(in);
+
+    String jCode = null;
+    String jType = null;
+    String jDescription = null;
+    LocalDateTime jValidFrom = null;
+    LocalDateTime jValidTo = null;
+
+    while (jp.nextToken() != JsonToken.END_OBJECT) {
+      if (jp.getCurrentToken() != JsonToken.FIELD_NAME) {
+        continue;
+      }
+
+      switch (jp.currentName()) {
+        case "code":
+          jp.nextToken();
+          jCode = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText();
+          break;
+        case "type":
+          jp.nextToken();
+          jType = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText();
+          break;
+        case "description":
+          jp.nextToken();
+          jDescription = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText();
+          break;
+        case "valid_from":
+          jp.nextToken();
+          jValidFrom = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null
+              : LocalDateTime.parse(jp.getText());
+          break;
+        case "valid_to":
+          jp.nextToken();
+          jValidTo = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null
+              : LocalDateTime.parse(jp.getText());
+          break;
+        default:
+          throw new UnexpectedKeyException("Unexpected field: " + jp.currentName());
+      }
+    }
+
+    return new Promotion(jCode, jType, jDescription, jValidFrom, jValidTo);
   }
 }
