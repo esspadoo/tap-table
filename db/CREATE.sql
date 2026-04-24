@@ -1,12 +1,11 @@
 -- WEBAPP USER
-CREATE ROLE webapp
+CREATE ROLE taptable_manager
 WITH LOGIN
-PASSWORD 'password'
+PASSWORD 'go1Y1U7b?!0G'
 NOSUPERUSER
 NOCREATEDB
 NOCREATEROLE
 NOINHERIT
--- CONNECTION LIMIT 5 TODO: understand how many concurrent connections we need and set the limit accordingly to HikariCP configuration (maximumPoolSize = 10 default)
 ;
 
 -- USERS
@@ -24,13 +23,13 @@ CREATE TABLE users (
 
 -- PROMOTIONS
 CREATE TABLE promotions (
-    id SERIAL PRIMARY KEY, -- TODO: remove id from promotions (maybe best idea)
+    id SERIAL PRIMARY KEY,
     code VARCHAR(20) NOT NULL UNIQUE,
-    type VARCHAR(20) NOT NULL, -- TODO: capire se fare enum
-    description VARCHAR(20) NOT NULL,
+    type VARCHAR(20) NOT NULL,
+    description TEXT NOT NULL,
     valid_from TIMESTAMP NOT NULL,
     valid_to TIMESTAMP NOT NULL,
-    CHECK (valid_to > valid_from) -- TODO: check if timestamp comparison works
+    CHECK (valid_to > valid_from)
 );
 
 -- ORDERS
@@ -106,3 +105,6 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER orders_set_updated_at
 BEFORE UPDATE ON orders
 FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+GRANT ALL ON ALL TABLES IN SCHEMA public TO taptable_manager;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO taptable_manager;
