@@ -75,8 +75,7 @@ public class Order extends AbstractResource {
           break;
         case "status":
           jp.nextToken();
-          status = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null
-              : OrderStatus.valueOf(jp.getText());
+          status = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : OrderStatus.fromString(jp.getText());
           break;
         case "total_price":
           jp.nextToken();
