@@ -1,13 +1,13 @@
 -- WEBAPP USER
-CREATE ROLE webapp 
-WITH LOGIN 
+CREATE ROLE webapp
+WITH LOGIN
 PASSWORD 'password'
 NOSUPERUSER
 NOCREATEDB
 NOCREATEROLE
 NOINHERIT
 -- CONNECTION LIMIT 5 TODO: understand how many concurrent connections we need and set the limit accordingly to HikariCP configuration (maximumPoolSize = 10 default)
-; 
+;
 
 -- USERS
 CREATE TYPE USER_ROLE AS ENUM ('STAFF', 'CUSTOMER', 'ADMIN');
@@ -19,20 +19,18 @@ CREATE TABLE users (
     surname VARCHAR(255) NOT NULL,
     phone_number VARCHAR(25) NOT NULL UNIQUE,
     role USER_ROLE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    password_hash VARCHAR(255) NOT NULL
 );
 
 -- PROMOTIONS
 CREATE TABLE promotions (
-                            id SERIAL PRIMARY KEY,
-                            code VARCHAR(20) NOT NULL UNIQUE,
-                            type VARCHAR(20) NOT NULL, -- TODO: capire se fare enum
-                            description VARCHAR(20) NOT NULL,
-                            valid_from TIMESTAMP NOT NULL,
-                            valid_to TIMESTAMP NOT NULL,
-                            CHECK (valid_to > valid_from) -- TODO: check if timestamp comparison works
+    id SERIAL PRIMARY KEY, -- TODO: remove id from promotions (maybe best idea)
+    code VARCHAR(20) NOT NULL UNIQUE,
+    type VARCHAR(20) NOT NULL, -- TODO: capire se fare enum
+    description VARCHAR(20) NOT NULL,
+    valid_from TIMESTAMP NOT NULL,
+    valid_to TIMESTAMP NOT NULL,
+    CHECK (valid_to > valid_from) -- TODO: check if timestamp comparison works
 );
 
 -- ORDERS
@@ -42,34 +40,39 @@ CREATE TABLE orders (
     user_id INTEGER NOT NULL,
     promotion_id INTEGER,
     total_amount DECIMAL(10, 2) NOT NULL,
-    status ORDER_STATUS NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (promotion_id) REFERENCES promotions(id)
+    status ORDER_STATUS NOT NULL DEFAULT 'PENDING',
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (promotion_id) REFERENCES promotions(id) ON DELETE SET NULL,
+    UNIQUE (user_id, promotion_id)
 );
 
--- ITEMS
--- TODO: change the name (ugly)
-CREATE TABLE items (
+-- CATEGORIES
+CREATE TABLE categories(
+    name VARCHAR(255) NOT NULL UNIQUE PRIMARY KEY
+);
+
+-- DISHES
+CREATE TABLE dishes (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
+    category_name VARCHAR(255) NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    FOREIGN KEY (category_name) REFERENCES categories(name)
 );
 
--- ORDER_ITEMS
-CREATE TABLE order_items (
+-- ORDER_DISHES
+CREATE TABLE order_dishes (
     id SERIAL PRIMARY KEY,
     order_id INTEGER NOT NULL,
-    item_id INTEGER NOT NULL,
+    dish_id INTEGER NOT NULL,
     quantity INTEGER NOT NULL,
-    is_liked BOOLEAN, -- this field can be null as the user might not have liked or disliked the item yet (TODO: create a trigger to avoid filling this field with the order still not completed)
-    UNIQUE (order_id, item_id),
-    FOREIGN KEY (order_id) REFERENCES orders(id),
-    FOREIGN KEY (item_id) REFERENCES items(id)
+    is_liked BOOLEAN,
+    UNIQUE (order_id, dish_id),
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (dish_id) REFERENCES dishes(id)
 );
 
 -- INGREDIENTS
@@ -77,41 +80,29 @@ CREATE TYPE ALLERGEN AS ENUM ('cereals', 'crustaceans', 'eggs', 'fish', 'peanuts
 CREATE TABLE ingredients (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    allergen ALLERGEN[], -- this field can be null as the item might not contain any allergen,
-    is_frozen BOOLEAN,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    allergen ALLERGEN[], -- this field can be null as the dish might not contain any allergen,
+    is_frozen BOOLEAN
 );
 
--- ITEM_INGREDIENTS
-CREATE TABLE item_ingredients (
+-- DISH_INGREDIENTS
+CREATE TABLE dish_ingredients (
     id SERIAL PRIMARY KEY,
-    item_id INTEGER NOT NULL,
+    dish_id INTEGER NOT NULL,
     ingredient_id INTEGER NOT NULL,
-    UNIQUE (item_id, ingredient_id),
-    FOREIGN KEY (item_id) REFERENCES items(id),
-    FOREIGN KEY (ingredient_id) REFERENCES ingredients(id)
+    UNIQUE (dish_id, ingredient_id),
+    FOREIGN KEY (dish_id) REFERENCES dishes(id) ON DELETE CASCADE,
+    FOREIGN KEY (ingredient_id) REFERENCES ingredients(id) ON DELETE CASCADE
 );
 
--- CATEGORIES
-CREATE TABLE categories(
-    name VARCHAR(255) NOT NULL UNIQUE PRIMARY KEY,
-    description VARCHAR(255) NOT NULL
-);
+-- TRIGGERS
+CREATE OR REPLACE FUNCTION set_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
--- ITEM_CATEGORIES
-CREATE TABLE item_categories (
-    id SERIAL PRIMARY KEY,
-    item_id INTEGER NOT NULL,
-    category_id VARCHAR(255) NOT NULL,
-    UNIQUE (item_id, category_id),
-    FOREIGN KEY (item_id) REFERENCES items(id),
-    FOREIGN KEY (category_id) REFERENCES categories(name)
-);
-
--- REFRESH TOKENS
-CREATE TABLE refresh_tokens (
-    token      VARCHAR(512) PRIMARY KEY,
-    user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    expires_at TIMESTAMP NOT NULL
-);
+CREATE TRIGGER orders_set_updated_at
+BEFORE UPDATE ON orders
+FOR EACH ROW EXECUTE FUNCTION set_updated_at();
