@@ -1098,3 +1098,554 @@ Content: \texttt{None}
 \end{itemize}
 
 \end{itemize}
+
+\subsubsection*{Get All Orders}
+
+Returns all orders. This route is available only to \texttt{STAFF} and \texttt{ADMIN}.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/order}
+
+\item \textbf{Method:} \texttt{GET}
+
+\item \textbf{URL Parameters:} \texttt{None}
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT with role \texttt{STAFF} or \texttt{ADMIN}
+
+\item \textbf{Data Parameters:} \texttt{None}
+
+The order read DAOs use \texttt{ResultSet\#getBoolean("is\_liked")} without \texttt{wasNull()}, so database \texttt{NULL} values in \texttt{order\_dishes.is\_liked} are serialized as \texttt{false}.
+
+\item \textbf{Success Response:} \texttt{200 OK}
+
+Content:
+
+\begin{lstlisting}
+{
+  "resource-list": [
+    {
+      "id": 2,
+      "status": "PENDING",
+      "total_price": 9.0,
+      "user_id": 4,
+      "promotion_id": null,
+      "dishes": [
+        {
+          "dish_id": 2,
+          "quantity": 1,
+          "is_liked": false
+        }
+      ]
+    }
+  ]
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth errors: \texttt{401 Unauthorized}, \texttt{E4A2}; \texttt{403 Forbidden}, \texttt{E4A4}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}.
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Database error while retrieving orders.}, inner details are the SQL exception message.
+\end{itemize}
+
+\end{itemize}
+
+\subsubsection*{Create Order}
+
+Creates a new order.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/order}
+
+\item \textbf{Method:} \texttt{POST}
+
+\item \textbf{URL Parameters:} \texttt{None}
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Content-Type: application/json}; \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT
+
+\item \textbf{Data Parameters:}
+
+\begin{lstlisting}
+{
+  "status": "PENDING",
+  "user_id": 4,
+  "promotion_id": 1,
+  "dishes": [
+    {
+      "dish_id": 1,
+      "quantity": 2,
+      "is_liked": null
+    }
+  ]
+}
+\end{lstlisting}
+
+The parsed fields are \texttt{id}, \texttt{status}, \texttt{total\_price}, \texttt{user\_id}, \texttt{promotion\_id}, and \texttt{dishes}, but the DAO ignores any submitted \texttt{total\_price} and recomputes it from current dish prices. \texttt{status} must be one of the case-sensitive enum values \texttt{PENDING}, \texttt{COMPLETED}, or \texttt{CANCELLED}. \texttt{user\_id} is required and must be a positive integer, but it is not cross-checked against the authenticated JWT user id; any authenticated caller can submit another user's id. \texttt{promotion\_id} is optional and is an integer foreign key to \texttt{promotions.id}, not a promotion code. Each dish object may contain \texttt{dish\_id}, \texttt{quantity}, and optional \texttt{is\_liked}. Invalid user ids, invalid promotion ids, duplicate \texttt{(user\_id, promotion\_id)} combinations, duplicate dish ids within the same order, and other persistence failures surface as \texttt{E5D1}.
+
+\item \textbf{Success Response:} \texttt{201 Created}
+
+Content:
+
+\begin{lstlisting}
+{
+  "id": 6,
+  "status": "PENDING",
+  "total_price": 11.0,
+  "user_id": 4,
+  "promotion_id": 1,
+  "dishes": [
+    {
+      "dish_id": 1,
+      "quantity": 2,
+      "is_liked": null
+    }
+  ]
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth error: \texttt{401 Unauthorized}, \texttt{E4A2}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}, \texttt{E4V3}, \texttt{E4V4}.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{invalid status in order.} when \texttt{status} is missing or \texttt{null}.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Invalid user id in order} when \texttt{user\_id} is missing, \texttt{null}, or \texttt{<= 0}.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Order must contain at least one item} when \texttt{dishes} is missing or empty.
+\item \texttt{400 Bad Request}, \texttt{E4V8} - inner message \texttt{Malformed JSON in request body.}, inner details are the parser message or \texttt{Unexpected key '<field>' in Order JSON} / \texttt{Unexpected key '<field>' in dish JSON}.
+\item \texttt{400 Bad Request}, \texttt{E4V8} - inner message \texttt{Invalid order.}, inner details are the \texttt{NotValidOrderException} message, for example \texttt{Invalid status: COMPLETE}.
+\item \texttt{400 Bad Request}, \texttt{E4V8} - inner message \texttt{Failed to create order. Please check the provided data.} when the DAO returns \texttt{null}, which happens when any referenced \texttt{dish\_id} is not found during price lookup.
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Unexpected database error: no. <sqlErrorCode>}, inner details are the SQL exception message. This includes invalid \texttt{user\_id}, invalid \texttt{promotion\_id}, duplicate dish ids in one order, and reusing the same non-null promotion for the same user.
+\end{itemize}
+
+\item \textbf{Sample Request Body:}
+
+\begin{lstlisting}
+{
+  "status": "PENDING",
+  "promotion_id": 1,
+  "dishes": [
+    { "dish_id": 1, "quantity": 2, "is_liked": null }
+  ]
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsubsection*{Get User Orders}
+
+Returns all orders placed by the authenticated user.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/order/user}
+
+\item \textbf{Method:} \texttt{GET}
+
+\item \textbf{URL Parameters:} \texttt{None}
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT
+
+\item \textbf{Data Parameters:} \texttt{None}
+
+The endpoint resolves the user from the dispatcher-set \texttt{user\_id} request attribute. This route must be registered before \texttt{GET /order/\{order\_id\}} in the router so that the literal segment \texttt{user} is matched first; if \texttt{/order/\{order\_id\}} were registered earlier it would shadow this route.
+
+\item \textbf{Success Response:} \texttt{200 OK}
+
+Content:
+
+\begin{lstlisting}
+{
+  "resource-list": [
+    {
+      "id": 2,
+      "status": "PENDING",
+      "total_price": 9.0,
+      "user_id": 4,
+      "promotion_id": null,
+      "dishes": [
+        {
+          "dish_id": 2,
+          "quantity": 1,
+          "is_liked": false
+        }
+      ]
+    }
+  ]
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth error: \texttt{401 Unauthorized}, \texttt{E4A2}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}.
+\item \texttt{404 Not Found}, \texttt{E4R2} - inner message \texttt{No orders found for user <id>} when the user has no orders.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Invalid user ID: must be a number.}, inner details are the \texttt{NumberFormatException} message, if the dispatcher-set \texttt{user\_id} attribute is not numeric.
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Unexpected database error: no. <sqlErrorCode>}, inner details are the SQL exception message.
+\end{itemize}
+
+\end{itemize}
+
+\subsubsection*{Get Order}
+
+Returns one order by id.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/order/\{order\_id\}}
+
+\item \textbf{Method:} \texttt{GET}
+
+\item \textbf{URL Parameters:} \texttt{order\_id} - integer order id
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT
+
+\item \textbf{Data Parameters:} \texttt{None}
+
+Any authenticated user can retrieve any order by id; the code performs no ownership check against the JWT \texttt{user\_id}.
+
+\item \textbf{Success Response:} \texttt{200 OK}
+
+Content:
+
+\begin{lstlisting}
+{
+  "id": 2,
+  "status": "PENDING",
+  "total_price": 9.0,
+  "user_id": 4,
+  "promotion_id": null,
+  "dishes": [
+    {
+      "dish_id": 2,
+      "quantity": 1,
+      "is_liked": false
+    }
+  ]
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth error: \texttt{401 Unauthorized}, \texttt{E4A2}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Invalid order ID <value>}, inner details are the \texttt{NumberFormatException} message.
+\item \texttt{404 Not Found}, \texttt{E4R2} - inner message \texttt{Order with id 2 not found.}
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Unexpected database error: no. <sqlErrorCode>}, inner details are the SQL exception message.
+\end{itemize}
+
+\end{itemize}
+
+\subsubsection*{Update Order Status}
+
+Updates the status of an order.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/order/\{order\_id\}/\{order\_status\}}
+
+\item \textbf{Method:} \texttt{PUT}
+
+\item \textbf{URL Parameters:} \texttt{order\_id} - integer order id; \texttt{order\_status} - one of \texttt{PENDING}, \texttt{COMPLETED}, \texttt{CANCELLED}
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Content-Type: application/json}; \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT with role \texttt{STAFF} or \texttt{ADMIN}
+
+\item \textbf{Data Parameters:} \texttt{None}
+
+Although this endpoint has no request body, \texttt{Content-Type: application/json} is still required because the shared base class treats every \texttt{PUT} as body-bearing. \texttt{order\_status} is parsed with \texttt{OrderStatus.valueOf}, so matching is case-sensitive. If the target order does not exist, the current DAO throws \texttt{SQLException("Failed to update order status")}; the handler therefore returns \texttt{500}/\texttt{E5D1}, not \texttt{404}.
+
+\item \textbf{Success Response:} \texttt{200 OK}
+
+Content:
+
+\begin{lstlisting}
+{
+  "id": 2,
+  "status": "COMPLETED",
+  "total_price": 9.0,
+  "user_id": 4,
+  "promotion_id": null,
+  "dishes": [
+    {
+      "dish_id": 2,
+      "quantity": 1,
+      "is_liked": false
+    }
+  ]
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth errors: \texttt{401 Unauthorized}, \texttt{E4A2}; \texttt{403 Forbidden}, \texttt{E4A4}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}, \texttt{E4V3}, \texttt{E4V4}.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Invalid order ID: must be a number}, inner details are the \texttt{NumberFormatException} message.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Invalid order status}, inner details are the \texttt{IllegalArgumentException} message from \texttt{OrderStatus.valueOf}.
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Unexpected database error: no. <sqlErrorCode>}, inner details are the SQL exception message. This is also the current response for nonexistent order ids.
+\end{itemize}
+
+\end{itemize}
+
+\subsubsection*{Delete Order}
+
+Deletes an order.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/order/\{order\_id\}/}
+
+\item \textbf{Method:} \texttt{DELETE}
+
+\item \textbf{URL Parameters:} \texttt{order\_id} - integer order id
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT with role \texttt{ADMIN}
+
+\item \textbf{Data Parameters:} \texttt{None}
+
+The trailing slash is part of the configured route. \texttt{/rest/order/4/} matches; \texttt{/rest/order/4} does not and instead falls through to the dispatcher-level \texttt{404}/\texttt{E4R1} unknown-resource response.
+
+\item \textbf{Success Response:} \texttt{204 No Content}
+
+Content: \texttt{None}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth errors: \texttt{401 Unauthorized}, \texttt{E4A2}; \texttt{403 Forbidden}, \texttt{E4A4}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Invalid format of order ID <value> to be deleted}, inner details are the \texttt{NumberFormatException} message.
+\item \texttt{404 Not Found}, \texttt{E4R2} - inner message \texttt{Order with id 4 not found for deletion}
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Unexpected database error: no. <sqlErrorCode>}, inner details are the SQL exception message.
+\end{itemize}
+
+\end{itemize}
+
+\subsubsection*{Create Promotion}
+
+Creates a promotion.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/promotion}
+
+\item \textbf{Method:} \texttt{POST}
+
+\item \textbf{URL Parameters:} \texttt{None}
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Content-Type: application/json}; \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT with role \texttt{ADMIN}
+
+\item \textbf{Data Parameters:}
+
+\begin{lstlisting}
+{
+  "code": "BENVENUTO15",
+  "discount": 15.0,
+  "description": "Sconto 15% per i nuovi clienti",
+  "valid_from": "2026-05-01T00:00:00",
+  "valid_to": "2026-12-31T23:59:59"
+}
+\end{lstlisting}
+
+Required fields are \texttt{code}, \texttt{discount}, \texttt{description}, \texttt{valid\_from}, and \texttt{valid\_to}. \texttt{discount} must satisfy \texttt{0 < discount <= 100}. \texttt{valid\_to} must not be before \texttt{valid\_from}; equality is not rejected by the handler, but it violates the database \texttt{CHECK (valid\_to > valid\_from)} constraint and therefore becomes \texttt{E5D1}. Date-time parsing uses \texttt{LocalDateTime.parse}, so the expected format is ISO-8601 local date-time such as \texttt{2026-05-01T00:00:00}. Duplicate promotion codes are not explicitly mapped to \texttt{409}; they surface as \texttt{500}/\texttt{E5D1}.
+
+\item \textbf{Success Response:} \texttt{201 Created}
+
+Content:
+
+\begin{lstlisting}
+{
+  "code": "BENVENUTO15",
+  "discount": 15.0,
+  "description": "Sconto 15% per i nuovi clienti",
+  "valid_from": "2026-05-01T00:00:00",
+  "valid_to": "2026-12-31T23:59:59"
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth errors: \texttt{401 Unauthorized}, \texttt{E4A2}; \texttt{403 Forbidden}, \texttt{E4A4}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}, \texttt{E4V3}, \texttt{E4V4}.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Missing required fields}
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Invalid discount: it must be between 0 and 100.}
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Invalid promotion dates: validTo must be after validFrom}
+\item \texttt{400 Bad Request}, \texttt{E4V8} - inner message \texttt{Malformed JSON in request body.}, inner details are \texttt{Unexpected field: <field>}.
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Failed to create promotion.} if the DAO returns no row.
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Unexpected database error: no. <sqlErrorCode>}, inner details are the SQL exception message. This includes duplicate codes and equality failures on \texttt{valid\_from}/\texttt{valid\_to}.
+\item \texttt{500 Internal Server Error}, \texttt{E5G1} - malformed JSON syntax or invalid \texttt{LocalDateTime} strings fall through to \texttt{Unable to serve the REST request: NEW\_PROMOTION.}
+\end{itemize}
+
+\item \textbf{Sample Request Body:}
+
+\begin{lstlisting}
+{
+  "code": "BENVENUTO15",
+  "discount": 15.0,
+  "description": "Sconto 15% per i nuovi clienti",
+  "valid_from": "2026-05-01T00:00:00",
+  "valid_to": "2026-12-31T23:59:59"
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsubsection*{Get All Promotions}
+
+Returns all promotions. This route is available only to \texttt{STAFF} and \texttt{ADMIN}.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/promotion}
+
+\item \textbf{Method:} \texttt{GET}
+
+\item \textbf{URL Parameters:} \texttt{None}
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT with role \texttt{STAFF} or \texttt{ADMIN}
+
+\item \textbf{Data Parameters:} \texttt{None}
+
+The DAO returns all rows from \texttt{promotions} without filtering by current date or validity window.
+
+\item \textbf{Success Response:} \texttt{200 OK}
+
+Content:
+
+\begin{lstlisting}
+{
+  "resource-list": [
+    {
+      "code": "BENVENUTO10",
+      "discount": 10.0,
+      "description": "Sconto 10% per i nuovi clienti",
+      "valid_from": "2026-01-01T00:00:00",
+      "valid_to": "2026-12-31T23:59:59"
+    }
+  ]
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth errors: \texttt{401 Unauthorized}, \texttt{E4A2}; \texttt{403 Forbidden}, \texttt{E4A4}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}.
+\item \texttt{404 Not Found}, \texttt{E4R2} - inner message \texttt{No promotions found.} when the DAO returns \texttt{null}.
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Unexpected database error: no. <sqlErrorCode>}, inner details are the SQL exception message.
+\end{itemize}
+
+\end{itemize}
+
+\subsubsection*{Get Promotion By Code}
+
+Returns a promotion by code.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/promotion/\{promotion\_code\}}
+
+\item \textbf{Method:} \texttt{GET}
+
+\item \textbf{URL Parameters:} \texttt{promotion\_code} - promotion code string
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{None}
+
+\item \textbf{Data Parameters:} \texttt{None}
+
+This endpoint is public and does not filter promotions by validity dates; it simply looks up the row by \texttt{code}.
+
+\item \textbf{Success Response:} \texttt{200 OK}
+
+Content:
+
+\begin{lstlisting}
+{
+  "code": "BENVENUTO10",
+  "discount": 10.0,
+  "description": "Sconto 10% per i nuovi clienti",
+  "valid_from": "2026-01-01T00:00:00",
+  "valid_to": "2026-12-31T23:59:59"
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}.
+\item \texttt{404 Not Found}, \texttt{E4R2} - inner message \texttt{Promotion with code BENVENUTO10 not found.}
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Unexpected database error: no. <sqlErrorCode>}, inner details are the SQL exception message.
+\end{itemize}
+
+\end{itemize}
+
+\subsubsection*{Check Promotion Usage}
+
+Returns whether the authenticated user has already used a promotion code on an order.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/promotion/\{promotion\_code\}/usage}
+
+\item \textbf{Method:} \texttt{GET}
+
+\item \textbf{URL Parameters:} \texttt{promotion\_code} - promotion code string
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT
+
+\item \textbf{Data Parameters:} \texttt{None}
+
+The endpoint uses the JWT \texttt{user\_id}; there is no user id path or query parameter in the configured route. The DAO performs \texttt{COUNT(*)} over \texttt{orders JOIN promotions}, so nonexistent promotion codes also return \texttt{false} rather than \texttt{404}.
+
+\item \textbf{Success Response:} \texttt{200 OK}
+
+Content:
+
+\begin{lstlisting}
+{
+  "is_already_used": true
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth error: \texttt{401 Unauthorized}, \texttt{E4A2}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}.
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Unexpected database error}, inner details are the SQL exception message.
+\end{itemize}
+
+\end{itemize}
