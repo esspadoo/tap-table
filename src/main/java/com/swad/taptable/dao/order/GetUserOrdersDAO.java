@@ -33,8 +33,8 @@ public class GetUserOrdersDAO extends AbstractDAO<ResourceList<Order>> {
 
             try (ResultSet ordersRs = ordersPstmt.executeQuery()) {
                 while (ordersRs.next()) {
-                    int orderId = ordersRs.getInt("id");
-                    int promotionId = ordersRs.getInt("promotion_id");
+                    Integer orderId = ordersRs.getInt("id");
+                    Integer promotionId = ordersRs.getObject("promotion_id", Integer.class);
                     float totalPrice = ordersRs.getFloat("total_amount");
                     OrderStatus status = OrderStatus.valueOf(ordersRs.getString("status"));
 
