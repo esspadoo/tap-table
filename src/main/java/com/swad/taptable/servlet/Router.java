@@ -1,5 +1,6 @@
 package com.swad.taptable.servlet;
 
+import com.swad.taptable.resources.UserRole;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -12,9 +13,8 @@ import java.util.Map;
  * A simple router for dispatching HTTP requests to handlers based on method and path patterns. It
  * supports registering handlers for specific HTTP methods (GET, POST, PUT, DELETE) and path
  * patterns that can include path parameters (e.g. {@code /rest/user/{id}}). The router matches
- * incoming requests against registered routes in order and invokes the corresponding handler if a
- * match is found. If no route matches, the router returns {@code false} to indicate that the
- * request was not handled.
+ * incoming requests against registered routes in order and checks the caller's role against the
+ * route's {@link RouteAccess} before invoking the handler.
  *
  * @author SWAD Team
  */
@@ -22,45 +22,69 @@ public final class Router {
 
   private final List<Route> routes = new ArrayList<>();
 
-  public Router get(String pattern, RouterHandler handler) {
-    routes.add(new Route("GET", pattern, handler));
+  public Router get(String pattern, RouteHandler handler, RouteAccess access) {
+    routes.add(new Route("GET", pattern, handler, access));
     return this;
   }
 
-  public Router post(String pattern, RouterHandler handler) {
-    routes.add(new Route("POST", pattern, handler));
+  public Router post(String pattern, RouteHandler handler, RouteAccess access) {
+    routes.add(new Route("POST", pattern, handler, access));
     return this;
   }
 
-  public Router put(String pattern, RouterHandler handler) {
-    routes.add(new Route("PUT", pattern, handler));
+  public Router put(String pattern, RouteHandler handler, RouteAccess access) {
+    routes.add(new Route("PUT", pattern, handler, access));
     return this;
   }
 
-  public Router delete(String pattern, RouterHandler handler) {
-    routes.add(new Route("DELETE", pattern, handler));
+  public Router delete(String pattern, RouteHandler handler, RouteAccess access) {
+    routes.add(new Route("DELETE", pattern, handler, access));
     return this;
   }
 
   /**
-   * Tries to match the incoming request against registered routes in order.
+   * Tries to match the incoming request against registered routes in order. Checks the caller's
+   * role before invoking the handler.
    *
-   * @return {@code true} if a route matched and was handled, {@code false} otherwise.
+   * @param callerRole the authenticated user's role, or {@code null} if unauthenticated.
+   * @return the dispatch result: {@link DispatchResult#OK} if handled,
+   *         {@link DispatchResult#NOT_FOUND} if no route matched,
+   *         {@link DispatchResult#UNAUTHORIZED} if authentication is required but missing, or
+   *         {@link DispatchResult#FORBIDDEN} if the role is insufficient.
    */
-  public boolean dispatch(HttpServletRequest req, HttpServletResponse res) throws Exception {
+  public DispatchResult dispatch(HttpServletRequest req, HttpServletResponse res) throws Exception {
     String method = req.getMethod();
     String path = req.getServletPath() + (req.getPathInfo() != null ? req.getPathInfo() : "");
+
+    String tmp = (String) req.getAttribute("user_role");
+    UserRole role = tmp != null ? UserRole.valueOf(tmp) : null;
 
     for (Route route : routes) {
       Map<String, String> params = route.match(method, path);
       if (params != null) {
+        DispatchResult access = hasAuthorization(route.access, role);
+        if (access != DispatchResult.OK) {
+          return access;
+        }
         params.forEach((key, value) -> req.setAttribute(key, value));
         route.handler.handle(req, res);
-        return true;
+        return DispatchResult.OK;
       }
     }
 
-    return false;
+    return DispatchResult.NOT_FOUND;
+  }
+
+  private static DispatchResult hasAuthorization(RouteAccess access, UserRole role) {
+    return switch (access) {
+      case PUBLIC -> DispatchResult.OK;
+      case AUTHENTICATED -> role != null ? DispatchResult.OK : DispatchResult.UNAUTHORIZED;
+      case STAFF_OR_ADMIN -> role == null ? DispatchResult.UNAUTHORIZED
+          : (role == UserRole.STAFF || role == UserRole.ADMIN) ? DispatchResult.OK
+              : DispatchResult.FORBIDDEN;
+      case ADMIN_ONLY -> role == null ? DispatchResult.UNAUTHORIZED
+          : role == UserRole.ADMIN ? DispatchResult.OK : DispatchResult.FORBIDDEN;
+    };
   }
 
   /**
@@ -68,39 +92,20 @@ public final class Router {
    * {@link Router}.
    *
    * <p>
-   * Represents a registered route with a method, path pattern, and handler. The {@code match}
-   * method checks if an incoming request matches this route and extracts path parameters if it
-   * does.
-   * </p>
-   *
-   * <p>
-   * The path pattern is split into segments by {@code /}. Each segment can be a literal string or a
-   * parameter (wrapped in braces). For example, the pattern {@code /rest/user/{id}} has three
-   * segments: {@code "rest"}, {@code "user"}, and {@code "{id}"}. A request to
-   * {@code /rest/user/123} would match this pattern and extract the parameter {@code id} with value
-   * {@code 123}.
+   * Represents a registered route with a method, path pattern, required access level, and handler.
    * </p>
    */
   private static final class Route {
-    /**
-     * Note: constructor and methods don't have visibility modifiers since this class is
-     * package-private and only used by {@link Router}.
-     */
     private final String method;
     private final String[] segments;
-    private final RouterHandler handler;
+    private final RouteHandler handler;
+    private final RouteAccess access;
 
-    /**
-     * Creates a new route with the given method, path pattern, and handler.
-     *
-     * @param method HTTP method (e.g. "GET", "POST")
-     * @param pattern URL pattern (e.g. "/rest/user/{id}")
-     * @param handler handler to invoke if this route matches an incoming request
-     */
-    Route(String method, String pattern, RouterHandler handler) {
+    Route(String method, String pattern, RouteHandler handler, RouteAccess access) {
       this.method = method;
       this.segments = pattern.split("/", -1);
       this.handler = handler;
+      this.access = access;
     }
 
     /**
