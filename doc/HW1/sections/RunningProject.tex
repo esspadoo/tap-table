@@ -1,0 +1,13 @@
+\section{How to run the application}
+The application is designed to run in a Docker environment. All the material needed to build and run is included in the repository. Read the \texttt{README.md} file carefully for detailed instructions on how to build the WAR and start the containers.
+
+The \texttt{docker-compose.yml} file orchestrates three services:
+\begin{itemize}
+    \item \textbf{web}: the Tomcat application server, built from the local \texttt{Dockerfile} and exposed on port \texttt{8080}. It mounts the compiled \texttt{target/taptable.war}, the application logs directory and the Tomcat configuration files (\texttt{server.xml}, \texttt{tomcat-users.xml}, \texttt{context.xml}). It depends on the \texttt{db} service being healthy before starting.
+    
+    \item \textbf{db}: a PostgreSQL container, exposed on port \texttt{5432}. The database schema is initialised automatically from \texttt{db/CREATE.sql} on first startup. Database credentials are provided via environment variables. Docker secrets support is also configured and it is stored in \texttt{secrets/postgres\_password.txt}.
+    
+    \item \textbf{pgadmin}: a pgAdmin instance exposed on port \texttt{5050}, pre-configured with server-mode disabled and setted with default email and password (even if it is not required the authentication). It is useful for inspecting the database during development and debugging phases.
+\end{itemize}
+
+Before running in any non-development environment, assure that the \texttt{jwt.secret} context parameter in \texttt{src/main/webapp/WEB-INF/web.xml} have been replaced with a strong random secret.
