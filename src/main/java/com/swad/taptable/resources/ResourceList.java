@@ -32,6 +32,10 @@ public final class ResourceList<T extends Resource> extends AbstractResource {
     this.list = list;
   }
 
+  public Iterable<T> getList() {
+    return list;
+  }
+
   @Override
   protected void writeJSON(final OutputStream out) throws IOException {
 
