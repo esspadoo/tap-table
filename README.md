@@ -9,9 +9,8 @@ This repository is the repository for the homeworks to developed in the Web Appl
 - Padoan Giancarlo (2188345)
 - Sanavia Thomas (2197484)
 
-### Organisation of the repository ###
-
-TO DO
+### How to run
+- docker compose up
 
 ### License ###
 
