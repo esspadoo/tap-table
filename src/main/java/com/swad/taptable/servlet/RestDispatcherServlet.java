@@ -106,13 +106,13 @@ public final class RestDispatcherServlet extends HttpServlet {
                     RouteAccess.STAFF_OR_ADMIN)
 
             // order
-            .get("/rest/order", (req, res) -> new GetAllOrdersRR(req, res).serve(),
-                    RouteAccess.STAFF_OR_ADMIN)
             .post("/rest/order", (req, res) -> new NewOrderRR(req, res).serve(),
                     RouteAccess.AUTHENTICATED)
-            .get("/rest/order/{order_id}", (req, res) -> new GetOrderRR(req, res).serve(),
-                    RouteAccess.AUTHENTICATED)
+            .get("/rest/order", (req, res) -> new GetAllOrdersRR(req, res).serve(),
+                    RouteAccess.STAFF_OR_ADMIN)
             .get("/rest/order/user", (req, res) -> new GetUserOrdersRR(req, res).serve(),
+                    RouteAccess.AUTHENTICATED)
+            .get("/rest/order/{order_id}", (req, res) -> new GetOrderRR(req, res).serve(),
                     RouteAccess.AUTHENTICATED)
             .put("/rest/order/{order_id}/{order_status}",
                     (req, res) -> new EditOrderStatusRR(req, res).serve(),
