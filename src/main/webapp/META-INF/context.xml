@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Context>
 
-    <!-- <Resource name="jdbc/taptable"
+    <Resource name="jdbc/taptable"
         auth="Container"
         type="javax.sql.DataSource"
         factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
         driverClassName="org.postgresql.Driver"
         url="jdbc:postgresql://db:5432/taptable"
-        username="admin"
-        password="password"
+        username="taptable_manager"
+        password="go1Y1U7b?!0G"
         testOnBorrow="true"
         validationQuery="SELECT 1"
         timeBetweenEvictionRunsMillis="30000"
@@ -19,21 +19,7 @@
         removeAbandonedTimeout="60"
         removeAbandoned="true"
         closeMethod="close"
-    /> -->
-
-    <!-- https://github.com/brettwooldridge/HikariCP/wiki/JNDI-DataSource-Factory-(Tomcat,-etc.) -->
-    <!-- TODO: change username and password for DB access -->
-    <Resource name="jdbc/taptable"
-        auth="Container"
-        type="javax.sql.DataSource"
-        factory="com.zaxxer.hikari.HikariJNDIFactory"
-        driverClassName="org.postgresql.Driver"
-        jdbcUrl="jdbc:postgresql://db:5432/taptable"
-        username="admin"
-        password="password"
-        minimumIdle="5"
-        maximumPoolSize="10"
-        connectionTimeout="30000" />
+    />
 
 
 </Context>
