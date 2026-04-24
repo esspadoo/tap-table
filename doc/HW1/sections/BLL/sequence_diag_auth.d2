@@ -10,6 +10,7 @@ rest_login: {
 
   Client
   RestDispatcherServlet
+  AbstractRR
   Router
   AuthenticateUserRR
   Credentials
@@ -18,23 +19,43 @@ rest_login: {
   JWTUtil
 
   Client -> RestDispatcherServlet: "POST /rest/user/login\nJSON: { email, password }"
+
+  RestDispatcherServlet -> RestDispatcherServlet: "read auth_token cookie\n(attempt JWT verify — skipped if absent;\nroute is PUBLIC so role not required)"
+
   RestDispatcherServlet -> Router: "dispatch(req, res)"
-  Router -> AuthenticateUserRR: "serve()"
-  AuthenticateUserRR -> Credentials: "fromJSON(req body)"
-  AuthenticateUserRR -> AuthenticateUserRR: "validate email/password present"
-  AuthenticateUserRR -> AuthenticateUserDAO: "access(email, password)"
+  Router -> AbstractRR: "serve()"
+
+  AbstractRR -> AbstractRR: "checkMethodMediaType()\nverify Accept header present"
+  AbstractRR -> Client: "[missing Accept] 400 Bad Request E4V1"
+  AbstractRR -> AbstractRR: "verify Accept contains application/json or */*"
+  AbstractRR -> Client: "[unsupported Accept] 406 Not Acceptable E4V2"
+  AbstractRR -> AbstractRR: "verify Content-Type header present (POST)"
+  AbstractRR -> Client: "[missing Content-Type] 400 Bad Request E4V3"
+  AbstractRR -> AbstractRR: "verify Content-Type contains application/json"
+  AbstractRR -> Client: "[unsupported Content-Type] 415 Unsupported Media Type E4V4"
+
+  AbstractRR -> AuthenticateUserRR: "doServe()"
+
+  AuthenticateUserRR -> Credentials: "fromJSON(req.getInputStream())"
+  Credentials -> AuthenticateUserRR: "Credentials { email, password }"
+
+  AuthenticateUserRR -> AuthenticateUserRR: "isMissing(email) || isMissing(password)"
+  AuthenticateUserRR -> Client: "[missing fields] 400 Bad Request E4V8\n\"Missing email or password.\""
+
+  AuthenticateUserDAO <- AuthenticateUserRR: "new AuthenticateUserDAO(email, password).access()"
   AuthenticateUserDAO -> Database: "SELECT * FROM users WHERE email = ?"
-  Database -> AuthenticateUserDAO: "user row + password_hash or no row"
-  AuthenticateUserDAO -> AuthenticateUserDAO: "BCrypt.checkpw(password, password_hash)"
+  Database -> AuthenticateUserDAO: "user row (with password_hash) or no row"
+  AuthenticateUserDAO -> AuthenticateUserDAO: "if row found: BCrypt.checkpw(password, password_hash)"
+  AuthenticateUserDAO -> AuthenticateUserRR: "[email not found or wrong password] null"
+  AuthenticateUserRR -> Client: "401 Unauthorized E4A1\n\"Invalid email or password.\""
 
-  AuthenticateUserDAO -> AuthenticateUserRR: "[valid] User"
-  AuthenticateUserRR -> JWTUtil: "generateToken(user_id, user_role)"
-  JWTUtil -> AuthenticateUserRR: "signed JWT"
-  AuthenticateUserRR -> Client: "200 OK\nSet-Cookie: auth_token=...; Path=/; HttpOnly; SameSite=Strict; Max-Age=28800"
+  AuthenticateUserDAO -> AuthenticateUserRR: "[valid credentials] User"
+  AuthenticateUserRR -> JWTUtil: "generateToken(user.id, user.role)"
+  JWTUtil -> AuthenticateUserRR: "signed JWT (expires in 28800s)"
+  AuthenticateUserRR -> Client: "200 OK\nSet-Cookie: auth_token=<JWT>; Path=/; HttpOnly; SameSite=Strict; Max-Age=28800"
 
-  AuthenticateUserRR -> Client: "[missing fields] 400 Bad Request"
-  AuthenticateUserRR -> Client: "[bad JSON / unexpected key] 400 Bad Request"
-  AuthenticateUserDAO -> AuthenticateUserRR: "[invalid credentials] null"
-  AuthenticateUserRR -> Client: "401 Unauthorized"
-  AuthenticateUserRR -> Client: "[DB error] 500 Internal Server Error"
+  AuthenticateUserRR -> Client: "[UnexpectedKeyException] 400 Bad Request E4V8\n\"Malformed request body.\""
+  AuthenticateUserRR -> Client: "[IOException / malformed JSON] 400 Bad Request E4V6\n\"Malformed JSON in request body.\""
+  AuthenticateUserRR -> Client: "[SQLException] 500 Internal Server Error E5D1\n\"Login failed: database error.\""
+  AbstractRR -> Client: "[uncaught Throwable] 500 Internal Server Error E5G1\n\"Unable to serve the REST request: AUTHENTICATE_USER.\""
 }
