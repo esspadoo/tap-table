@@ -15,8 +15,8 @@ import java.sql.ResultSet;
 public class RegisterUserDAO extends AbstractDAO<Integer> {
 
   private static final String STATEMENT =
-          "INSERT INTO users (username, email, name, surname, phone_number, role, password_hash) "
-                  + "VALUES (?, ?, ?, ?, ?, 'CUSTOMER'::USER_ROLE, ?) RETURNING id";
+      "INSERT INTO users (username, email, name, surname, phone_number, role, password_hash) "
+          + "VALUES (?, ?, ?, ?, ?, 'CUSTOMER'::USER_ROLE, ?) RETURNING id";
 
   private final User user;
 
@@ -37,7 +37,7 @@ public class RegisterUserDAO extends AbstractDAO<Integer> {
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           outputParam = rs.getInt("id");
-          LOGGER.debug("User inserted successfully with id %d.", outputParam);
+          LOGGER.info("User inserted successfully with id %d.", outputParam);
         }
       }
     }
