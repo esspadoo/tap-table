@@ -35,31 +35,28 @@ public class EditOrderStatusDAO extends AbstractDAO<Order> {
       orderPstmt.setInt(2, orderId);
 
       try (ResultSet orderRs = orderPstmt.executeQuery()) {
-        if (!orderRs.next()) {
-          throw new SQLException("Failed to update order status");
-        }
+        if (orderRs.next()) {
+          Integer orderId = orderRs.getInt("id");
+          Integer userId = orderRs.getInt("user_id");
+          Integer promotionId = orderRs.getObject("promotion_id", Integer.class);
+          Float totalPrice = orderRs.getFloat("total_amount");
 
-        Integer orderId = orderRs.getInt("id");
-        Integer userId = orderRs.getInt("user_id");
-        Integer promotionId = orderRs.getObject("promotion_id", Integer.class);
-        Float totalPrice = orderRs.getFloat("total_amount");
+          List<OrderDish> orderDishes = new ArrayList<>();
+          try (PreparedStatement orderDishesPstmt = con.prepareStatement(ORDER_DISHES_STATEMENT)) {
+            orderDishesPstmt.setInt(1, orderId);
+            try (ResultSet orderDishesRs = orderDishesPstmt.executeQuery()) {
+              while (orderDishesRs.next()) {
+                Integer dishId = orderDishesRs.getInt("dish_id");
+                Integer quantity = orderDishesRs.getInt("quantity");
+                Boolean isLiked = orderDishesRs.getBoolean("is_liked");
 
-        List<OrderDish> orderDishes = new ArrayList<>();
-        try (PreparedStatement orderDishesPstmt = con.prepareStatement(ORDER_DISHES_STATEMENT)) {
-          orderDishesPstmt.setInt(1, orderId);
-          try (ResultSet orderDishesRs = orderDishesPstmt.executeQuery()) {
-            while (orderDishesRs.next()) {
-              Integer dishId = orderDishesRs.getInt("dish_id");
-              Integer quantity = orderDishesRs.getInt("quantity");
-              Boolean isLiked = orderDishesRs.getBoolean("is_liked");
-
-              orderDishes.add(new OrderDish(dishId, quantity, isLiked));
+                orderDishes.add(new OrderDish(dishId, quantity, isLiked));
+              }
             }
           }
+          o = new Order.Builder().id(orderId).userId(userId).promotionId(promotionId)
+                  .totalPrice(totalPrice).status(orderStatus).dishes(orderDishes).build();
         }
-
-        o = new Order.Builder().id(orderId).userId(userId).promotionId(promotionId)
-            .totalPrice(totalPrice).status(orderStatus).dishes(orderDishes).build();
       }
 
       con.commit();
