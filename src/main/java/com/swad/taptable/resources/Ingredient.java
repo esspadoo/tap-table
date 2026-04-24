@@ -77,6 +77,10 @@ public class Ingredient extends AbstractResource {
     return frozen;
   }
 
+  public Boolean getFrozen() {
+    return frozen;
+  }
+
   @Override
   protected void writeJSON(final OutputStream out) throws IOException {
     final JsonGenerator jg = JSON_FACTORY.createGenerator(out);

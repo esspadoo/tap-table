@@ -1,0 +1,82 @@
+package com.swad.taptable.servlet;
+
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.swad.taptable.dao.ingredient.GetIngredientsDAO;
+import com.swad.taptable.resources.Ingredient;
+import com.swad.taptable.resources.ResourceList;
+import com.swad.taptable.util.Actions;
+import com.swad.taptable.util.JWTUtil;
+import com.swad.taptable.util.LogContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.StringFormatterMessageFactory;
+
+import java.io.IOException;
+
+public final class IngredientsServlet extends HttpServlet {
+
+    private static final Logger LOGGER =
+            LogManager.getLogger(IngredientsServlet.class, StringFormatterMessageFactory.INSTANCE);
+
+    @Override
+    protected void doGet(final HttpServletRequest req, final HttpServletResponse res)
+            throws ServletException, IOException {
+        LogContext.setIPAddress(req.getRemoteAddr());
+        LogContext.setAction(Actions.VIEW_INGREDIENTS);
+
+        final Cookie[] cookies = req.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (JWTUtil.COOKIE_NAME.equals(cookie.getName())) {
+                    try {
+                        DecodedJWT decoded = JWTUtil.verify(cookie.getValue());
+                        LogContext.setUser(String.valueOf(decoded.getClaim("user_id").asInt()));
+                    } catch (Exception ignored) {
+                    }
+                    break;
+                }
+            }
+        }
+
+        try {
+            ResourceList<Ingredient> ingredients = new GetIngredientsDAO().access().getOutputParam();
+            req.setAttribute("ingredients", ingredients.getList());
+
+            String role = null;
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (JWTUtil.COOKIE_NAME.equals(cookie.getName())) {
+                        try {
+                            DecodedJWT decoded = JWTUtil.verify(cookie.getValue());
+                            role = decoded.getClaim("user_role").asString();
+                        } catch (Exception ignored) {
+                        }
+                        break;
+                    }
+                }
+            }
+            req.setAttribute("userRole", role);
+
+            LOGGER.debug("Serving ingredients page.");
+            req.getRequestDispatcher("/jsp/ingredients.jsp").forward(req, res);
+        } catch (Exception e) {
+            LOGGER.error("Error serving ingredients page.", e);
+            res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        } finally {
+            LogContext.removeIPAddress();
+            LogContext.removeAction();
+            LogContext.removeUser();
+        }
+    }
+
+    @Override
+    protected void doDelete(final HttpServletRequest req, final HttpServletResponse res)
+            throws ServletException, IOException {
+        res.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+    }
+}
