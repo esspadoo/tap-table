@@ -487,3 +487,277 @@ Content:
 \end{itemize}
 
 \end{itemize}
+
+\subsubsection*{Create Ingredient}
+
+Creates an ingredient.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/ingredient}
+
+\item \textbf{Method:} \texttt{POST}
+
+\item \textbf{URL Parameters:} \texttt{None}
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Content-Type: application/json}; \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT with role \texttt{STAFF} or \texttt{ADMIN}
+
+\item \textbf{Data Parameters:}
+
+\begin{lstlisting}
+{
+  "name": "Origano",
+  "allergens": [],
+  "is_frozen": false
+}
+\end{lstlisting}
+
+The parser accepts \texttt{id}, \texttt{name}, \texttt{allergens}, and \texttt{is\_frozen}. The handler requires only \texttt{name}, checked for \texttt{null} (not blank). \texttt{is\_frozen} and \texttt{allergens} are optional; \texttt{allergens} may be omitted, set to \texttt{null}, or be an empty array. Valid allergen values are the lowercase enum literals \texttt{cereals}, \texttt{crustaceans}, \texttt{eggs}, \texttt{fish}, \texttt{peanuts}, \texttt{soybeans}, \texttt{milk}, \texttt{nuts}, \texttt{celery}, \texttt{mustard}, \texttt{sesame\_seeds}, \texttt{sulphur\_dioxide\_and\_sulphites}, \texttt{lupin}, and \texttt{molluscs}. Invalid allergen enum values are not explicitly handled and fall through to \texttt{E5G1}.
+
+\item \textbf{Success Response:} \texttt{201 Created}
+
+Content:
+
+\begin{lstlisting}
+{
+  "id": 6,
+  "name": "Origano",
+  "allergens": [],
+  "is_frozen": false
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth errors: \texttt{401 Unauthorized}, \texttt{E4A2}; \texttt{403 Forbidden}, \texttt{E4A4}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}, \texttt{E4V3}, \texttt{E4V4}.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Missing required fields: name and isFrozen must be provided} when \texttt{name} is \texttt{null}.
+\item \texttt{400 Bad Request}, \texttt{E4V8} - inner message \texttt{Malformed JSON in request body.}, inner details are \texttt{Unexpected field: <field>}.
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Failed to create ingredient.} if the DAO returns no row.
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Database error while creating ingredient.}, inner details are the SQL exception message.
+\item \texttt{500 Internal Server Error}, \texttt{E5G1} - malformed JSON syntax or invalid allergen enum values fall through to \texttt{Unable to serve the REST request: CREATE\_INGREDIENT.}
+\end{itemize}
+
+\item \textbf{Sample Request Body:}
+
+\begin{lstlisting}
+{
+  "name": "Origano",
+  "allergens": [],
+  "is_frozen": false
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsubsection*{Get All Ingredients}
+
+Returns all ingredients.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/ingredient}
+
+\item \textbf{Method:} \texttt{GET}
+
+\item \textbf{URL Parameters:} \texttt{None}
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{None}
+
+\item \textbf{Data Parameters:} \texttt{None}
+
+The read DAOs use \texttt{ResultSet\#getBoolean("is\_frozen")} without \texttt{wasNull()}, so a database \texttt{NULL} in \texttt{ingredients.is\_frozen} would be serialized as \texttt{false}.
+
+\item \textbf{Success Response:} \texttt{200 OK}
+
+Content:
+
+\begin{lstlisting}
+{
+  "resource-list": [
+    {
+      "id": 1,
+      "name": "Pomodoro San Marzano",
+      "allergens": [],
+      "is_frozen": false
+    },
+    {
+      "id": 2,
+      "name": "Mozzarella di Bufala",
+      "allergens": ["milk"],
+      "is_frozen": false
+    }
+  ]
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}.
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Database error while retrieving ingredients}, with no explicit \texttt{error\_details}.
+\end{itemize}
+
+\end{itemize}
+
+\subsubsection*{Get Ingredient}
+
+Returns one ingredient by id.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/ingredient/\{ingredient\_id\}}
+
+\item \textbf{Method:} \texttt{GET}
+
+\item \textbf{URL Parameters:} \texttt{ingredient\_id} - integer ingredient id
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{None}
+
+\item \textbf{Data Parameters:} \texttt{None}
+
+\item \textbf{Success Response:} \texttt{200 OK}
+
+Content:
+
+\begin{lstlisting}
+{
+  "id": 2,
+  "name": "Mozzarella di Bufala",
+  "allergens": ["milk"],
+  "is_frozen": false
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Ingredient id must be a valid integer}
+\item \texttt{404 Not Found}, \texttt{E4R2} - inner message \texttt{Ingredient 2 not found in database}
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Database error while retrieving ingredient}, with no explicit \texttt{error\_details}.
+\end{itemize}
+
+\end{itemize}
+
+\subsubsection*{Edit Ingredient}
+
+Updates an ingredient.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/ingredient}
+
+\item \textbf{Method:} \texttt{PUT}
+
+\item \textbf{URL Parameters:} \texttt{None}
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Content-Type: application/json}; \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT with role \texttt{STAFF} or \texttt{ADMIN}
+
+\item \textbf{Data Parameters:}
+
+\begin{lstlisting}
+{
+  "id": 2,
+  "name": "Mozzarella di Bufala DOP",
+  "allergens": ["milk"],
+  "is_frozen": false
+}
+\end{lstlisting}
+
+The handler requires \texttt{id}, \texttt{name}, and \texttt{is\_frozen}; unlike create, it also rejects blank \texttt{name}. \texttt{allergens} remains optional. Invalid allergen enum values and malformed JSON syntax are not explicitly mapped and fall through to \texttt{E5G1}.
+
+\item \textbf{Success Response:} \texttt{200 OK}
+
+Content:
+
+\begin{lstlisting}
+{
+  "id": 2,
+  "name": "Mozzarella di Bufala DOP",
+  "allergens": ["milk"],
+  "is_frozen": false
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth errors: \texttt{401 Unauthorized}, \texttt{E4A2}; \texttt{403 Forbidden}, \texttt{E4A4}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}, \texttt{E4V3}, \texttt{E4V4}.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Missing required fields: name and isFrozen must be provided}
+\item \texttt{400 Bad Request}, \texttt{E4V8} - inner message \texttt{Unexpected key in JSON: Unexpected field: <field>}
+\item \texttt{404 Not Found}, \texttt{E4R2} - inner message \texttt{Ingredient with id 2 not found.}
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Database error while editing ingredient.}, inner details are the SQL exception message.
+\item \texttt{500 Internal Server Error}, \texttt{E5G1} - malformed JSON syntax or invalid allergen enum values fall through to \texttt{Unable to serve the REST request: EDIT\_INGREDIENT.}
+\end{itemize}
+
+\item \textbf{Sample Request Body:}
+
+\begin{lstlisting}
+{
+  "id": 2,
+  "name": "Mozzarella di Bufala DOP",
+  "allergens": ["milk"],
+  "is_frozen": false
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsubsection*{Delete Ingredient}
+
+Deletes an ingredient by id.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/ingredient/\{ingredient\_id\}}
+
+\item \textbf{Method:} \texttt{DELETE}
+
+\item \textbf{URL Parameters:} \texttt{ingredient\_id} - integer ingredient id
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT with role \texttt{STAFF} or \texttt{ADMIN}
+
+\item \textbf{Data Parameters:} \texttt{None}
+
+The schema defines \texttt{dish\_ingredients.ingredient\_id} with \texttt{ON DELETE CASCADE}, so deleting an ingredient also deletes its dish bindings.
+
+\item \textbf{Success Response:} \texttt{200 OK}
+
+Content:
+
+\begin{lstlisting}
+{
+  "id": 6,
+  "name": "Origano",
+  "allergens": [],
+  "is_frozen": false
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth errors: \texttt{401 Unauthorized}, \texttt{E4A2}; \texttt{403 Forbidden}, \texttt{E4A4}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Invalid ingredient id format: /6} or the actual \texttt{req.getPathInfo()} value, inner details are the \texttt{NumberFormatException} message.
+\item \texttt{404 Not Found}, \texttt{E4R2} - inner message \texttt{Ingredient with id 6 not found}
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Unexpected database error: no. <sqlErrorCode>}, inner details are the SQL exception message.
+\end{itemize}
+
+\end{itemize}
