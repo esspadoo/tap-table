@@ -11,7 +11,7 @@ import com.swad.taptable.resources.ResourceList;
 public class GetPromotionsDAO extends AbstractDAO<ResourceList<Promotion>> {
 
   private static final String STATEMENT =
-      "SELECT code, type, description, valid_from, valid_to FROM promotions";
+      "SELECT code, discount, description, valid_from, valid_to FROM promotions";
 
   @Override
   protected void doAccess() throws Exception {
@@ -19,7 +19,7 @@ public class GetPromotionsDAO extends AbstractDAO<ResourceList<Promotion>> {
     try (PreparedStatement pstmt = con.prepareStatement(STATEMENT);) {
       try (ResultSet rs = pstmt.executeQuery()) {
         while (rs.next()) {
-          promotions.add(new Promotion(rs.getString("code"), rs.getString("type"),
+          promotions.add(new Promotion(rs.getString("code"), rs.getFloat("discount"),
               rs.getString("description"), rs.getTimestamp("valid_from").toLocalDateTime(),
               rs.getTimestamp("valid_to").toLocalDateTime()));
         }

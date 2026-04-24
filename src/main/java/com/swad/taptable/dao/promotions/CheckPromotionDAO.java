@@ -10,7 +10,7 @@ import java.sql.SQLException;
 public class CheckPromotionDAO extends AbstractDAO<Promotion> {
 
   private static final String STATEMENT =
-      "SELECT code, type, description, valid_from, valid_to FROM promotions WHERE code=?";
+      "SELECT code, discount, description, valid_from, valid_to FROM promotions WHERE code=?";
 
   private final String code;
 
@@ -33,7 +33,7 @@ public class CheckPromotionDAO extends AbstractDAO<Promotion> {
       try (ResultSet rs = pstmt.executeQuery()) {
 
         if (rs.next()) {
-          p = new Promotion(rs.getString("code"), rs.getString("type"), rs.getString("description"),
+          p = new Promotion(rs.getString("code"), rs.getFloat("discount"), rs.getString("description"),
               rs.getTimestamp("valid_from").toLocalDateTime(),
               rs.getTimestamp("valid_to").toLocalDateTime());
         }
