@@ -1,5 +1,5 @@
 /**
- * Provides application-specific exception classes
+ * Provides application-specific exception types
  * 
  * @author SWAD Team
  */
