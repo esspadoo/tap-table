@@ -36,7 +36,7 @@ public class NewPromotionDAO extends AbstractDAO<Promotion> {
       pstmt.setTimestamp(5, Timestamp.valueOf(promotion.getValidTo()));
 
       try (ResultSet rs = pstmt.executeQuery();) {
-        if (rs.next()) {
+        if (!rs.next()) {
           throw new SQLException("Error while inserting the promotion");
         }
         p = new Promotion(rs.getString("code"), rs.getString("type"), rs.getString("description"),
