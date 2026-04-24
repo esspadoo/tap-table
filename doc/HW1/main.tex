@@ -2,6 +2,39 @@
 \usepackage[utf8]{inputenc}
 \usepackage{float}
 \usepackage{subcaption}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+\setlength{\fboxsep}{2pt}
+\let\oldtexttt\texttt
+\renewcommand{\texttt}[1]{%
+  \colorbox{gray!15}{\oldtexttt{#1}}%
+}
+
+\usepackage[T1]{fontenc}
+\definecolor{bgcolor}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{bgcolor},   
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{black},
+    stringstyle=\color{green},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=10pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+\usepackage{minted}   
 
 \input{local_macros}
 
