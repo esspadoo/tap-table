@@ -1,11 +1,85 @@
 \subsection{REST API Summary}
 
-%describe the REST API. If needed, add a few lines of text here, describing the content of the table.
+All REST resources are identified through the prefix \texttt{/rest}, which is omitted in the table below. No servlet filter is mapped to \texttt{/rest/*}; REST authentication and authorization are enforced inside \texttt{RestDispatcherServlet}, which reads the \texttt{auth\_token} HttpOnly cookie, verifies the JWT, sets the \texttt{user\_id} and \texttt{user\_role} request attributes, and applies per-route access rules.
 
-\begin{longtable}{|p{.375\columnwidth}|p{.1\columnwidth} |p{.35\columnwidth}|p{.1\columnwidth}|} 
+\begin{itemize}
+\item Dispatcher Access Guard (DAG): effective REST access-control layer inside \texttt{RestDispatcherServlet}, applied to all \texttt{/rest/*} routes. \texttt{DAG-P} = \texttt{PUBLIC}, \texttt{DAG-A} = \texttt{AUTHENTICATED}, \texttt{DAG-SA} = \texttt{STAFF\_OR\_ADMIN}, \texttt{DAG-ADM} = \texttt{ADMIN\_ONLY}. Missing, invalid, or expired JWTs are treated as unauthenticated and protected routes return \texttt{401} with \texttt{E4A2}; insufficient roles return \texttt{403} with \texttt{E4A4}.
+\item DashboardFilter (DF): protects \texttt{/dashboard/*} by validating the \texttt{auth\_token} HttpOnly cookie. Redirects to \texttt{/login} if the token is missing or invalid; otherwise sets the \texttt{user\_id} request attribute. This filter does not apply to \texttt{/rest/*}.
+\item AuthFlowFilter (AFF): protects \texttt{/login} and \texttt{/register} by redirecting already-authenticated users to \texttt{/dashboard}. This filter does not apply to \texttt{/rest/*}.
+\end{itemize}
+
+\small
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.33\textwidth}|>{\raggedright\arraybackslash}p{0.09\textwidth}|>{\raggedright\arraybackslash}p{0.40\textwidth}|>{\raggedright\arraybackslash}p{0.08\textwidth}|}
 \hline
-\textbf{URI} & \textbf{Method} & \textbf{Description} & \textbf{Filter} \\\hline
-What is the URI? & What HTTP method uses? &  Describe briefly the result of calling the URI & is it behind a filter?\\\hline
-\caption{Describe in this table your REST API}
-\label{tab:termGlossary}
+\textbf{URI} & \textbf{Method} & \textbf{Description} & \textbf{Filter} \\
+\hline
+\endfirsthead
+\hline
+\textbf{URI} & \textbf{Method} & \textbf{Description} & \textbf{Filter} \\
+\hline
+\endhead
+\texttt{/user/login} & \texttt{POST} & Authenticates a user and issues a JWT cookie & \texttt{DAG-P} \\
+\hline
+\texttt{/user/logout} & \texttt{POST} & Expires the JWT cookie & \texttt{DAG-A} \\
+\hline
+\texttt{/user/register} & \texttt{POST} & Registers a new customer account & \texttt{DAG-P} \\
+\hline
+\texttt{/user} & \texttt{GET} & Returns the authenticated user profile & \texttt{DAG-A} \\
+\hline
+\texttt{/user} & \texttt{PUT} & Updates the authenticated user profile & \texttt{DAG-A} \\
+\hline
+\texttt{/user} & \texttt{DELETE} & Deletes the authenticated user account & \texttt{DAG-A} \\
+\hline
+\texttt{/category} & \texttt{POST} & Creates a category & \texttt{DAG-ADM} \\
+\hline
+\texttt{/category} & \texttt{GET} & Returns all categories & \texttt{DAG-P} \\
+\hline
+\texttt{/category/\{category\_name\}} & \texttt{DELETE} & Deletes a category by name & \texttt{DAG-ADM} \\
+\hline
+\texttt{/ingredient} & \texttt{POST} & Creates an ingredient & \texttt{DAG-SA} \\
+\hline
+\texttt{/ingredient} & \texttt{GET} & Returns all ingredients & \texttt{DAG-P} \\
+\hline
+\texttt{/ingredient/\{ingredient\_id\}} & \texttt{GET} & Returns one ingredient & \texttt{DAG-P} \\
+\hline
+\texttt{/ingredient} & \texttt{PUT} & Updates an ingredient & \texttt{DAG-SA} \\
+\hline
+\texttt{/ingredient/\{ingredient\_id\}} & \texttt{DELETE} & Deletes an ingredient & \texttt{DAG-SA} \\
+\hline
+\texttt{/dish} & \texttt{POST} & Creates a dish & \texttt{DAG-SA} \\
+\hline
+\texttt{/dish} & \texttt{GET} & Returns all dishes & \texttt{DAG-P} \\
+\hline
+\texttt{/dish/\{dish\_id\}} & \texttt{GET} & Returns one dish & \texttt{DAG-P} \\
+\hline
+\texttt{/dish} & \texttt{PUT} & Updates a dish & \texttt{DAG-SA} \\
+\hline
+\texttt{/dish/\{dish\_id\}} & \texttt{DELETE} & Deletes a dish & \texttt{DAG-SA} \\
+\hline
+\texttt{/order} & \texttt{GET} & Returns all orders & \texttt{DAG-SA} \\
+\hline
+\texttt{/order} & \texttt{POST} & Creates an order & \texttt{DAG-A} \\
+\hline
+\texttt{/order/user} & \texttt{GET} & Returns all orders of the authenticated user & \texttt{DAG-A} \\
+\hline
+\texttt{/order/\{order\_id\}} & \texttt{GET} & Returns one order & \texttt{DAG-A} \\
+\hline
+\texttt{/order/\{order\_id\}/\{order\_status\}} & \texttt{PUT} & Updates an order status & \texttt{DAG-SA} \\
+\hline
+\texttt{/order/\{order\_id\}/} & \texttt{DELETE} & Deletes an order & \texttt{DAG-ADM} \\
+\hline
+\texttt{/promotion} & \texttt{POST} & Creates a promotion & \texttt{DAG-ADM} \\
+\hline
+\texttt{/promotion} & \texttt{GET} & Returns all promotions & \texttt{DAG-SA} \\
+\hline
+\texttt{/promotion/\{promotion\_code\}} & \texttt{GET} & Returns a promotion by code & \texttt{DAG-P} \\
+\hline
+\texttt{/promotion/\{promotion\_code\}/usage} & \texttt{GET} & Returns whether the authenticated user already used the promotion & \texttt{DAG-A} \\
+\hline
 \end{longtable}
+\normalsize
+
+
+\begin{center}
+Table 2: REST API summary
+\end{center}
