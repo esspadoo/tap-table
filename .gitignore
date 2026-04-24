@@ -13,18 +13,3 @@ target/*
 # Logs
 logs/**.log
 logs/**/**.log.*
-
-# LaTeX build artifacts
-doc/**/*.aux
-doc/**/*.log
-doc/**/*.out
-doc/**/*.toc
-doc/**/*.lof
-doc/**/*.lot
-doc/**/*.fls
-doc/**/*.fdb_latexmk
-doc/**/*.synctex.gz
-doc/**/*.synctex(busy)
-doc/**/out/
-
-hw1/out
