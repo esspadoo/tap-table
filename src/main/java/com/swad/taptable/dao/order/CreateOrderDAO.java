@@ -52,7 +52,7 @@ public class CreateOrderDAO extends AbstractDAO<Order> {
                     createOrderStmt.setInt(2, order.getPromotionId());
                 }
                 createOrderStmt.setFloat(3, total);
-                createOrderStmt.setObject(4, order.getStatus().name(), java.sql.Types.OTHER);
+                createOrderStmt.setString(4, order.getStatus().name());
 
                 try (ResultSet orderRs = createOrderStmt.executeQuery()) {
                     if (!orderRs.next()) {
