@@ -1,21 +1,346 @@
 \subsection{REST API Details}
 
-%List here a few resources retrievable via REST API
+All error responses are serialized through \texttt{Message.toJSON()} and therefore use the envelope \texttt{\{"message":\{"message":...,"error\_code":...,"error\_details":...\}\}}; \texttt{error\_code} and \texttt{error\_details} are omitted when null. \texttt{Accept} is mandatory for every documented endpoint and must include \texttt{application/json} or be exactly \texttt{*/*}. For \texttt{POST} and \texttt{PUT}, \texttt{Content-Type} is also mandatory and must contain \texttt{application/json}; this includes \texttt{POST /user/logout} and \texttt{PUT /order/\{order\_id\}/\{order\_status\}}, even though those handlers do not read a request body.
 
-\subsubsection*{A resource}
-
-% the description of the resource
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+Common globally enforced REST errors are:
 
 \begin{itemize}
-    \item URL: \texttt{the URL to retrieve it}
-    \item Method: \texttt{Method to retrieve it}
-    \item URL Parameters:
-    \item Data Parameters: 
-    \item Success Response:
-    \item Error Response:
-    
+\item \texttt{400 Bad Request}, \texttt{E4V1} - inner message \texttt{Output media type not specified.}, inner details \texttt{Accept request header missing.}
+\item \texttt{406 Not Acceptable}, \texttt{E4V2} - inner message \texttt{Unsupported output media type. Resources are represented only in application/json.}, inner details \texttt{Requested representation is <Accept>.}
+\item \texttt{400 Bad Request}, \texttt{E4V3} - inner message \texttt{Input media type not specified.}, inner details \texttt{Content-Type request header missing.}
+\item \texttt{415 Unsupported Media Type}, \texttt{E4V4} - inner message \texttt{Unsupported input media type. Resources are represented only in application/json.}, inner details \texttt{Submitted representation is <Content-Type>.}
+\item Protected-route dispatcher errors:
+
+\texttt{401 Unauthorized}, \texttt{E4A2} - inner message \texttt{Authentication required.} \texttt{403 Forbidden}, \texttt{E4A4} - inner message \texttt{You do not have permission to perform this operation.}
+\item Unmatched-route dispatcher error:
+
+\texttt{404 Not Found}, \texttt{E4R1} - inner message \texttt{Unknown resource requested.}, inner details \texttt{Requested resource is <request URI>.}
+\item Generic fallback:
+
+\texttt{500 Internal Server Error}, \texttt{E5G1} - either \texttt{Unexpected error.} from \texttt{RestDispatcherServlet} or \texttt{Unable to serve the REST request: <ACTION>.} from \texttt{AbstractRR}, with dynamic \texttt{error\_details}.
 \end{itemize}
 
+\subsubsection*{Register User}
+
+Creates a new user account. The DAO always persists role \texttt{CUSTOMER}.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/user/register}
+
+\item \textbf{Method:} \texttt{POST}
+
+\item \textbf{URL Parameters:} \texttt{None}
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Content-Type: application/json}; \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{None}
+
+\item \textbf{Data Parameters:}
+
+\begin{lstlisting}
+{
+  "username": "newcustomer",
+  "email": "newcustomer@example.com",
+  "password": "Secret1!",
+  "name": "Giulia",
+  "surname": "Rossi",
+  "phone_number": "3331234567"
+}
+\end{lstlisting}
+
+Required fields are \texttt{username}, \texttt{email}, \texttt{password}, \texttt{name}, \texttt{surname}, and \texttt{phone\_number}; blank values are rejected for all of them. \texttt{email} must match \texttt{\textasciicircum{}[A-Za-z0-9+\_.-]+@[A-Za-z0-9.-]+\textbackslash{}\textbackslash{}.[A-Za-z]\{2,\}\$}. \texttt{password} must be 8-16 characters long and contain at least one lowercase letter, one uppercase letter, one digit, and one special character. The shared \texttt{User.fromJSON()} parser also accepts \texttt{id} and \texttt{role}, but this endpoint ignores them on success: the database generates the id and \texttt{RegisterUserDAO} always inserts \texttt{CUSTOMER}. An invalid \texttt{role} enum value is not explicitly handled and falls through to \texttt{E5G1}.
+
+\item \textbf{Success Response:} \texttt{201 Created}
+
+Content:
+
+\begin{lstlisting}
+{
+  "id": 6
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}, \texttt{E4V3}, \texttt{E4V4}.
+\item \texttt{400 Bad Request}, \texttt{E4V8} - inner message \texttt{Missing required fields.}, inner details \texttt{Fields 'username', 'email', 'password', 'name', 'surname', and 'phone\_number' are required.}
+\item \texttt{400 Bad Request}, \texttt{E4V8} - inner message \texttt{Invalid email address.}, inner details \texttt{The provided email address is not valid.}
+\item \texttt{400 Bad Request}, \texttt{E4V8} - inner message \texttt{Invalid password.}, inner details \texttt{Password must be 8-16 characters and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.}
+\item \texttt{400 Bad Request}, \texttt{E4V8} - inner message \texttt{Malformed request body.}, inner details are the parser message or \texttt{Unexpected key in JSON: <field>}.
+\item \texttt{409 Conflict}, \texttt{E4R3} - inner message \texttt{Email, username, or phone number already in use.}
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Registration failed: database error.}, inner details are the SQL exception message.
+\item \texttt{500 Internal Server Error}, \texttt{E5G1} - uncaught runtime failures, including invalid \texttt{role} enum values accepted by the shared parser.
+\end{itemize}
+
+\item \textbf{Sample Request Body:}
+
+\begin{lstlisting}
+{
+  "username": "newcustomer",
+  "email": "newcustomer@example.com",
+  "password": "Secret1!",
+  "name": "Giulia",
+  "surname": "Rossi",
+  "phone_number": "3331234567"
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsubsection*{Authenticate User}
+
+Authenticates an existing user and issues a signed JWT in the \texttt{auth\_token} HttpOnly cookie.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/user/login}
+
+\item \textbf{Method:} \texttt{POST}
+
+\item \textbf{URL Parameters:} \texttt{None}
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Content-Type: application/json}; \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{None}
+
+\item \textbf{Data Parameters:}
+
+\begin{lstlisting}
+{
+  "email": "merja@test.com",
+  "password": "@UniPadova26"
+}
+\end{lstlisting}
+
+Only \texttt{email} and \texttt{password} are parsed. No controller-level e-mail format validation is performed here; the credentials are passed directly to \texttt{AuthenticateUserDAO}. On success, the JWT contains the claims \texttt{user\_id} and \texttt{user\_role}, expires after 8 hours (\texttt{28800} seconds), and is sent as \texttt{Set-Cookie: auth\_token=<JWT>; Path=/; HttpOnly; SameSite=Strict; Max-Age=28800}. No \texttt{Secure} attribute is added in code.
+
+\item \textbf{Success Response:} \texttt{200 OK}
+
+Content: \texttt{None} Additional header: \texttt{Set-Cookie: auth\_token=<JWT>; Path=/; HttpOnly; SameSite=Strict; Max-Age=28800}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}, \texttt{E4V3}, \texttt{E4V4}.
+\item \texttt{400 Bad Request}, \texttt{E4V8} - inner message \texttt{Missing email or password.}, inner details \texttt{Fields 'email' and 'password' are required.}
+\item \texttt{400 Bad Request}, \texttt{E4V8} - inner message \texttt{Malformed request body.}, inner details are \texttt{Unexpected key in JSON: <field>}.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Malformed JSON in request body.}, inner details are the Jackson parser message.
+\item \texttt{401 Unauthorized}, \texttt{E4A1} - inner message \texttt{Invalid email or password.}
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Login failed: database error.}, inner details are the SQL exception message.
+\end{itemize}
+
+\item \textbf{Sample Request Body:}
+
+\begin{lstlisting}
+{
+  "email": "merja@test.com",
+  "password": "@UniPadova26"
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsubsection*{Logout User}
+
+Expires the JWT cookie.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/user/logout}
+
+\item \textbf{Method:} \texttt{POST}
+
+\item \textbf{URL Parameters:} \texttt{None}
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Content-Type: application/json; Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT
+
+\item \textbf{Data Parameters:} \texttt{None}
+
+Although the handler does not read a body, the shared \texttt{AbstractRR} logic still requires \texttt{Content-Type: application/json} because the route uses \texttt{POST}.
+
+\item \textbf{Success Response:} \texttt{204 No Content}
+
+Content: \texttt{None} Additional header: \texttt{Set-Cookie: auth\_token=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth error: \texttt{401 Unauthorized}, \texttt{E4A2}. Invalid or expired JWTs are not mapped to \texttt{E4A3}; they are treated as unauthenticated and produce \texttt{E4A2}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}, \texttt{E4V3}, \texttt{E4V4}.
+\end{itemize}
+
+\end{itemize}
+
+\subsubsection*{Get Current User}
+
+Returns the profile of the authenticated user identified by the JWT \texttt{user\_id} claim.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/user}
+
+\item \textbf{Method:} \texttt{GET}
+
+\item \textbf{URL Parameters:} \texttt{None}
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT
+
+\item \textbf{Data Parameters:} \texttt{None}
+
+The endpoint does not accept a path id. It always resolves the current user from the dispatcher-set \texttt{user\_id} request attribute.
+
+\item \textbf{Success Response:} \texttt{200 OK}
+
+Content:
+
+\begin{lstlisting}
+{
+  "id": 4,
+  "username": "gpadoan",
+  "email": "padoan@test.com",
+  "name": "Giancarlo",
+  "surname": "Padoan",
+  "phone_number": "1234567",
+  "role": "CUSTOMER"
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth error: \texttt{401 Unauthorized}, \texttt{E4A2}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}.
+\item \texttt{404 Not Found}, \texttt{E4R2} - inner message \texttt{User with id 4 not found.} when the JWT user id no longer exists in the database.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Invalid user ID: <value>} if the dispatcher-set \texttt{user\_id} attribute is not numeric.
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Database error while retrieving user.}, inner details are the SQL exception message.
+\end{itemize}
+
+\end{itemize}
+
+\subsubsection*{Edit Current User}
+
+Updates the authenticated user's profile.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/user}
+
+\item \textbf{Method:} \texttt{PUT}
+
+\item \textbf{URL Parameters:} \texttt{None}
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Content-Type: application/json}; \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT
+
+\item \textbf{Data Parameters:}
+
+\begin{lstlisting}
+{
+  "name": "Giancarlo",
+  "surname": "Padoan",
+  "email": "giancarlo.padoan@example.com",
+  "phone_number": "3339876543"
+}
+\end{lstlisting}
+
+The endpoint uses the JWT \texttt{user\_id}; it does not accept a target user id in the URL. Only \texttt{name}, \texttt{surname}, \texttt{email}, and \texttt{phone\_number} are actually required by the handler, and it checks only for \texttt{null}, not blank strings. No controller-level e-mail-format validation is performed here. The shared \texttt{User.fromJSON()} parser also accepts \texttt{id}, \texttt{username}, \texttt{role}, and \texttt{password}, but this handler ignores them on success; invalid \texttt{role} enum values and malformed JSON syntax are not explicitly caught and fall through to \texttt{E5G1}.
+
+\item \textbf{Success Response:} \texttt{200 OK}
+
+Content:
+
+\begin{lstlisting}
+{
+  "id": 4,
+  "username": "gpadoan",
+  "email": "giancarlo.padoan@example.com",
+  "name": "Giancarlo",
+  "surname": "Padoan",
+  "phone_number": "3339876543",
+  "role": "CUSTOMER"
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth error: \texttt{401 Unauthorized}, \texttt{E4A2}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}, \texttt{E4V3}, \texttt{E4V4}.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Missing required fields: name, surname, email and phone\_number must be provided.}
+\item \texttt{400 Bad Request}, \texttt{E4V8} - inner message \texttt{Malformed JSON in request body.}, inner details are \texttt{Unexpected key in JSON: <field>}.
+\item \texttt{404 Not Found}, \texttt{E4R2} - inner message \texttt{User with id 4 not found.}
+\item \texttt{409 Conflict}, \texttt{E4R3} - inner message \texttt{Email or phone number already in use.}
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Database error while updating user.}, inner details are the SQL exception message.
+\item \texttt{500 Internal Server Error}, \texttt{E5G1} - malformed JSON syntax and invalid \texttt{role} enum values fall through to \texttt{Unable to serve the REST request: EDIT\_USER.}
+\end{itemize}
+
+\item \textbf{Sample Request Body:}
+
+\begin{lstlisting}
+{
+  "name": "Giancarlo",
+  "surname": "Padoan",
+  "email": "giancarlo.padoan@example.com",
+  "phone_number": "3339876543"
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsubsection*{Delete Current User}
+
+Deletes the authenticated user's account.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/user}
+
+\item \textbf{Method:} \texttt{DELETE}
+
+\item \textbf{URL Parameters:} \texttt{None}
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT
+
+\item \textbf{Data Parameters:} \texttt{None}
+
+The endpoint uses the JWT \texttt{user\_id}. Because the schema defines \texttt{orders.user\_id} with \texttt{ON DELETE CASCADE}, deleting a user also deletes that user's orders. The handler does not clear the auth cookie after deletion.
+
+\item \textbf{Success Response:} \texttt{200 OK}
+
+Content:
+
+\begin{lstlisting}
+{
+  "id": 4,
+  "username": "gpadoan",
+  "email": "padoan@test.com",
+  "name": "Giancarlo",
+  "surname": "Padoan",
+  "phone_number": "1234567",
+  "role": "CUSTOMER"
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth error: \texttt{401 Unauthorized}, \texttt{E4A2}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}.
+\item \texttt{404 Not Found}, \texttt{E4R2} - inner message \texttt{User with id 4 not found.}
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Invalid user ID: <value>} if the dispatcher-set \texttt{user\_id} is not numeric.
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Database error while deleting user.}, inner details are the SQL exception message.
+\end{itemize}
+
+\end{itemize}
