@@ -43,7 +43,7 @@ public class AuthenticateUserDAO extends AbstractDAO<User> {
 
           if (BCrypt.checkpw(password, passwordHash)) {
             user = new User.Builder().id(userId).email(email).name(name).surname(surname)
-                    .phoneNumber(phoneNumber).role(role).passwordHash(passwordHash).build();
+                .phoneNumber(phoneNumber).role(role).passwordHash(passwordHash).build();
           }
         }
       }

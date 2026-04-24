@@ -55,7 +55,7 @@ public class EditOrderStatusDAO extends AbstractDAO<Order> {
             }
           }
           o = new Order.Builder().id(orderId).userId(userId).promotionId(promotionId)
-                  .totalPrice(totalPrice).status(orderStatus).dishes(orderDishes).build();
+              .totalPrice(totalPrice).status(orderStatus).dishes(orderDishes).build();
         }
       }
 

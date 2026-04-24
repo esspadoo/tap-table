@@ -39,8 +39,8 @@ public class NewPromotionDAO extends AbstractDAO<Promotion> {
         if (!rs.next()) {
           throw new SQLException("Error while inserting the promotion");
         }
-        p = new Promotion(rs.getString("code"), rs.getFloat("discount"), rs.getString("description"),
-            rs.getTimestamp("valid_from").toLocalDateTime(),
+        p = new Promotion(rs.getString("code"), rs.getFloat("discount"),
+            rs.getString("description"), rs.getTimestamp("valid_from").toLocalDateTime(),
             rs.getTimestamp("valid_to").toLocalDateTime());
       }
     }

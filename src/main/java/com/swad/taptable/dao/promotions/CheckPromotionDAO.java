@@ -33,8 +33,8 @@ public class CheckPromotionDAO extends AbstractDAO<Promotion> {
       try (ResultSet rs = pstmt.executeQuery()) {
 
         if (rs.next()) {
-          p = new Promotion(rs.getString("code"), rs.getFloat("discount"), rs.getString("description"),
-              rs.getTimestamp("valid_from").toLocalDateTime(),
+          p = new Promotion(rs.getString("code"), rs.getFloat("discount"),
+              rs.getString("description"), rs.getTimestamp("valid_from").toLocalDateTime(),
               rs.getTimestamp("valid_to").toLocalDateTime());
         }
       }

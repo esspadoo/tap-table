@@ -54,14 +54,8 @@ public final class RegisterServlet extends HttpServlet {
         return;
       }
 
-      final User user = new User.Builder()
-          .name(name)
-          .surname(surname)
-          .username(username)
-          .email(email)
-          .phoneNumber(phoneNumber)
-          .password(password)
-          .build();
+      final User user = new User.Builder().name(name).surname(surname).username(username)
+          .email(email).phoneNumber(phoneNumber).password(password).build();
 
       try {
         new RegisterUserDAO(user).access();
@@ -69,7 +63,8 @@ public final class RegisterServlet extends HttpServlet {
         res.sendRedirect(req.getContextPath() + "/login");
       } catch (SQLException e) {
         if ("23505".equals(e.getSQLState())) {
-          LOGGER.warn("Registration conflict: username or email already in use for '%s'.", username);
+          LOGGER.warn("Registration conflict: username or email already in use for '%s'.",
+              username);
           req.setAttribute("error", "Username or email already in use.");
         } else {
           LOGGER.error("Unexpected database error during registration for '%s'.", username, e);

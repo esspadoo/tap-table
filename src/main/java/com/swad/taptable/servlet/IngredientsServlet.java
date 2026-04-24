@@ -17,29 +17,28 @@ import java.io.IOException;
 
 public final class IngredientsServlet extends HttpServlet {
 
-    private static final Logger LOGGER =
-            LogManager.getLogger(IngredientsServlet.class, StringFormatterMessageFactory.INSTANCE);
+  private static final Logger LOGGER =
+      LogManager.getLogger(IngredientsServlet.class, StringFormatterMessageFactory.INSTANCE);
 
-    @Override
-    protected void doGet(final HttpServletRequest req, final HttpServletResponse res)
-            throws ServletException, IOException {
-        LogContext.setIPAddress(req.getRemoteAddr());
-        LogContext.setAction(Actions.VIEW_INGREDIENTS);
+  @Override
+  protected void doGet(final HttpServletRequest req, final HttpServletResponse res)
+      throws ServletException, IOException {
+    LogContext.setIPAddress(req.getRemoteAddr());
+    LogContext.setAction(Actions.VIEW_INGREDIENTS);
 
-        try {
-            ResourceList<Ingredient> ingredients =
-                    new GetIngredientsDAO().access().getOutputParam();
-            req.setAttribute("ingredients", ingredients.getList());
+    try {
+      ResourceList<Ingredient> ingredients = new GetIngredientsDAO().access().getOutputParam();
+      req.setAttribute("ingredients", ingredients.getList());
 
-            LOGGER.debug("Serving ingredients page.");
-            req.getRequestDispatcher("/jsp/ingredients.jsp").forward(req, res);
-        } catch (Exception e) {
-            LOGGER.error("Error serving ingredients page.", e);
-            res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        } finally {
-            LogContext.removeIPAddress();
-            LogContext.removeAction();
-            LogContext.removeUser();
-        }
+      LOGGER.debug("Serving ingredients page.");
+      req.getRequestDispatcher("/jsp/ingredients.jsp").forward(req, res);
+    } catch (Exception e) {
+      LOGGER.error("Error serving ingredients page.", e);
+      res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    } finally {
+      LogContext.removeIPAddress();
+      LogContext.removeAction();
+      LogContext.removeUser();
     }
+  }
 }

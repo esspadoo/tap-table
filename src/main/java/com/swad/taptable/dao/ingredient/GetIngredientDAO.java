@@ -13,7 +13,7 @@ import java.util.List;
 public class GetIngredientDAO extends AbstractDAO<Ingredient> {
   // We know that we can avoid to get the id from the select, but it isn't a big deal
   private static final String STATEMENT =
-          "SELECT id, name, allergen, is_frozen FROM ingredients WHERE id = ?";
+      "SELECT id, name, allergen, is_frozen FROM ingredients WHERE id = ?";
 
   private final int ingredientId;
 
@@ -43,7 +43,7 @@ public class GetIngredientDAO extends AbstractDAO<Ingredient> {
 
           // Create the ingredient object with the retrieved values
           i = new Ingredient(rs.getInt("id"), rs.getString("name"), allergens,
-                  rs.getBoolean("is_frozen"));
+              rs.getBoolean("is_frozen"));
         }
       }
     }

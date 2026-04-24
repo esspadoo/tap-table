@@ -20,30 +20,30 @@ import java.sql.SQLException;
  */
 public class GetAllOrdersRR extends AbstractRR {
 
-    /**
-     * Creates the REST resource that retrieves all orders.
-     *
-     * @param req the HTTP request.
-     * @param res the HTTP response.
-     */
-    public GetAllOrdersRR(final HttpServletRequest req, final HttpServletResponse res) {
-        super(Actions.GET_ORDERS, req, res);
+  /**
+   * Creates the REST resource that retrieves all orders.
+   *
+   * @param req the HTTP request.
+   * @param res the HTTP response.
+   */
+  public GetAllOrdersRR(final HttpServletRequest req, final HttpServletResponse res) {
+    super(Actions.GET_ORDERS, req, res);
+  }
+
+  @Override
+  protected void doServe() throws IOException {
+    try {
+      final ResourceList<Order> orders = new GetAllOrdersDAO().access().getOutputParam();
+
+      res.setStatus(HttpServletResponse.SC_OK);
+      orders.toJSON(res.getOutputStream());
+
+    } catch (final SQLException e) {
+      LOGGER.error("Database error (no. %d) while retrieving all orders: %s", e.getErrorCode(),
+          e.getMessage());
+      res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      new Message("Database error while retrieving orders.", ErrorCodes.UNEXPECTED_DB_ERROR,
+          e.getMessage()).toJSON(res.getOutputStream());
     }
-
-    @Override
-    protected void doServe() throws IOException {
-        try {
-            final ResourceList<Order> orders = new GetAllOrdersDAO().access().getOutputParam();
-
-            res.setStatus(HttpServletResponse.SC_OK);
-            orders.toJSON(res.getOutputStream());
-
-        } catch (final SQLException e) {
-            LOGGER.error("Database error (no. %d) while retrieving all orders: %s",
-                    e.getErrorCode(), e.getMessage());
-            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            new Message("Database error while retrieving orders.", ErrorCodes.UNEXPECTED_DB_ERROR,
-                    e.getMessage()).toJSON(res.getOutputStream());
-        }
-    }
+  }
 }

@@ -20,28 +20,28 @@ import java.sql.SQLException;
  */
 public class GetAllCategoriesRR extends AbstractRR {
 
-    /**
-     * Creates the REST resource that retrieves all categories.
-     *
-     * @param req the HTTP request.
-     * @param res the HTTP response.
-     */
-    public GetAllCategoriesRR(final HttpServletRequest req, final HttpServletResponse res) {
-        super(Actions.GET_CATEGORIES, req, res);
+  /**
+   * Creates the REST resource that retrieves all categories.
+   *
+   * @param req the HTTP request.
+   * @param res the HTTP response.
+   */
+  public GetAllCategoriesRR(final HttpServletRequest req, final HttpServletResponse res) {
+    super(Actions.GET_CATEGORIES, req, res);
+  }
+
+  @Override
+  protected void doServe() throws IOException {
+    try {
+      final ResourceList<Category> out = new GetAllCategoriesDAO().access().getOutputParam();
+
+      res.setStatus(HttpServletResponse.SC_OK);
+      out.toJSON(res.getOutputStream());
+
+    } catch (final SQLException e) {
+      res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      new Message("Database error while retrieving categories.", ErrorCodes.UNEXPECTED_DB_ERROR,
+          e.getMessage()).toJSON(res.getOutputStream());
     }
-
-    @Override
-    protected void doServe() throws IOException {
-        try {
-            final ResourceList<Category> out = new GetAllCategoriesDAO().access().getOutputParam();
-
-            res.setStatus(HttpServletResponse.SC_OK);
-            out.toJSON(res.getOutputStream());
-
-        } catch (final SQLException e) {
-            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            new Message("Database error while retrieving categories.",
-                    ErrorCodes.UNEXPECTED_DB_ERROR, e.getMessage()).toJSON(res.getOutputStream());
-        }
-    }
+  }
 }

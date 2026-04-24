@@ -9,37 +9,32 @@ import java.sql.ResultSet;
 
 public final class GetUserDAO extends AbstractDAO<User> {
 
-    private static final String STATEMENT =
-        "SELECT id, username, email, name, surname, phone_number, role FROM users WHERE id = ?";
+  private static final String STATEMENT =
+      "SELECT id, username, email, name, surname, phone_number, role FROM users WHERE id = ?";
 
-    private final Integer id;
+  private final Integer id;
 
-    public GetUserDAO(final Integer id) {
-        this.id = id;
-    }
+  public GetUserDAO(final Integer id) {
+    this.id = id;
+  }
 
-    @Override
-    protected void doAccess() throws Exception {
-        User u = null;
+  @Override
+  protected void doAccess() throws Exception {
+    User u = null;
 
-        try (PreparedStatement stmt = con.prepareStatement(STATEMENT)) {
-            stmt.setInt(1, id);
+    try (PreparedStatement stmt = con.prepareStatement(STATEMENT)) {
+      stmt.setInt(1, id);
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    u = new User.Builder()
-                        .id(rs.getInt("id"))
-                        .username(rs.getString("username"))
-                        .email(rs.getString("email"))
-                        .name(rs.getString("name"))
-                        .surname(rs.getString("surname"))
-                        .phoneNumber(rs.getString("phone_number"))
-                        .role(UserRole.valueOf(rs.getString("role")))
-                        .build();
-                }
-            }
+      try (ResultSet rs = stmt.executeQuery()) {
+        if (rs.next()) {
+          u = new User.Builder().id(rs.getInt("id")).username(rs.getString("username"))
+              .email(rs.getString("email")).name(rs.getString("name"))
+              .surname(rs.getString("surname")).phoneNumber(rs.getString("phone_number"))
+              .role(UserRole.valueOf(rs.getString("role"))).build();
         }
-
-        outputParam = u;
+      }
     }
+
+    outputParam = u;
+  }
 }

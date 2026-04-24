@@ -14,47 +14,45 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GetDishesDAO extends AbstractDAO<ResourceList<Dish>> {
-    private static final String DISHES_STATEMENT = "SELECT * FROM dishes";
-    private static final String INGREDIENTS_STATEMENT =
-            "SELECT i.id, i.name, i.allergen, i.is_frozen FROM ingredients i JOIN dish_ingredients di ON i.id = di.ingredient_id WHERE di.dish_id = ?";
+  private static final String DISHES_STATEMENT = "SELECT * FROM dishes";
+  private static final String INGREDIENTS_STATEMENT =
+      "SELECT i.id, i.name, i.allergen, i.is_frozen FROM ingredients i JOIN dish_ingredients di ON i.id = di.ingredient_id WHERE di.dish_id = ?";
 
-    @Override
-    protected void doAccess() throws SQLException {
-        List<Dish> dishes = new ArrayList<>();
+  @Override
+  protected void doAccess() throws SQLException {
+    List<Dish> dishes = new ArrayList<>();
 
-        try (PreparedStatement dishesPstmt = con.prepareStatement(DISHES_STATEMENT);
-                ResultSet dishesRs = dishesPstmt.executeQuery()) {
+    try (PreparedStatement dishesPstmt = con.prepareStatement(DISHES_STATEMENT);
+        ResultSet dishesRs = dishesPstmt.executeQuery()) {
 
-            while (dishesRs.next()) {
-                int dishId = dishesRs.getInt("id");
+      while (dishesRs.next()) {
+        int dishId = dishesRs.getInt("id");
 
-                List<Ingredient> ingredients = new ArrayList<>();
-                try (PreparedStatement ingredientsPstmt =
-                        con.prepareStatement(INGREDIENTS_STATEMENT)) {
-                    ingredientsPstmt.setInt(1, dishId);
-                    try (ResultSet ingredientsRs = ingredientsPstmt.executeQuery()) {
-                        while (ingredientsRs.next()) {
-                            List<Allergen> allergens = new ArrayList<>();
-                            Array allergenArray = ingredientsRs.getArray("allergen");
-                            if (allergenArray != null) {
-                                for (String a : (String[]) allergenArray.getArray()) {
-                                    allergens.add(Allergen.valueOf(a));
-                                }
-                            }
-                            ingredients.add(new Ingredient(ingredientsRs.getInt("id"),
-                                    ingredientsRs.getString("name"), allergens,
-                                    ingredientsRs.getBoolean("is_frozen")));
-                        }
-                    }
+        List<Ingredient> ingredients = new ArrayList<>();
+        try (PreparedStatement ingredientsPstmt = con.prepareStatement(INGREDIENTS_STATEMENT)) {
+          ingredientsPstmt.setInt(1, dishId);
+          try (ResultSet ingredientsRs = ingredientsPstmt.executeQuery()) {
+            while (ingredientsRs.next()) {
+              List<Allergen> allergens = new ArrayList<>();
+              Array allergenArray = ingredientsRs.getArray("allergen");
+              if (allergenArray != null) {
+                for (String a : (String[]) allergenArray.getArray()) {
+                  allergens.add(Allergen.valueOf(a));
                 }
-
-                dishes.add(new Dish.Builder().id(dishId).name(dishesRs.getString("name"))
-                        .description(dishesRs.getString("description"))
-                        .price(dishesRs.getDouble("price")).ingredients(ingredients)
-                        .category(dishesRs.getString("category_name")).build());
+              }
+              ingredients
+                  .add(new Ingredient(ingredientsRs.getInt("id"), ingredientsRs.getString("name"),
+                      allergens, ingredientsRs.getBoolean("is_frozen")));
             }
+          }
         }
 
-        outputParam = new ResourceList<>(dishes);
+        dishes.add(new Dish.Builder().id(dishId).name(dishesRs.getString("name"))
+            .description(dishesRs.getString("description")).price(dishesRs.getDouble("price"))
+            .ingredients(ingredients).category(dishesRs.getString("category_name")).build());
+      }
     }
+
+    outputParam = new ResourceList<>(dishes);
+  }
 }
