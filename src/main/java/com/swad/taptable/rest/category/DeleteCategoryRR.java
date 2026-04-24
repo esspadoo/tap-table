@@ -12,8 +12,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * REST resource that handles deletion of a category by its name
+ *
+ * @author SWAD Team
+ */
 public class DeleteCategoryRR extends AbstractRR {
 
+    /**
+     * Creates the REST resource that deletes a category.
+     *
+     * @param req the HTTP request.
+     * @param res the HTTP response.
+     */
     public DeleteCategoryRR(final HttpServletRequest req, final HttpServletResponse res) {
         super(Actions.DELETE_CATEGORY, req, res);
     }
@@ -29,7 +40,7 @@ public class DeleteCategoryRR extends AbstractRR {
                 LOGGER.warn("Category '%s' not found.", categoryName);
                 res.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 new Message(String.format("Category '%s' not found.", categoryName),
-                    ErrorCodes.RESOURCE_NOT_FOUND, null).toJSON(res.getOutputStream());
+                        ErrorCodes.RESOURCE_NOT_FOUND, null).toJSON(res.getOutputStream());
                 return;
             }
 
@@ -42,11 +53,13 @@ public class DeleteCategoryRR extends AbstractRR {
                 LOGGER.warn("Cannot delete category: it is still referenced by existing dishes.");
                 res.setStatus(HttpServletResponse.SC_CONFLICT);
                 new Message("Cannot delete category: it is referenced by existing dishes.",
-                    ErrorCodes.UNEXPECTED_DB_ERROR, e.getMessage()).toJSON(res.getOutputStream());
+                        ErrorCodes.UNEXPECTED_DB_ERROR, e.getMessage())
+                                .toJSON(res.getOutputStream());
             } else {
                 res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                new Message("Database error while deleting category.", ErrorCodes.UNEXPECTED_DB_ERROR,
-                    e.getMessage()).toJSON(res.getOutputStream());
+                new Message("Database error while deleting category.",
+                        ErrorCodes.UNEXPECTED_DB_ERROR, e.getMessage())
+                                .toJSON(res.getOutputStream());
             }
         }
     }

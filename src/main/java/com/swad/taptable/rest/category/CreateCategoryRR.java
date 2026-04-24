@@ -13,8 +13,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * REST resource that handles creation of a new category
+ *
+ * @author SWAD Team
+ */
 public class CreateCategoryRR extends AbstractRR {
 
+    /**
+     * Creates the REST resource that handles category creation.
+     *
+     * @param req the HTTP request.
+     * @param res the HTTP response.
+     */
     public CreateCategoryRR(final HttpServletRequest req, final HttpServletResponse res) {
         super(Actions.CREATE_CATEGORY, req, res);
     }

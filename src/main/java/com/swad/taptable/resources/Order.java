@@ -11,6 +11,11 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * JSON representation of a customer order.
+ *
+ * @author SWAD Team
+ */
 public class Order extends AbstractResource {
   private final Integer id;
   private final OrderStatus status;
@@ -19,6 +24,11 @@ public class Order extends AbstractResource {
   private final Integer promotionId;
   private final List<OrderDish> dishes;
 
+  /**
+   * Creates a new {@code Order} from the values collected by the builder.
+   *
+   * @param builder the builder containing the order data.
+   */
   private Order(Builder builder) {
     this.id = builder.id;
     this.status = builder.status;
@@ -28,30 +38,68 @@ public class Order extends AbstractResource {
     this.dishes = builder.dishes == null ? null : List.copyOf(builder.dishes);
   }
 
+  /**
+   * Returns the order identifier.
+   *
+   * @return the order identifier.
+   */
   public Integer getId() {
     return id;
   }
 
+  /**
+   * Returns the current order status.
+   *
+   * @return the order status.
+   */
   public OrderStatus getStatus() {
     return status;
   }
 
+  /**
+   * Returns the total price associated with the order.
+   *
+   * @return the total order price.
+   */
   public Float getTotalPrice() {
     return totalPrice;
   }
 
+  /**
+   * Returns the identifier of the user who placed the order.
+   *
+   * @return the user identifier.
+   */
   public Integer getUserId() {
     return userId;
   }
 
+  /**
+   * Returns the identifier of the applied promotion, if any.
+   *
+   * @return the promotion identifier.
+   */
   public Integer getPromotionId() {
     return promotionId;
   }
 
+  /**
+   * Returns the dishes included in the order.
+   *
+   * @return the ordered dishes.
+   */
   public List<OrderDish> getDishes() {
     return dishes;
   }
 
+  /**
+   * Parses an {@code Order} from a JSON payload.
+   *
+   * @param inputStream the servlet input stream containing the JSON payload.
+   * @return the parsed order.
+   * @throws IOException if an error occurs while reading the stream.
+   * @throws UnexpectedKeyException if the payload contains unsupported fields.
+   */
   public static Order fromJSON(ServletInputStream inputStream)
       throws IOException, UnexpectedKeyException {
     Integer id = null;
@@ -75,7 +123,8 @@ public class Order extends AbstractResource {
           break;
         case "status":
           jp.nextToken();
-          status = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : OrderStatus.fromString(jp.getText());
+          status = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null
+              : OrderStatus.fromString(jp.getText());
           break;
         case "total_price":
           jp.nextToken();
@@ -193,6 +242,9 @@ public class Order extends AbstractResource {
     jg.flush();
   }
 
+  /**
+   * Builder used to assemble immutable {@link Order} instances.
+   */
   public static class Builder {
     private Integer id;
     private OrderStatus status;
@@ -201,36 +253,77 @@ public class Order extends AbstractResource {
     private Integer promotionId;
     private List<OrderDish> dishes = new ArrayList<>();
 
+    /**
+     * Sets the order identifier.
+     *
+     * @param id the order identifier.
+     * @return this builder.
+     */
     public Builder id(Integer id) {
       this.id = id;
       return this;
     }
 
+    /**
+     * Sets the order status.
+     *
+     * @param status the order status.
+     * @return this builder.
+     */
     public Builder status(OrderStatus status) {
       this.status = status;
       return this;
     }
 
+    /**
+     * Sets the total order price.
+     *
+     * @param totalPrice the total order price.
+     * @return this builder.
+     */
     public Builder totalPrice(Float totalPrice) {
       this.totalPrice = totalPrice;
       return this;
     }
 
+    /**
+     * Sets the identifier of the user who placed the order.
+     *
+     * @param userId the user identifier.
+     * @return this builder.
+     */
     public Builder userId(Integer userId) {
       this.userId = userId;
       return this;
     }
 
+    /**
+     * Sets the identifier of the applied promotion.
+     *
+     * @param promotionId the promotion identifier.
+     * @return this builder.
+     */
     public Builder promotionId(Integer promotionId) {
       this.promotionId = promotionId;
       return this;
     }
 
+    /**
+     * Sets the ordered dishes.
+     *
+     * @param dishes the ordered dishes.
+     * @return this builder.
+     */
     public Builder dishes(List<OrderDish> dishes) {
       this.dishes = dishes;
       return this;
     }
 
+    /**
+     * Builds a new {@link Order} instance.
+     *
+     * @return the built order.
+     */
     public Order build() {
       return new Order(this);
     }

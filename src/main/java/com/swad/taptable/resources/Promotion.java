@@ -15,31 +15,25 @@ import java.time.LocalDateTime;
  * @author SWAD Team
  */
 public class Promotion extends AbstractResource {
-
   private final String code;
-
-  private final String type;
-
+  private final Float discount;
   private final String description;
-
   private final LocalDateTime validFrom;
-
   private final LocalDateTime validTo;
 
   /**
    * Creates a new {@code Promotion}.
    *
    * @param code the unique promotion code.
-   * @param type the type of the promotion.
+   * @param discount the discount percentage applied by the promotion.
    * @param description a human-readable description of the promotion.
    * @param validFrom the date and time from which the promotion is valid.
    * @param validTo the date and time until which the promotion is valid.
-   * @throws NotValidPromotionException if {@code validTo} is not after {@code validFrom}.
    */
-  public Promotion(final String code, final String type, final String description,
+  public Promotion(final String code, final Float discount, final String description,
       final LocalDateTime validFrom, final LocalDateTime validTo) {
     this.code = code;
-    this.type = type;
+    this.discount = discount;
     this.description = description;
     this.validFrom = validFrom;
     this.validTo = validTo;
@@ -55,12 +49,12 @@ public class Promotion extends AbstractResource {
   }
 
   /**
-   * Returns the type of the promotion.
+   * Returns the discount percentage of the promotion.
    *
-   * @return the promotion type.
+   * @return the promotion discount percentage.
    */
-  public String getType() {
-    return type;
+  public Float getDiscount() {
+    return discount;
   }
 
   /**
@@ -101,10 +95,10 @@ public class Promotion extends AbstractResource {
     else
       jg.writeStringField("code", code);
 
-    if (type == null)
-      jg.writeNullField("type");
+    if (discount == null)
+      jg.writeNullField("discount");
     else
-      jg.writeStringField("type", type);
+      jg.writeNumberField("discount", discount);
 
     if (description == null)
       jg.writeNullField("description");
@@ -126,12 +120,20 @@ public class Promotion extends AbstractResource {
     jg.flush();
   }
 
+  /**
+   * Parses a {@code Promotion} from a JSON payload.
+   *
+   * @param in the input stream containing the JSON payload.
+   * @return the parsed promotion.
+   * @throws IOException if an error occurs while reading the stream.
+   * @throws UnexpectedKeyException if the payload contains unsupported fields.
+   */
   public static Promotion fromJSON(final InputStream in)
       throws IOException, UnexpectedKeyException {
     final JsonParser jp = JSON_FACTORY.createParser(in);
 
     String jCode = null;
-    String jType = null;
+    Float jDiscount = null;
     String jDescription = null;
     LocalDateTime jValidFrom = null;
     LocalDateTime jValidTo = null;
@@ -146,9 +148,9 @@ public class Promotion extends AbstractResource {
           jp.nextToken();
           jCode = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText();
           break;
-        case "type":
+        case "discount":
           jp.nextToken();
-          jType = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText();
+          jDiscount = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getFloatValue();
           break;
         case "description":
           jp.nextToken();
@@ -169,6 +171,6 @@ public class Promotion extends AbstractResource {
       }
     }
 
-    return new Promotion(jCode, jType, jDescription, jValidFrom, jValidTo);
+    return new Promotion(jCode, jDiscount, jDescription, jValidFrom, jValidTo);
   }
 }

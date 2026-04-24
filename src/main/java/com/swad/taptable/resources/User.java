@@ -35,6 +35,11 @@ public class User extends AbstractResource {
   private final LocalDateTime createdAt;
   private final LocalDateTime updatedAt;
 
+  /**
+   * Creates a new {@code User} from the values collected by the builder.
+   *
+   * @param b the builder containing the user data.
+   */
   private User(final Builder b) {
     this.id = b.id;
     this.username = b.username;
@@ -49,46 +54,101 @@ public class User extends AbstractResource {
     this.updatedAt = b.updatedAt;
   }
 
+  /**
+   * Returns the user identifier.
+   *
+   * @return the user identifier.
+   */
   public Integer getId() {
     return id;
   }
 
+  /**
+   * Returns the username.
+   *
+   * @return the username.
+   */
   public String getUsername() {
     return username;
   }
 
+  /**
+   * Returns the email address.
+   *
+   * @return the email address.
+   */
   public String getEmail() {
     return email;
   }
 
+  /**
+   * Returns the user's first name.
+   *
+   * @return the first name.
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * Returns the user's surname.
+   *
+   * @return the surname.
+   */
   public String getSurname() {
     return surname;
   }
 
+  /**
+   * Returns the user's phone number.
+   *
+   * @return the phone number.
+   */
   public String getPhoneNumber() {
     return phoneNumber;
   }
 
+  /**
+   * Returns the user role.
+   *
+   * @return the user role.
+   */
   public UserRole getRole() {
     return role;
   }
 
+  /**
+   * Returns the plain-text password, when present.
+   *
+   * @return the plain-text password.
+   */
   public String getPassword() {
     return password;
   }
 
+  /**
+   * Returns the hashed password, when present.
+   *
+   * @return the hashed password.
+   */
   public String getPasswordHash() {
     return passwordHash;
   }
 
+  /**
+   * Returns the creation timestamp.
+   *
+   * @return the creation timestamp.
+   */
   public LocalDateTime getCreatedAt() {
     return createdAt;
   }
 
+  /**
+   * Returns the last update timestamp.
+   *
+   * @return the last update timestamp.
+   */
   public LocalDateTime getUpdatedAt() {
     return updatedAt;
   }
@@ -299,6 +359,7 @@ public class User extends AbstractResource {
    * @param in the input stream containing the JSON payload.
    * @return a new {@code User} with a plain-text password.
    * @throws IOException if there is an error reading from the stream or parsing the JSON.
+   * @throws UnexpectedKeyException if the payload contains unsupported fields.
    */
   public static User fromJSON(final InputStream in) throws IOException, UnexpectedKeyException {
     final Builder b = new Builder();
@@ -306,14 +367,15 @@ public class User extends AbstractResource {
     final JsonParser jp = JSON_FACTORY.createParser(in);
 
     while (jp.nextToken() != JsonToken.END_OBJECT) {
-
-      // TODO: check for corner cases like empty JSON objects or arrays, or non-JSON content
-      // types, and handle them gracefully with clear error messages.
       if (jp.getCurrentToken() != JsonToken.FIELD_NAME) {
         continue;
       }
 
       switch (jp.currentName()) {
+        case "id":
+          jp.nextToken();
+          b.id(jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getIntValue());
+          break;
         case "username":
           jp.nextToken();
           b.username(jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText());
@@ -336,8 +398,8 @@ public class User extends AbstractResource {
           break;
         case "role":
           jp.nextToken();
-          b.role(jp.getCurrentToken() == JsonToken.VALUE_NULL ? null
-              : UserRole.valueOf(jp.getText()));
+          b.role(
+              jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : UserRole.valueOf(jp.getText()));
           break;
         case "password":
           jp.nextToken();

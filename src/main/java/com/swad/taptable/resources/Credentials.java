@@ -14,9 +14,7 @@ import java.io.OutputStream;
  * @author SWAD Team
  */
 public class Credentials extends AbstractResource {
-
   private final String email;
-
   private final String password;
 
   /**
@@ -30,10 +28,20 @@ public class Credentials extends AbstractResource {
     this.password = password;
   }
 
+  /**
+   * Returns the email submitted during authentication.
+   *
+   * @return the user email.
+   */
   public String getEmail() {
     return email;
   }
 
+  /**
+   * Returns the plain-text password submitted during authentication.
+   *
+   * @return the plain-text password.
+   */
   public String getPassword() {
     return password;
   }
@@ -44,18 +52,12 @@ public class Credentials extends AbstractResource {
   }
 
   /**
-   * Parses a JSON input stream to create an instance of {@code Credentials}. The expected JSON
-   * format is:
-   *
-   * <pre>
-   * { "email": "mario@test.com", "password": "supersecret" }
-   * </pre>
-   *
-   * Unknown fields are silently ignored.
+   * Parses a JSON input stream to create an instance of {@code Credentials}
    *
    * @param in the input stream containing the JSON payload.
    * @return an instance of {@code Credentials} with the email and password extracted from the JSON.
    * @throws IOException if there is an error reading from the input stream or parsing the JSON.
+   * @throws UnexpectedKeyException if the payload contains unsupported fields.
    */
   public static Credentials fromJSON(final InputStream in)
       throws IOException, UnexpectedKeyException {

@@ -17,7 +17,6 @@ import java.util.List;
  * @author SWAD Team
  */
 public class Dish extends AbstractResource {
-
   private final Integer id;
   private final String name;
   private final String description;
@@ -26,6 +25,11 @@ public class Dish extends AbstractResource {
   private final List<Ingredient> ingredients;
   private final String category;
 
+  /**
+   * Creates a new {@code Dish} from the values collected by the builder.
+   *
+   * @param builder the builder containing the dish data.
+   */
   private Dish(final Builder builder) {
     this.id = builder.id;
     this.name = builder.name;
@@ -36,34 +40,79 @@ public class Dish extends AbstractResource {
     this.category = builder.category;
   }
 
+  /**
+   * Returns the dish identifier.
+   *
+   * @return the dish identifier.
+   */
   public Integer getId() {
     return id;
   }
 
+  /**
+   * Returns the dish name.
+   *
+   * @return the dish name.
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * Returns the dish description.
+   *
+   * @return the dish description.
+   */
   public String getDescription() {
     return description;
   }
 
+  /**
+   * Returns the dish price.
+   *
+   * @return the dish price.
+   */
   public Double getPrice() {
     return price;
   }
 
+  /**
+   * Returns the identifiers of the ingredients associated with the dish.
+   *
+   * @return the ingredient identifiers.
+   */
   public List<Integer> getIngredientIds() {
     return ingredientIds;
   }
 
+  /**
+   * Returns the fully populated ingredient resources associated with the dish.
+   *
+   * @return the ingredient resources.
+   */
   public List<Ingredient> getIngredients() {
     return ingredients;
   }
 
+  /**
+   * Returns the category name assigned to the dish.
+   *
+   * @return the category name.
+   */
   public String getCategory() {
     return category;
   }
 
+  /**
+   * Parses a {@code Dish} from a JSON payload.
+   *
+   * @param in the input stream containing the JSON payload.
+   * @return the parsed dish.
+   * @throws IOException if an error occurs while reading the stream.
+   * @throws NotValidDishException if the status of the parsed payload is considered invalid by the
+   *         caller contract.
+   * @throws UnexpectedKeyException if the payload contains unsupported fields.
+   */
   public static Dish fromJSON(final InputStream in)
       throws IOException, NotValidDishException, UnexpectedKeyException {
     Integer jId = null;
@@ -193,6 +242,9 @@ public class Dish extends AbstractResource {
     jg.flush();
   }
 
+  /**
+   * Builder used to assemble {@link Dish} instances.
+   */
   public static class Builder {
     private Integer id;
     private String name;
@@ -202,41 +254,88 @@ public class Dish extends AbstractResource {
     private List<Ingredient> ingredients;
     private String category;
 
+    /**
+     * Sets the dish identifier.
+     *
+     * @param id the dish identifier.
+     * @return this builder.
+     */
     public Builder id(final Integer id) {
       this.id = id;
       return this;
     }
 
+    /**
+     * Sets the dish name.
+     *
+     * @param name the dish name.
+     * @return this builder.
+     */
     public Builder name(final String name) {
       this.name = name;
       return this;
     }
 
+    /**
+     * Sets the dish description.
+     *
+     * @param description the dish description.
+     * @return this builder.
+     */
     public Builder description(final String description) {
       this.description = description;
       return this;
     }
 
+    /**
+     * Sets the dish price.
+     *
+     * @param price the dish price.
+     * @return this builder.
+     */
     public Builder price(final Double price) {
       this.price = price;
       return this;
     }
 
+    /**
+     * Sets the ingredient identifiers used by the dish.
+     *
+     * @param ingredientIds the ingredient identifiers.
+     * @return this builder.
+     */
     public Builder ingredientIds(final List<Integer> ingredientIds) {
       this.ingredientIds = ingredientIds;
       return this;
     }
 
+    /**
+     * Sets the fully populated ingredient resources used by the dish.
+     *
+     * @param ingredients the ingredient resources.
+     * @return this builder.
+     */
     public Builder ingredients(final List<Ingredient> ingredients) {
       this.ingredients = ingredients;
       return this;
     }
 
+    /**
+     * Sets the dish category name.
+     *
+     * @param category the category name.
+     * @return this builder.
+     */
     public Builder category(final String category) {
       this.category = category;
       return this;
     }
 
+    /**
+     * Builds a new {@link Dish} instance.
+     *
+     * @return the built dish.
+     */
     public Dish build() {
       return new Dish(this);
     }

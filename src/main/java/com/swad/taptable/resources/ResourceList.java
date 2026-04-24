@@ -4,23 +4,23 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import java.io.*;
 
 /**
- * Represents a list of {@link AbstractResource} objects.
+ * Represents a list of {@link Resource} objects.
  *
  * @author SWAD Team
  *
- * @param <T> the type of the actual class extending {@code AbstractResource}.
+ * @param <T> the type of resource contained in the list.
  */
 public final class ResourceList<T extends Resource> extends AbstractResource {
 
   /**
-   * The list of {@code AbstractResource}s.
+   * The list of resources.
    */
   private final Iterable<T> list;
 
   /**
-   * Creates a list of {@code AbstractResource}s.
+   * Creates a list of resources.
    *
-   * @param list the list of {@code AbstractResource}s.
+   * @param list the list of resources.
    */
   public ResourceList(final Iterable<T> list) {
 
@@ -32,6 +32,11 @@ public final class ResourceList<T extends Resource> extends AbstractResource {
     this.list = list;
   }
 
+  /**
+   * Returns the resources wrapped by this container.
+   *
+   * @return the wrapped resources.
+   */
   public Iterable<T> getList() {
     return list;
   }
@@ -74,5 +79,4 @@ public final class ResourceList<T extends Resource> extends AbstractResource {
 
     jg.flush();
   }
-
 }

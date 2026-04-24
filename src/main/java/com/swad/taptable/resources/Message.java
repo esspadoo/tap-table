@@ -21,13 +21,9 @@ import java.io.*;
  * @author SWAD Team
  */
 public class Message extends AbstractResource {
-
   private final String message;
-
   private final String errorCode;
-
   private final String errorDetails;
-
   private final boolean isError;
 
   /**
@@ -55,7 +51,6 @@ public class Message extends AbstractResource {
     this.errorDetails = null;
     this.isError = false;
   }
-
 
   /**
    * Returns the message.
@@ -120,5 +115,4 @@ public class Message extends AbstractResource {
 
     jg.flush();
   }
-
 }

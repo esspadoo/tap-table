@@ -16,13 +16,9 @@ import java.util.List;
  * @author SWAD Team
  */
 public class Ingredient extends AbstractResource {
-
   private final Integer id;
-
   private final String name;
-
   private final List<Allergen> allergens;
-
   private final Boolean frozen;
 
   /**
@@ -30,7 +26,8 @@ public class Ingredient extends AbstractResource {
    *
    * @param id the unique identifier of the ingredient.
    * @param name the name of the ingredient.
-   * @param allergens the allergens associated with the ingredient; {@code null} or empty if none.
+   * @param allergens the allergens associated with the ingredient; copied defensively if not
+   *        {@code null}.
    * @param frozen whether the ingredient is frozen.
    */
   public Ingredient(final Integer id, final String name, final List<Allergen> allergens,
@@ -62,7 +59,7 @@ public class Ingredient extends AbstractResource {
   /**
    * Returns the allergens associated with the ingredient.
    *
-   * @return an unmodifiable list of allergens; empty if none.
+   * @return a copy of the allergens list, or {@code null} if not specified.
    */
   public List<Allergen> getAllergens() {
     return allergens;
@@ -71,12 +68,17 @@ public class Ingredient extends AbstractResource {
   /**
    * Returns whether the ingredient is frozen.
    *
-   * @return {@code true} if frozen, {@code false} otherwise.
+   * @return {@code true} if frozen, {@code false} if not frozen, or {@code null} if unspecified.
    */
   public Boolean isFrozen() {
     return frozen;
   }
 
+  /**
+   * Returns whether the ingredient is frozen.
+   *
+   * @return {@code true} if frozen, {@code false} if not frozen, or {@code null} if unspecified.
+   */
   public Boolean getFrozen() {
     return frozen;
   }
@@ -127,8 +129,7 @@ public class Ingredient extends AbstractResource {
    * @param in the input stream containing the JSON payload.
    * @return a new {@code Ingredient} built from the parsed fields.
    * @throws IOException if there is an error reading from the stream or parsing the JSON.
-   * @throws NotValidIngredientException if the payload contains unexpected fields, unknown allergen
-   *         values, or is missing required fields.
+   * @throws UnexpectedKeyException if the payload contains unsupported fields.
    */
   public static Ingredient fromJSON(final InputStream in)
       throws IOException, UnexpectedKeyException {
