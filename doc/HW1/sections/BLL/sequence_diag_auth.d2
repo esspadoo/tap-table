@@ -1,0 +1,40 @@
+vars: {
+  d2-config: {
+    layout-engine: elk
+  }
+}
+
+rest_login: {
+  label: "API login flow: POST /rest/user/login"
+  shape: sequence_diagram
+
+  Client
+  RestDispatcherServlet
+  Router
+  AuthenticateUserRR
+  Credentials
+  AuthenticateUserDAO
+  Database
+  JWTUtil
+
+  Client -> RestDispatcherServlet: "POST /rest/user/login\nJSON: { email, password }"
+  RestDispatcherServlet -> Router: "dispatch(req, res)"
+  Router -> AuthenticateUserRR: "serve()"
+  AuthenticateUserRR -> Credentials: "fromJSON(req body)"
+  AuthenticateUserRR -> AuthenticateUserRR: "validate email/password present"
+  AuthenticateUserRR -> AuthenticateUserDAO: "access(email, password)"
+  AuthenticateUserDAO -> Database: "SELECT * FROM users WHERE email = ?"
+  Database -> AuthenticateUserDAO: "user row + password_hash or no row"
+  AuthenticateUserDAO -> AuthenticateUserDAO: "BCrypt.checkpw(password, password_hash)"
+
+  AuthenticateUserDAO -> AuthenticateUserRR: "[valid] User"
+  AuthenticateUserRR -> JWTUtil: "generateToken(user_id, user_role)"
+  JWTUtil -> AuthenticateUserRR: "signed JWT"
+  AuthenticateUserRR -> Client: "200 OK\nSet-Cookie: auth_token=...; Path=/; HttpOnly; SameSite=Strict; Max-Age=28800"
+
+  AuthenticateUserRR -> Client: "[missing fields] 400 Bad Request"
+  AuthenticateUserRR -> Client: "[bad JSON / unexpected key] 400 Bad Request"
+  AuthenticateUserDAO -> AuthenticateUserRR: "[invalid credentials] null"
+  AuthenticateUserRR -> Client: "401 Unauthorized"
+  AuthenticateUserRR -> Client: "[DB error] 500 Internal Server Error"
+}
