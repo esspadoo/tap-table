@@ -44,7 +44,7 @@ public final class ConnectionPoolSingleton {
    * AssertionError is thrown to indicate that this is not allowed.
    */
   private ConnectionPoolSingleton() {
-    new AssertionError(
+    throw new AssertionError(
         String.format("No instances of %s allowed.", ConnectionPoolSingleton.class.getName()));
   }
 
