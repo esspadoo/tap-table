@@ -16,10 +16,10 @@
   limitations under the License.
 -->
 <tomcat-users xmlns="http://tomcat.apache.org/xml"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd"
-    version="1.0">
-    <!--
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd"
+  version="1.0">
+  <!--
   By default, no user is included in the "manager-gui" role required
   to operate the "/manager/html" web application.  If you wish to use this app,
   you must define such a user - the username and password are arbitrary.
@@ -36,17 +36,17 @@
   will also need to set the passwords to something appropriate.
 -->
 
-    <user username="admin" password="prova" roles="manager-gui" />
-    <user username="robot" password="prova" roles="manager-script" />
+  <user username="taptable" password="Atkinson55#" roles="manager-gui" />
+  <user username="robot" password="prova" roles="manager-script" />
 
-    <!--
+  <!--
   The sample user and role entries below are intended for use with the
   examples web application. They are wrapped in a comment and thus are ignored
   when reading this file. If you wish to configure these users for use with the
   examples web application, do not forget to remove the <!.. ..> that surrounds
   them. You will also need to set the passwords to something appropriate.
 -->
-    <!--
+  <!--
   <role rolename="tomcat"/>
   <role rolename="role1"/>
   <user username="tomcat" password="<must-be-changed>" roles="tomcat"/>
