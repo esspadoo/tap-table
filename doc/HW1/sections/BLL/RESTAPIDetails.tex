@@ -761,3 +761,340 @@ Content:
 \end{itemize}
 
 \end{itemize}
+
+\subsubsection*{Create Dish}
+
+Creates a dish and its ingredient bindings.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/dish}
+
+\item \textbf{Method:} \texttt{POST}
+
+\item \textbf{URL Parameters:} \texttt{None}
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Content-Type: application/json}; \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT with role \texttt{STAFF} or \texttt{ADMIN}
+
+\item \textbf{Data Parameters:}
+
+\begin{lstlisting}
+{
+  "name": "Margherita",
+  "description": "Pizza con pomodoro, mozzarella e basilico",
+  "price": 8.5,
+  "ingredient_ids": [1, 2, 3],
+  "category": "Pizze"
+}
+\end{lstlisting}
+
+Required fields are \texttt{name}, \texttt{price}, \texttt{ingredient\_ids}, and \texttt{category}. \texttt{name} must be non-blank, \texttt{price} must be strictly greater than \texttt{0}, and \texttt{ingredient\_ids} must be a non-empty array. \texttt{description} is optional. The parser also accepts \texttt{id}, but the create logic ignores it. On success, the response contains nested \texttt{ingredients}, not \texttt{ingredient\_ids}. Invalid category names, invalid ingredient ids, and duplicate ingredient ids in the submitted array surface as database errors (\texttt{E5D1}), not as explicit 4xx validation errors.
+
+\item \textbf{Success Response:} \texttt{201 Created}
+
+Content:
+
+\begin{lstlisting}
+{
+  "id": 6,
+  "name": "Margherita",
+  "description": "Pizza con pomodoro, mozzarella e basilico",
+  "price": 8.5,
+  "ingredients": [
+    {
+      "id": 1,
+      "name": "Pomodoro San Marzano",
+      "allergens": [],
+      "is_frozen": false
+    },
+    {
+      "id": 2,
+      "name": "Mozzarella di Bufala",
+      "allergens": ["milk"],
+      "is_frozen": false
+    },
+    {
+      "id": 3,
+      "name": "Basilico fresco",
+      "allergens": [],
+      "is_frozen": false
+    }
+  ],
+  "category": "Pizze"
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth errors: \texttt{401 Unauthorized}, \texttt{E4A2}; \texttt{403 Forbidden}, \texttt{E4A4}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}, \texttt{E4V3}, \texttt{E4V4}.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Missing or invalid fields}
+\item \texttt{400 Bad Request}, \texttt{E4V8} - inner message \texttt{Malformed JSON in request body.}, inner details are \texttt{Unexpected field: <field>}.
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Failed to create dish.} if the DAO returns no row.
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Database error while creating dish.}, inner details are the SQL exception message.
+\item \texttt{500 Internal Server Error}, \texttt{E5G1} - malformed JSON syntax falls through to \texttt{Unable to serve the REST request: CREATE\_DISH.}
+\end{itemize}
+
+\item \textbf{Sample Request Body:}
+
+\begin{lstlisting}
+{
+  "name": "Margherita",
+  "description": "Pizza con pomodoro, mozzarella e basilico",
+  "price": 8.5,
+  "ingredient_ids": [1, 2, 3],
+  "category": "Pizze"
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsubsection*{Get All Dishes}
+
+Returns all dishes with nested ingredient objects.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/dish}
+
+\item \textbf{Method:} \texttt{GET}
+
+\item \textbf{URL Parameters:} \texttt{None}
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{None}
+
+\item \textbf{Data Parameters:} \texttt{None}
+
+\item \textbf{Success Response:} \texttt{200 OK}
+
+Content:
+
+\begin{lstlisting}
+{
+  "resource-list": [
+    {
+      "id": 1,
+      "name": "Bruschetta al pomodoro",
+      "description": "Pane tostato con pomodoro fresco e basilico",
+      "price": 5.5,
+      "ingredients": [
+        {
+          "id": 1,
+          "name": "Pomodoro San Marzano",
+          "allergens": [],
+          "is_frozen": false
+        },
+        {
+          "id": 3,
+          "name": "Basilico fresco",
+          "allergens": [],
+          "is_frozen": false
+        }
+      ],
+      "category": "Antipasti"
+    }
+  ]
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}.
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Database error while retrieving dishes.}, inner details are the SQL exception message.
+\end{itemize}
+
+\end{itemize}
+
+\subsubsection*{Get Dish}
+
+Returns one dish by id.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/dish/\{dish\_id\}}
+
+\item \textbf{Method:} \texttt{GET}
+
+\item \textbf{URL Parameters:} \texttt{dish\_id} - integer dish id
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{None}
+
+\item \textbf{Data Parameters:} \texttt{None}
+
+\item \textbf{Success Response:} \texttt{200 OK}
+
+Content:
+
+\begin{lstlisting}
+{
+  "id": 2,
+  "name": "Spaghetti al pomodoro",
+  "description": "Spaghetti con salsa di pomodoro fresco e basilico",
+  "price": 9.0,
+  "ingredients": [
+    {
+      "id": 4,
+      "name": "Spaghetti di Gragnano",
+      "allergens": ["cereals", "eggs"],
+      "is_frozen": false
+    },
+    {
+      "id": 1,
+      "name": "Pomodoro San Marzano",
+      "allergens": [],
+      "is_frozen": false
+    }
+  ],
+  "category": "Primi"
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Invalid dish id format}, inner details are the \texttt{NumberFormatException} message.
+\item \texttt{404 Not Found}, \texttt{E4R2} - inner message \texttt{Dish with id 2 not found.}
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Database error while retrieving dish.}, inner details are the SQL exception message.
+\end{itemize}
+
+\end{itemize}
+
+\subsubsection*{Edit Dish}
+
+Updates a dish and replaces its ingredient bindings.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/dish}
+
+\item \textbf{Method:} \texttt{PUT}
+
+\item \textbf{URL Parameters:} \texttt{None}
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Content-Type: application/json}; \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT with role \texttt{STAFF} or \texttt{ADMIN}
+
+\item \textbf{Data Parameters:}
+
+\begin{lstlisting}
+{
+  "id": 2,
+  "name": "Spaghetti al pomodoro fresco",
+  "description": "Spaghetti con salsa di pomodoro e basilico",
+  "price": 9.5,
+  "ingredient_ids": [4, 1, 3],
+  "category": "Primi"
+}
+\end{lstlisting}
+
+Required fields are \texttt{id}, \texttt{name}, \texttt{price}, \texttt{ingredient\_ids}, and \texttt{category}. \texttt{name} must be non-blank. Unlike create, this handler does not enforce \texttt{price > 0}; it only requires \texttt{price != null}. \texttt{description} is optional. Invalid category names, invalid ingredient ids, and duplicate ingredient ids surface as \texttt{E5D1}. Malformed JSON syntax is not explicitly handled and falls through to \texttt{E5G1}.
+
+\item \textbf{Success Response:} \texttt{200 OK}
+
+Content:
+
+\begin{lstlisting}
+{
+  "id": 2,
+  "name": "Spaghetti al pomodoro fresco",
+  "description": "Spaghetti con salsa di pomodoro e basilico",
+  "price": 9.5,
+  "ingredients": [
+    {
+      "id": 4,
+      "name": "Spaghetti di Gragnano",
+      "allergens": ["cereals", "eggs"],
+      "is_frozen": false
+    },
+    {
+      "id": 1,
+      "name": "Pomodoro San Marzano",
+      "allergens": [],
+      "is_frozen": false
+    },
+    {
+      "id": 3,
+      "name": "Basilico fresco",
+      "allergens": [],
+      "is_frozen": false
+    }
+  ],
+  "category": "Primi"
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth errors: \texttt{401 Unauthorized}, \texttt{E4A2}; \texttt{403 Forbidden}, \texttt{E4A4}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}, \texttt{E4V3}, \texttt{E4V4}.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Missing required fields}
+\item \texttt{400 Bad Request}, \texttt{E4V8} - inner message \texttt{Malformed JSON in request body.}, inner details are \texttt{Unexpected field: <field>}.
+\item \texttt{404 Not Found}, \texttt{E4R2} - inner message \texttt{Dish with id 2 not found.}
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Database error while editing dish.}, inner details are the SQL exception message.
+\item \texttt{500 Internal Server Error}, \texttt{E5G1} - malformed JSON syntax falls through to \texttt{Unable to serve the REST request: EDIT\_DISH.}
+\end{itemize}
+
+\item \textbf{Sample Request Body:}
+
+\begin{lstlisting}
+{
+  "id": 2,
+  "name": "Spaghetti al pomodoro fresco",
+  "description": "Spaghetti con salsa di pomodoro e basilico",
+  "price": 9.5,
+  "ingredient_ids": [4, 1, 3],
+  "category": "Primi"
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsubsection*{Delete Dish}
+
+Deletes a dish by id.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/dish/\{dish\_id\}}
+
+\item \textbf{Method:} \texttt{DELETE}
+
+\item \textbf{URL Parameters:} \texttt{dish\_id} - integer dish id
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT with role \texttt{STAFF} or \texttt{ADMIN}
+
+\item \textbf{Data Parameters:} \texttt{None}
+
+The schema keeps \texttt{order\_dishes.dish\_id} as a foreign key without \texttt{ON DELETE CASCADE}, so deleting a dish referenced by an order fails with a database error (\texttt{E5D1}), not a conflict code.
+
+\item \textbf{Success Response:} \texttt{204 No Content}
+
+Content: \texttt{None}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth errors: \texttt{401 Unauthorized}, \texttt{E4A2}; \texttt{403 Forbidden}, \texttt{E4A4}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Invalid dish id format}, inner details are the \texttt{NumberFormatException} message.
+\item \texttt{404 Not Found}, \texttt{E4R2} - inner message \texttt{Dish with id 2 not found.}
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Database error while deleting dish.}, inner details are the SQL exception message.
+\end{itemize}
+
+\end{itemize}
