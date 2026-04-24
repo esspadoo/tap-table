@@ -82,7 +82,11 @@ public abstract class AbstractRR implements RestResource {
   }
 
   @Override
-  public void serve() throws IOException {
+  public final void serve() throws IOException {
+
+    // Defaulting to JSON UTF-8 media type for all the responses. Subclasses can override this
+    // behaviour by setting a different content type in the response with the same method
+    res.setContentType(JSON_UTF_8_MEDIA_TYPE);
 
     try {
       // if the request method and/or the MIME media type are not allowed, return.

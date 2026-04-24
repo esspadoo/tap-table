@@ -14,6 +14,6 @@ public interface RestResource {
    *
    * @throws IOException if any error occurs in the client/server communication.
    */
-  void serve() throws IOException;
+  public void serve() throws IOException;
 
 }
