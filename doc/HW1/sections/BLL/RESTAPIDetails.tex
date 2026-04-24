@@ -344,3 +344,146 @@ Content:
 \end{itemize}
 
 \end{itemize}
+
+\subsubsection*{Create Category}
+
+Creates a new category.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/category}
+
+\item \textbf{Method:} \texttt{POST}
+
+\item \textbf{URL Parameters:} \texttt{None}
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Content-Type: application/json}; \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT with role \texttt{ADMIN}
+
+\item \textbf{Data Parameters:}
+
+\begin{lstlisting}
+{
+  "name": "Pizze"
+}
+\end{lstlisting}
+
+Only the \texttt{name} field is parsed. \texttt{name} is required and blank values are rejected. Unexpected fields are mapped to \texttt{E4V8}. Malformed JSON syntax is not explicitly caught here and therefore falls through to \texttt{E5G1}.
+
+\item \textbf{Success Response:} \texttt{201 Created}
+
+Content:
+
+\begin{lstlisting}
+{
+  "name": "Pizze"
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth errors: \texttt{401 Unauthorized}, \texttt{E4A2}; \texttt{403 Forbidden}, \texttt{E4A4}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}, \texttt{E4V3}, \texttt{E4V4}.
+\item \texttt{400 Bad Request}, \texttt{E4V6} - inner message \texttt{Missing required field: name must be provided.}
+\item \texttt{400 Bad Request}, \texttt{E4V8} - inner message \texttt{Malformed JSON in request body.}, inner details are \texttt{Unexpected field: <field>}.
+\item \texttt{409 Conflict}, \texttt{E5D1} - inner message \texttt{Category already exists.}, inner details are the database exception message. The status is \texttt{409}, but the code is the database code \texttt{E5D1}, not \texttt{E4R3}.
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Database error while creating category.}, inner details are the SQL exception message.
+\item \texttt{500 Internal Server Error}, \texttt{E5G1} - malformed JSON syntax falls through to \texttt{Unable to serve the REST request: CREATE\_CATEGORY.}
+\end{itemize}
+
+\item \textbf{Sample Request Body:}
+
+\begin{lstlisting}
+{
+  "name": "Pizze"
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsubsection*{Get All Categories}
+
+Returns all categories.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/category}
+
+\item \textbf{Method:} \texttt{GET}
+
+\item \textbf{URL Parameters:} \texttt{None}
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{None}
+
+\item \textbf{Data Parameters:} \texttt{None}
+
+\item \textbf{Success Response:} \texttt{200 OK}
+
+Content:
+
+\begin{lstlisting}
+{
+  "resource-list": [
+    { "name": "Antipasti" },
+    { "name": "Primi" },
+    { "name": "Secondi" }
+  ]
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}.
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Database error while retrieving categories.}, inner details are the SQL exception message.
+\end{itemize}
+
+\end{itemize}
+
+\subsubsection*{Delete Category}
+
+Deletes a category by name.
+
+\begin{itemize}[nosep]
+\item \textbf{URL:} \texttt{/category/\{category\_name\}}
+
+\item \textbf{Method:} \texttt{DELETE}
+
+\item \textbf{URL Parameters:} \texttt{category\_name} - category primary key
+
+\item \textbf{Query Parameters:} \texttt{None}
+
+\item \textbf{Headers:} \texttt{Accept: application/json}
+
+\item \textbf{Cookies:} \texttt{auth\_token} HttpOnly cookie containing a valid JWT with role \texttt{ADMIN}
+
+\item \textbf{Data Parameters:} \texttt{None}
+
+The path parameter is matched as a raw route segment. Database matching is exact because the DAO executes \texttt{DELETE FROM categories WHERE name = -}.
+
+\item \textbf{Success Response:} \texttt{200 OK}
+
+Content:
+
+\begin{lstlisting}
+{
+  "name": "Pizze"
+}
+\end{lstlisting}
+
+\item \textbf{Error Responses:}
+
+\begin{itemize}[nosep]
+\item Common auth errors: \texttt{401 Unauthorized}, \texttt{E4A2}; \texttt{403 Forbidden}, \texttt{E4A4}.
+\item Common header errors: \texttt{E4V1}, \texttt{E4V2}.
+\item \texttt{404 Not Found}, \texttt{E4R2} - inner message \texttt{Category 'Pizze' not found.}
+\item \texttt{409 Conflict}, \texttt{E5D1} - inner message \texttt{Cannot delete category: it is referenced by existing dishes.}, inner details are the SQL exception message. The schema conflict is detected via SQL state \texttt{23503}, but the handler still emits \texttt{E5D1}.
+\item \texttt{500 Internal Server Error}, \texttt{E5D1} - inner message \texttt{Database error while deleting category.}, inner details are the SQL exception message.
+\end{itemize}
+
+\end{itemize}
