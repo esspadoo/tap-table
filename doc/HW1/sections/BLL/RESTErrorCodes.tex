@@ -1,11 +1,56 @@
 \subsection{REST Error Codes}
 
-%If needed, add few lines of text, describing the error codes table
+Listed below are the error codes defined for the application. Each code uniquely identifies a specific error condition and follows the format \texttt{E[class][category][index]}, where class is the HTTP status class, category identifies the error domain, and index is a sequential number within the category. The defined categories are: \texttt{A} (authentication), \texttt{V} (validation/media type), \texttt{R} (resource), \texttt{D} (database), and \texttt{G} (generic server error).
 
-\begin{longtable}{|p{.15\columnwidth}|p{.2\columnwidth} |p{.6\columnwidth}|} 
+\small
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.1\textwidth}|>{\raggedright\arraybackslash}p{0.18\textwidth}|>{\raggedright\arraybackslash}p{0.62\textwidth}|}
 \hline
-\textbf{Error Code} & \textbf{HTTP Status Code} & \textbf{Description} \\\hline
-Error Code Identifier & Corresponding HTTP Status Code &  Description of the error \\\hline
-\caption{Describe in this table your REST API}
-\label{tab:termGlossary}
+\textbf{Error Code} & \textbf{HTTP Status Code} & \textbf{Description} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Error Code} & \textbf{HTTP Status Code} & \textbf{Description} \\
+\hline
+\endhead
+\texttt{E4A1} & \texttt{401 Unauthorized} & Invalid login credentials: wrong e-mail or password. \\
+\hline
+\texttt{E4A2} & \texttt{401 Unauthorized} & Missing authentication cookie. In current REST routing, invalid or expired JWTs are also collapsed to this code because the dispatcher treats them as unauthenticated. \\
+\hline
+\texttt{E4A3} & \texttt{401 Unauthorized} & Invalid or expired access token. Defined in \texttt{ErrorCodes}, but not emitted by the current REST dispatcher. \\
+\hline
+\texttt{E4A4} & \texttt{403 Forbidden} & Forbidden operation due to insufficient role. \\
+\hline
+\texttt{E4V1} & \texttt{400 Bad Request} & Output media type not specified: missing \texttt{Accept} header. \\
+\hline
+\texttt{E4V2} & \texttt{406 Not Acceptable} & Unsupported output media type: \texttt{Accept} does not include \texttt{application/json} and is not exactly \texttt{*/*}. \\
+\hline
+\texttt{E4V3} & \texttt{400 Bad Request} & Input media type not specified: missing \texttt{Content-Type} header on \texttt{POST} or \texttt{PUT}. \\
+\hline
+\texttt{E4V4} & \texttt{415 Unsupported} \texttt{Media Type} & Unsupported input media type: \texttt{Content-Type} does not contain \texttt{application/json}. \\
+\hline
+\texttt{E4V5} & \texttt{405 Method} \texttt{Not Allowed} & Unsupported operation. Defined in \texttt{AbstractRR}; with the current router, unmatched methods normally fall through to \texttt{E4R1} instead. \\
+\hline
+\texttt{E4V6} & \texttt{400 Bad Request} & Invalid input parameter. \\
+\hline
+\texttt{E4V7} & \texttt{400 Bad Request} & Wrong URI format. Defined in \texttt{ErrorCodes}, but not used by the current REST routes. \\
+\hline
+\texttt{E4V8} & \texttt{400 Bad Request} & Wrong resource provided: malformed request body or semantically invalid representation. \\
+\hline
+\texttt{E4R1} & \texttt{404 Not Found} & Unknown resource requested: no configured route matched the request URI. \\
+\hline
+\texttt{E4R2} & \texttt{404 Not Found} & Resource not found. \\
+\hline
+\texttt{E4R3} & \texttt{409 Conflict} & Resource already exists. \\
+\hline
+\texttt{E4R4} & \texttt{409 Conflict} & Resource still referenced by other resources. Defined in \texttt{ErrorCodes}, but not used by the current REST handlers. \\
+\hline
+\texttt{E5D1} & \texttt{500 Internal} \texttt{Server Error} & Unexpected database error. Some endpoints also use this code for conflicts or foreign-key/check-constraint failures instead of mapping them to a 4xx code. \\
+\hline
+\texttt{E5G1} & \texttt{500 Internal} \texttt{Server Error} & Unexpected generic server error. This is the fallback used by \texttt{AbstractRR} or \texttt{RestDispatcherServlet} for uncaught exceptions. \\
+\hline
 \end{longtable}
+\normalsize
+
+\begin{center}
+Table 3: List of the REST error codes
+\end{center}
