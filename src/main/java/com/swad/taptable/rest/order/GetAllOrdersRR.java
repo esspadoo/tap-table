@@ -13,8 +13,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * REST resource that handles retrieval of all orders in the system
+ *
+ * @author SWAD Team
+ */
 public class GetAllOrdersRR extends AbstractRR {
 
+    /**
+     * Creates the REST resource that retrieves all orders.
+     *
+     * @param req the HTTP request.
+     * @param res the HTTP response.
+     */
     public GetAllOrdersRR(final HttpServletRequest req, final HttpServletResponse res) {
         super(Actions.GET_ORDERS, req, res);
     }
@@ -29,10 +40,10 @@ public class GetAllOrdersRR extends AbstractRR {
 
         } catch (final SQLException e) {
             LOGGER.error("Database error (no. %d) while retrieving all orders: %s",
-                e.getErrorCode(), e.getMessage());
+                    e.getErrorCode(), e.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             new Message("Database error while retrieving orders.", ErrorCodes.UNEXPECTED_DB_ERROR,
-                e.getMessage()).toJSON(res.getOutputStream());
+                    e.getMessage()).toJSON(res.getOutputStream());
         }
     }
 }

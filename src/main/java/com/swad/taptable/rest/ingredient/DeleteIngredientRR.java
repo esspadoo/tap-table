@@ -12,16 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
- * Rest resource for deleting an ingredient given its id.
- * 
- * <p>
- * The {@code id}, passed as a path parameter, is used to identify the ingredient to be deleted. If
- * the id provided is numerical only (alphanumerical), the response status is set to {@code 400}
- * (Bad Request). If the ingredient is successfully deleted, the response status is set to
- * {@code 200} (OK). If the ingredient with the specified id does not exist, the response status is
- * set to {@code 404} (Not Found). If any server side error occurs (e.g. database) during the
- * deletion process, the response status is set to {@code 500} (Internal Server Error).
- * </p>
+ * REST resource for deleting an ingredient given its id.
  * 
  * @author SWAD Team
  */
@@ -80,6 +71,4 @@ public class DeleteIngredientRR extends AbstractRR {
       m.toJSON(res.getOutputStream());
     }
   }
-
-
 }

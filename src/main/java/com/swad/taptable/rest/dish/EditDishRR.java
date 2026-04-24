@@ -14,8 +14,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * REST resource that handles editing of an existing dish
+ *
+ * @author SWAD Team
+ */
 public class EditDishRR extends AbstractRR {
 
+  /**
+   * Creates the REST resource that updates a dish.
+   *
+   * @param req the HTTP request.
+   * @param res the HTTP response.
+   */
   public EditDishRR(final HttpServletRequest req, final HttpServletResponse res) {
     super(Actions.EDIT_DISH, req, res);
   }
@@ -29,7 +40,8 @@ public class EditDishRR extends AbstractRR {
           || in.getIngredientIds() == null || in.getIngredientIds().isEmpty()
           || in.getCategory() == null || in.getId() == null) {
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        Message m = new Message("Missing required fields", ErrorCodes.INVALID_INPUT_PARAMETER, null);
+        Message m =
+            new Message("Missing required fields", ErrorCodes.INVALID_INPUT_PARAMETER, null);
         m.toJSON(res.getOutputStream());
         return;
       }
@@ -49,8 +61,8 @@ public class EditDishRR extends AbstractRR {
 
     } catch (final NumberFormatException e) {
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      Message m = new Message("Invalid dish id format", ErrorCodes.INVALID_INPUT_PARAMETER,
-          e.getMessage());
+      Message m =
+          new Message("Invalid dish id format", ErrorCodes.INVALID_INPUT_PARAMETER, e.getMessage());
       m.toJSON(res.getOutputStream());
     } catch (final NotValidDishException e) {
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -59,13 +71,13 @@ public class EditDishRR extends AbstractRR {
       m.toJSON(res.getOutputStream());
     } catch (final UnexpectedKeyException e) {
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      Message m = new Message("Malformed JSON in request body.",
-          ErrorCodes.WRONG_RESOURCE_PROVIDED, e.getMessage());
+      Message m = new Message("Malformed JSON in request body.", ErrorCodes.WRONG_RESOURCE_PROVIDED,
+          e.getMessage());
       m.toJSON(res.getOutputStream());
     } catch (final SQLException e) {
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      Message m = new Message("Database error while editing dish.",
-          ErrorCodes.UNEXPECTED_DB_ERROR, e.getMessage());
+      Message m = new Message("Database error while editing dish.", ErrorCodes.UNEXPECTED_DB_ERROR,
+          e.getMessage());
       m.toJSON(res.getOutputStream());
     }
   }

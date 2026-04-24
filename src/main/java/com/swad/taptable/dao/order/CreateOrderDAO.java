@@ -18,9 +18,11 @@ public class CreateOrderDAO extends AbstractDAO<Order> {
             "INSERT INTO order_dishes (order_id, dish_id, quantity, is_liked) VALUES (?, ?, ?, ?) RETURNING *";
 
     private final Order order;
+    private final Integer userId;
 
-    public CreateOrderDAO(final Order order) {
+    public CreateOrderDAO(final Order order, final Integer userId) {
         this.order = order;
+        this.userId = userId;
     }
 
     @Override
@@ -45,7 +47,7 @@ public class CreateOrderDAO extends AbstractDAO<Order> {
             }
 
             try (PreparedStatement createOrderStmt = con.prepareStatement(CREATE_ORDER_STATEMENT)) {
-                createOrderStmt.setInt(1, order.getUserId());
+                createOrderStmt.setInt(1, this.userId);
                 if (order.getPromotionId() == null) {
                     createOrderStmt.setNull(2, java.sql.Types.INTEGER);
                 } else {

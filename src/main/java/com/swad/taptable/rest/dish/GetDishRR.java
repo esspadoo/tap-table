@@ -12,8 +12,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * REST resource that handles retrieval of a single dish by ID
+ *
+ * @author SWAD Team
+ */
 public class GetDishRR extends AbstractRR {
 
+  /**
+   * Creates the REST resource that retrieves a single dish.
+   *
+   * @param req the HTTP request.
+   * @param res the HTTP response.
+   */
   public GetDishRR(final HttpServletRequest req, final HttpServletResponse res) {
     super(Actions.GET_DISH, req, res);
   }
@@ -38,8 +49,8 @@ public class GetDishRR extends AbstractRR {
 
     } catch (final NumberFormatException e) {
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      Message m = new Message("Invalid dish id format", ErrorCodes.INVALID_INPUT_PARAMETER,
-          e.getMessage());
+      Message m =
+          new Message("Invalid dish id format", ErrorCodes.INVALID_INPUT_PARAMETER, e.getMessage());
       m.toJSON(res.getOutputStream());
     } catch (final SQLException e) {
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

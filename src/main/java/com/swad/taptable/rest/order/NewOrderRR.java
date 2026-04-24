@@ -16,9 +16,14 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
 
+/**
+ * REST resource that handles creation of a new order
+ *
+ * @author SWAD Team
+ */
 public class NewOrderRR extends AbstractRR {
     /**
-     * Creates a new REST resource.
+     * Creates the REST resource that handles order creation.
      *
      * @param req the HTTP request.
      * @param res the HTTP response.
@@ -30,21 +35,13 @@ public class NewOrderRR extends AbstractRR {
     @Override
     protected void doServe() throws IOException {
         try {
-            final Order in = Order.fromJSON(req.getInputStream());
+            final Integer userId = Integer.parseInt((String) req.getAttribute("user_id"));
+            Order in = Order.fromJSON(req.getInputStream());
 
             if (in.getStatus() == null) {
                 LOGGER.warn("Invalid status in order %s", in.getStatus());
                 res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 Message m = new Message("invalid status in order.",
-                        ErrorCodes.INVALID_INPUT_PARAMETER, null);
-                m.toJSON(res.getOutputStream());
-                return;
-            }
-
-            if (in.getUserId() == null || in.getUserId() <= 0) {
-                LOGGER.warn("Invalid user id in order: %d", in.getUserId());
-                res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                Message m = new Message("Invalid user id in order",
                         ErrorCodes.INVALID_INPUT_PARAMETER, null);
                 m.toJSON(res.getOutputStream());
                 return;
@@ -59,11 +56,11 @@ public class NewOrderRR extends AbstractRR {
                 return;
             }
 
-            final CreateOrderDAO dao = new CreateOrderDAO(in);
+            final CreateOrderDAO dao = new CreateOrderDAO(in, userId);
             final Order out = dao.access().getOutputParam();
 
             if (out == null) {
-                LOGGER.warn("Failed to create order for user %d", in.getUserId());
+                LOGGER.warn("Failed to create order for user %d", userId);
                 res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 Message m = new Message("Failed to create order. Please check the provided data.",
                         ErrorCodes.WRONG_RESOURCE_PROVIDED, null);
@@ -94,5 +91,4 @@ public class NewOrderRR extends AbstractRR {
             m.toJSON(res.getOutputStream());
         }
     }
-
 }

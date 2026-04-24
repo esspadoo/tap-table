@@ -11,9 +11,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * REST resource that handles deletion of an order
+ *
+ * @author SWAD Team
+ */
 public class DeleteOrderRR extends AbstractRR {
   /**
-   * Creates a new REST resource.
+   * Creates the REST resource that deletes an order.
    *
    * @param req the HTTP request.
    * @param res the HTTP response.
@@ -50,8 +55,7 @@ public class DeleteOrderRR extends AbstractRR {
           ErrorCodes.INVALID_INPUT_PARAMETER, e.getMessage());
       m.toJSON(res.getOutputStream());
     } catch (SQLException ex) {
-      // FIXME: better sql handling (dont return 500 everytime)
-      Message m = new Message("Unexpected database error: no. " + ex.getErrorCode(),
+      Message m = new Message("Unexpected database error n. " + ex.getErrorCode(),
           ErrorCodes.UNEXPECTED_DB_ERROR, ex.getMessage());
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       m.toJSON(res.getOutputStream());

@@ -13,8 +13,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * REST resource that handles retrieval of all dishes in the system
+ *
+ * @author SWAD Team
+ */
 public class GetDishesRR extends AbstractRR {
 
+  /**
+   * Creates the REST resource that retrieves all dishes.
+   *
+   * @param req the HTTP request.
+   * @param res the HTTP response.
+   */
   public GetDishesRR(final HttpServletRequest req, final HttpServletResponse res) {
     super(Actions.GET_DISHES, req, res);
   }

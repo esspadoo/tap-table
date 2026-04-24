@@ -12,9 +12,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * REST resource that handles checking if a promotion code is valid and retrieves its details
+ *
+ * @author SWAD Team
+ */
 public class CheckPromotionRR extends AbstractRR {
   /**
-   * Creates a new REST resource.
+   * Creates the REST resource that retrieves a promotion by code.
    *
    * @param req the HTTP request.
    * @param res the HTTP response.

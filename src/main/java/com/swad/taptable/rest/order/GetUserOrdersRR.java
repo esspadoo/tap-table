@@ -13,9 +13,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * REST resource that handles retrieval of all orders for a specific user
+ *
+ * @author SWAD Team
+ */
 public class GetUserOrdersRR extends AbstractRR {
   /**
-   * Creates a new REST resource.
+   * Creates the REST resource that retrieves all orders for a specific user.
    *
    * @param req the HTTP request.
    * @param res the HTTP response.

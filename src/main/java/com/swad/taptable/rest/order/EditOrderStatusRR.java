@@ -13,9 +13,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * Updates the status of an existing order identified by the {@code order_id} request attribute.
+ *
+ * @author SWAD Team
+ */
 public class EditOrderStatusRR extends AbstractRR {
   /**
-   * Creates a new REST resource.
+   * Creates the REST resource that updates an order status.
    *
    * @param req the HTTP request.
    * @param res the HTTP response.

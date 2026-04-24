@@ -12,8 +12,19 @@ import com.swad.taptable.resources.Message;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * REST resource that handles editing of an existing ingredient
+ *
+ * @author SWAD Team
+ */
 public class EditIngredientRR extends AbstractRR {
 
+  /**
+   * Creates the REST resource that updates an ingredient.
+   *
+   * @param req the HTTP request.
+   * @param res the HTTP response.
+   */
   public EditIngredientRR(HttpServletRequest req, HttpServletResponse res) {
     super(Actions.EDIT_INGREDIENT, req, res);
   }

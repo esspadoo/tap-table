@@ -12,8 +12,19 @@ import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * REST resource that handles retrieval of all ingredients in the system
+ *
+ * @author SWAD Team
+ */
 public class GetIngredientsRR extends AbstractRR {
 
+  /**
+   * Creates the REST resource that retrieves all ingredients.
+   *
+   * @param req the HTTP request.
+   * @param res the HTTP response.
+   */
   public GetIngredientsRR(HttpServletRequest req, HttpServletResponse res) {
     super(Actions.GET_INGREDIENTS, req, res);
   }
@@ -34,5 +45,4 @@ public class GetIngredientsRR extends AbstractRR {
       m.toJSON(res.getOutputStream());
     }
   }
-
 }

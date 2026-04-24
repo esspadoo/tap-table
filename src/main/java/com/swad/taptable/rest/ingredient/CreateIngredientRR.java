@@ -13,24 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
- * Rest resource for creating a new ingredient.
- * 
- * <p>
- * The ingredient data is provided in the request body as a JSON object. The required fields are
- * {@code name} and {@code isFrozen}. If any of these fields is missing or invalid, the response
- * status is set to {@code 400} (Bad Request).
- * </p>
- * 
- * <p>
- * If the ingredient is successfully created, the response status is set to {@code 201} (Created)
- * and the created ingredient is returned in the response body as a JSON object.
- * </p>
- * 
- * <p>
- * If any server side error occurs (e.g. database) during the creation process, the response status
- * is set to {@code 500} (Internal Server Error) and an error message is returned in the response
- * body as a JSON object with the appropriate error code and message details.
- * </p>
+ * REST resource for creating a new ingredient.
  * 
  * @author SWAD Team
  */
@@ -53,7 +36,7 @@ public class CreateIngredientRR extends AbstractRR {
       final Ingredient in = Ingredient.fromJSON(req.getInputStream());
 
       // Check that the required fields provided are not null nor empty
-      if (in.getName() == null || in.isFrozen() == null) {
+      if (in.getName() == null) {
         LOGGER.warn("Invalid input for creating ingredient: missing required fields");
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         Message m = new Message("Missing required fields: name and isFrozen must be provided",
@@ -90,5 +73,4 @@ public class CreateIngredientRR extends AbstractRR {
       m.toJSON(res.getOutputStream());
     }
   }
-
 }

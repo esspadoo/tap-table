@@ -12,13 +12,13 @@ import java.util.List;
 
 /**
  * DAO for retrieving all the ingredients from the database.
- *
+ * 
  * @author SWAD Team
  */
 public class GetIngredientsDAO extends AbstractDAO<ResourceList<Ingredient>> {
 
   private static final String STATEMENT =
-          "SELECT id, name, allergen, is_frozen FROM ingredients ORDER BY id ASC";
+      "SELECT id, name, allergen, is_frozen FROM ingredients ORDER BY id ASC";
 
   public GetIngredientsDAO() {}
 
@@ -40,7 +40,7 @@ public class GetIngredientsDAO extends AbstractDAO<ResourceList<Ingredient>> {
           }
 
           ingredients.add(new Ingredient(rs.getInt("id"), rs.getString("name"), allergens,
-                  rs.getBoolean("is_frozen")));
+              rs.getBoolean("is_frozen")));
         }
       }
     }

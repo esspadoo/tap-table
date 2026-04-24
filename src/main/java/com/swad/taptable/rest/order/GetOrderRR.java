@@ -12,9 +12,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * REST resource that handles retrieval of a single order by ID
+ *
+ * @author SWAD Team
+ */
 public class GetOrderRR extends AbstractRR {
   /**
-   * Creates a new REST resource.
+   * Creates the REST resource that retrieves a single order.
    *
    * @param req the HTTP request.
    * @param res the HTTP response.

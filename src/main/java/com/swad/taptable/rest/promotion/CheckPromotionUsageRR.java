@@ -11,8 +11,19 @@ import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * REST resource that handles checking if a promotion code has already been used by a user
+ *
+ * @author SWAD Team
+ */
 public class CheckPromotionUsageRR extends AbstractRR {
 
+  /**
+   * Creates the REST resource that checks promotion usage for a user.
+   *
+   * @param req the HTTP request.
+   * @param res the HTTP response.
+   */
   public CheckPromotionUsageRR(HttpServletRequest req, HttpServletResponse res) {
     super(Actions.CHECK_PROMOTION_USAGE, req, res);
   }
@@ -47,6 +58,4 @@ public class CheckPromotionUsageRR extends AbstractRR {
       m.toJSON(res.getOutputStream());
     }
   }
-
-
 }

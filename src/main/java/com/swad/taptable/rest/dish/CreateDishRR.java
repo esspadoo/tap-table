@@ -14,8 +14,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * REST resource that handles creation of a new dish
+ *
+ * @author SWAD Team
+ */
 public class CreateDishRR extends AbstractRR {
 
+  /**
+   * Creates the REST resource that handles dish creation.
+   *
+   * @param req the HTTP request.
+   * @param res the HTTP response.
+   */
   public CreateDishRR(final HttpServletRequest req, final HttpServletResponse res) {
     super(Actions.CREATE_DISH, req, res);
   }
@@ -25,10 +36,12 @@ public class CreateDishRR extends AbstractRR {
     try {
       final Dish in = Dish.fromJSON(req.getInputStream());
 
-      if (in.getName() == null || in.getName().isBlank() || in.getPrice() == null || in.getPrice() <= 0
-          || in.getIngredientIds() == null || in.getIngredientIds().isEmpty() || in.getCategory() == null) {
+      if (in.getName() == null || in.getName().isBlank() || in.getPrice() == null
+          || in.getPrice() <= 0 || in.getIngredientIds() == null || in.getIngredientIds().isEmpty()
+          || in.getCategory() == null) {
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        Message m = new Message("Missing or invalid fields", ErrorCodes.INVALID_INPUT_PARAMETER, null);
+        Message m =
+            new Message("Missing or invalid fields", ErrorCodes.INVALID_INPUT_PARAMETER, null);
         m.toJSON(res.getOutputStream());
         return;
       }
@@ -52,13 +65,13 @@ public class CreateDishRR extends AbstractRR {
       m.toJSON(res.getOutputStream());
     } catch (final UnexpectedKeyException e) {
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      Message m = new Message("Malformed JSON in request body.",
-          ErrorCodes.WRONG_RESOURCE_PROVIDED, e.getMessage());
+      Message m = new Message("Malformed JSON in request body.", ErrorCodes.WRONG_RESOURCE_PROVIDED,
+          e.getMessage());
       m.toJSON(res.getOutputStream());
     } catch (final SQLException e) {
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      Message m = new Message("Database error while creating dish.",
-          ErrorCodes.UNEXPECTED_DB_ERROR, e.getMessage());
+      Message m = new Message("Database error while creating dish.", ErrorCodes.UNEXPECTED_DB_ERROR,
+          e.getMessage());
       m.toJSON(res.getOutputStream());
     }
   }
