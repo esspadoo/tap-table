@@ -1,13 +1,77 @@
 \section{Presentation Logic Layer}
 
-%What pages will be present in your project? briefly indicate how your web site will be organized
+The web application is partially accessible to unauthenticated users, guests can visit the home page and the menu catalogue but any action that requires an account such as placing an order and accessing the dashboard redirects to the login page. The application exposes four JSP views, used for testing and developing purposes: ingredients, login, register and index (representation of the dashboard).
+\subsection{Home Page}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+The home page (figure \ref{fig:Home page's mockup}) is the entry point for all visitors. It presents a brief introduction to the service and provides navigation links to the login and registration pages. No authentication is required and if there are some meals available that day they are displayed in an overview-table.
 
-\subsection{A page}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/Mockup/home.pdf}
+    \caption{Home page's mockup}
+    \label{fig:Home page's mockup}
+\end{figure}
 
-%For the main pages put a mockup and describe it in detail.
 
-\includegraphics[]{mockup.pdf}
+\subsection{Login Page}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+The login page (figure \ref{fig:Log in's page mockup}) allows existing users to authenticate. The form collects the user's \textbf{email} and \textbf{password}. On submission, the credentials are sent via \texttt{POST /rest/user/login}. A successful login results in an \texttt{HttpOnly} cookie (\texttt{auth\_token}) containing a signed JWT and consequently the user is redirected to the dashboard. If authentication fails, an error message is displayed inline.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/Mockup/logIn.pdf}
+    \caption{Log in's page mockup}
+    \label{fig:Log in's page mockup}
+\end{figure}
+
+
+\subsection{Registration Page}
+
+The registration page (figure \ref{fig:Example of compilation of registration's page mockup}) allows new customers to create an account. The form collects the following fields: \textbf{username}, \textbf{email}, \textbf{name}, \textbf{surname}, \textbf{phone number}, and \textbf{password}. All fields are mandatory so the user can't go on with the registration until all of them are filled. The password must satisfy a security policy: 8-16 characters, at least one uppercase letter, one lowercase letter, one digit and one special character. This policy is enforced server-side by the \texttt{Validator} utility class.
+\texttt{Validator} utility class validates also the email field: it allows the first part of the e-mail address to contain one or more characters (letters, digits and symbols + \_ . -), followed by an @, a valid domain name, a dot and a top-level domain of at least two letters. On successful registration the user is redirected to the login page.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/Mockup/registration.pdf}
+    \caption{Example of compilation of registration's page mockup}
+    \label{fig:Example of compilation of registration's page mockup}
+\end{figure}
+
+
+\subsection{Dashboard}
+The dashboard (figures \ref{fig:Management admin-side dishes dashboard mockup page.} - \ref{fig:Management staff-side dishes dashboard mockup page.} - \ref{fig:Dish's ingredients admin-side mockup page.} - \ref{fig:Dish's ingredients staff-side mockup page.} - \ref{fig:Menu dashboard's mockup page.}) is the main interface for authenticated users. The \texttt{AuthFilter} servlet filter is designed to protect all routes under \texttt{/dashboard/*} by validating the \texttt{auth\_token} HttpOnly cookie on every request. If the token is missing or expired, it redirects to \texttt{/login} otherwise it sets the \texttt{user\_id} request attribute. The dashboard will expose the menu catalogue, order management and staff/admin back-office functionality depending on the role of the authenticated user (\texttt{CUSTOMER}, \texttt{STAFF}, or \texttt{ADMIN}).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Mockup/adminDishesList.pdf}
+    \caption{Management admin-side dishes dashboard mockup page.}
+    \label{fig:Management admin-side dishes dashboard mockup page.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Mockup/staffDishesList.pdf}
+    \caption{Management staff-side dishes dashboard mockup page.}
+    \label{fig:Management staff-side dishes dashboard mockup page.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Mockup/adminIngredients.pdf}
+    \caption{Dish's ingredients admin-side mockup page.}
+    \label{fig:Dish's ingredients admin-side mockup page.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Mockup/staffIngredients.pdf}
+    \caption{Dish's ingredients staff-side mockup page.}
+    \label{fig:Dish's ingredients staff-side mockup page.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Mockup/menu.pdf}
+    \caption{Menu dashboard's mockup page.}
+    \label{fig:Menu dashboard's mockup page.}
+\end{figure}
+
