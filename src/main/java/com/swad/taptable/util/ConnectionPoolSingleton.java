@@ -16,6 +16,9 @@ import org.apache.logging.log4j.message.StringFormatterMessageFactory;
  * Connection pool lifecycle (sizing, timeouts, credentials) is fully owned by Tomcat - configured
  * in {@code context.xml} outside the WAR. This class only performs the lookup and delegates every
  * call to the container.
+ * </p>
+ *
+ * @author SWAD Team
  */
 public final class ConnectionPoolSingleton {
 

@@ -12,8 +12,19 @@ import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * REST resource that handles retrieval of all promotions
+ *
+ * @author SWAD Team
+ */
 public class GetPromotionsRR extends AbstractRR {
 
+  /**
+   * Creates the REST resource that retrieves all promotions.
+   *
+   * @param req the HTTP request.
+   * @param res the HTTP response.
+   */
   public GetPromotionsRR(HttpServletRequest req, HttpServletResponse res) {
     super(Actions.GET_PROMOTIONS, req, res);
   }
@@ -40,5 +51,4 @@ public class GetPromotionsRR extends AbstractRR {
       m.toJSON(res.getOutputStream());
     }
   }
-
 }

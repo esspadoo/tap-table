@@ -12,8 +12,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * REST resource that handles deletion of a user identified by {@code id}
+ *
+ * @author SWAD Team
+ */
 public class DeleteUserRR extends AbstractRR {
 
+    /**
+     * Creates the REST resource that deletes a user.
+     *
+     * @param req the HTTP request.
+     * @param res the HTTP response.
+     */
     public DeleteUserRR(final HttpServletRequest req, final HttpServletResponse res) {
         super(Actions.DELETE_USER, req, res);
     }

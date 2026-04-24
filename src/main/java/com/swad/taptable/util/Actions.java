@@ -2,6 +2,8 @@ package com.swad.taptable.util;
 
 /**
  * Contains constants for the actions performed by the application.
+ *
+ * @author SWAD Team
  */
 public final class Actions {
   /**
@@ -178,5 +180,4 @@ public final class Actions {
    * Serving the ingredients page
    */
   public static final String VIEW_INGREDIENTS = "VIEW_INGREDIENTS";
-
 }

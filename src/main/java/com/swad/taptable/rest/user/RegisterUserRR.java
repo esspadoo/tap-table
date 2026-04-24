@@ -20,15 +20,6 @@ import java.sql.SQLException;
  * </p>
  *
  * <p>
- * Example request body:
- *
- * <pre>
- * { "username": "johndoe", "email": "john@test.com", "password": "password123", "name": "John",
- * "surname": "Doe", "phone_number": "1234567890" }
- * </pre>
- * </p>
- *
- * <p>
  * On success, responds with HTTP 201 Created and a JSON body containing the new user's ID. On
  * failure, responds with an appropriate HTTP status code and a JSON body containing an error
  * message and code.
@@ -38,6 +29,12 @@ import java.sql.SQLException;
  */
 public final class RegisterUserRR extends AbstractRR {
 
+  /**
+   * Creates the REST resource that handles user registration.
+   *
+   * @param req the HTTP request.
+   * @param res the HTTP response.
+   */
   public RegisterUserRR(final HttpServletRequest req, final HttpServletResponse res) {
     super(Actions.REGISTER_USER, req, res);
   }
@@ -47,9 +44,9 @@ public final class RegisterUserRR extends AbstractRR {
     try {
       final User user = User.fromJSON(req.getInputStream());
 
-      if (isMissing(user.getUsername()) || isMissing(user.getEmail()) || isMissing(user.getPassword())
-          || isMissing(user.getName()) || isMissing(user.getSurname())
-          || isMissing(user.getPhoneNumber())) {
+      if (isMissing(user.getUsername()) || isMissing(user.getEmail())
+          || isMissing(user.getPassword()) || isMissing(user.getName())
+          || isMissing(user.getSurname()) || isMissing(user.getPhoneNumber())) {
         LOGGER.warn("Registration request missing required fields.");
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         Message m = new Message("Missing required fields.", ErrorCodes.WRONG_RESOURCE_PROVIDED,
@@ -68,7 +65,8 @@ public final class RegisterUserRR extends AbstractRR {
       }
 
       if (!Validator.isValidPassword(user.getPassword())) {
-        LOGGER.warn("Registration request contains a password that does not meet policy requirements.");
+        LOGGER.warn(
+            "Registration request contains a password that does not meet policy requirements.");
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         Message m = new Message("Invalid password.", ErrorCodes.WRONG_RESOURCE_PROVIDED,
             "Password must be 8-16 characters and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.");
@@ -105,6 +103,12 @@ public final class RegisterUserRR extends AbstractRR {
     }
   }
 
+  /**
+   * Method that checks if a string is missing (null or blank)
+   *
+   * @param s the string to validate.
+   * @return {@code true} if the string is {@code null} or blank, {@code false} otherwise.
+   */
   private static boolean isMissing(final String s) {
     return s == null || s.isBlank();
   }

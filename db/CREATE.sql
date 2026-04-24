@@ -25,11 +25,12 @@ CREATE TABLE users (
 CREATE TABLE promotions (
     id SERIAL PRIMARY KEY,
     code VARCHAR(20) NOT NULL UNIQUE,
-    type VARCHAR(20) NOT NULL,
+    discount FLOAT NOT NULL,
     description TEXT NOT NULL,
     valid_from TIMESTAMP NOT NULL,
     valid_to TIMESTAMP NOT NULL,
-    CHECK (valid_to > valid_from)
+    CHECK (valid_to > valid_from),
+    CHECK (discount > 0 AND discount <= 100)
 );
 
 -- ORDERS

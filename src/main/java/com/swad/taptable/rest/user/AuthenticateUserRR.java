@@ -19,15 +19,16 @@ import java.sql.SQLException;
  * Handles user authentication (login). Expects a JSON body with {@code email} and {@code password}
  * fields, and returns a JWT in an HttpOnly cookie on successful authentication.
  *
- * <p>
- * Example request body:
- *
- * <pre>
- * { "email": "mario@test.com", "password": "supersecret" }
- * </pre>
+ * @author SWAD Team
  */
 public final class AuthenticateUserRR extends AbstractRR {
 
+  /**
+   * Creates the REST resource that handles user authentication.
+   *
+   * @param req the HTTP request.
+   * @param res the HTTP response.
+   */
   public AuthenticateUserRR(final HttpServletRequest req, final HttpServletResponse res) {
     super(Actions.AUTHENTICATE_USER, req, res);
   }
@@ -86,6 +87,12 @@ public final class AuthenticateUserRR extends AbstractRR {
     }
   }
 
+  /**
+   * Method that checks if a string is missing (null or blank)
+   *
+   * @param s the string to validate.
+   * @return {@code true} if the string is {@code null} or blank.
+   */
   private static boolean isMissing(final String s) {
     return s == null || s.isBlank();
   }

@@ -25,9 +25,19 @@ public final class JWTUtil {
   /** Token expiry in seconds (8 hours). */
   public static final int EXPIRY_SECONDS = 8 * 60 * 60;
 
+  /**
+   * Signing algorithm initialized from the application secret and reused for token generation.
+   */
   private static Algorithm algorithm;
+
+  /**
+   * Verifier configured with the current signing algorithm and reused for token validation.
+   */
   private static JWTVerifier verifier;
 
+  /**
+   * Private constructor to prevent instantiation of this utility class.
+   */
   private JWTUtil() {}
 
   /**

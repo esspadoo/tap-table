@@ -13,6 +13,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * REST resource that handles creation of a new promotion
+ *
+ * @author SWAD Team
+ */
 public class NewPromotionRR extends AbstractRR {
   /**
    * Creates a new {@code NewPromotionRR} object.
@@ -30,16 +35,27 @@ public class NewPromotionRR extends AbstractRR {
       final Promotion in = Promotion.fromJSON(req.getInputStream());
 
       // Check if the required fields are present and valid
-      if (in.getCode() == null || in.getCode().isBlank() || in.getType() == null
-          || in.getType().isBlank() || in.getDescription() == null || in.getDescription().isBlank()
+      if (in.getCode() == null || in.getCode().isBlank() || in.getDiscount() == null
+          || in.getDescription() == null || in.getDescription().isBlank()
           || in.getValidFrom() == null || in.getValidTo() == null) {
-        LOGGER.warn("Missing required fields: code, type or description is empty.");
+        LOGGER.warn("Missing required fields: code, discount or description is empty.");
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         Message m =
             new Message("Missing required fields", ErrorCodes.INVALID_INPUT_PARAMETER, null);
         m.toJSON(res.getOutputStream());
 
         // Return early since the input is not valid
+        return;
+      }
+
+      if (in.getDiscount() <= 0 || in.getDiscount() > 100) {
+        LOGGER.warn("Invalid promotion discount: %f.", in.getDiscount());
+        Message m = new Message("Invalid discount: it must be between 0 and 100.",
+            ErrorCodes.INVALID_INPUT_PARAMETER, null);
+        res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        m.toJSON(res.getOutputStream());
+
+        // Return early since the discount is not valid
         return;
       }
 

@@ -12,8 +12,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * REST resource that handles retrieval of a single user by ID
+ *
+ * @author SWAD Team
+ */
 public class GetUserRR extends AbstractRR {
 
+    /**
+     * Creates the REST resource that retrieves a single user.
+     *
+     * @param req the HTTP request.
+     * @param res the HTTP response.
+     */
     public GetUserRR(final HttpServletRequest req, final HttpServletResponse res) {
         super(Actions.GET_USER, req, res);
     }

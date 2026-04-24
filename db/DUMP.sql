@@ -35,12 +35,12 @@ INSERT INTO "public"."dish_ingredients" ("id", "dish_id", "ingredient_id") VALUE
 (4, 2, 1),  -- spaghetti    → pomodoro
 (5, 4, 5);  -- tiramisù     → mascarpone
 
-INSERT INTO "public"."promotions" ("id", "code", "type", "description", "valid_from", "valid_to") VALUES
-(1, 'BENVENUTO10',  'DISCOUNT', 'Sconto 10% per i nuovi clienti',              '2026-01-01 00:00:00', '2026-12-31 23:59:59'),
-(2, 'ESTATE20',     'DISCOUNT', 'Sconto 20% per il periodo estivo',            '2026-06-01 00:00:00', '2026-08-31 23:59:59'),
-(3, 'FEDELTA5',     'DISCOUNT', 'Sconto 5% per i clienti fedeli',              '2026-01-01 00:00:00', '2026-12-31 23:59:59'),
-(4, 'NATALE15',     'DISCOUNT', 'Sconto 15% per le festività natalizie',       '2026-12-01 00:00:00', '2026-12-31 23:59:59'),
-(5, 'COMPLEANNO25', 'DISCOUNT', 'Sconto 25% nel giorno del compleanno',        '2026-01-01 00:00:00', '2026-12-31 23:59:59');
+INSERT INTO "public"."promotions" ("id", "code", "discount", "description", "valid_from", "valid_to") VALUES
+(1, 'BENVENUTO10',  0.10, 'Sconto 10% per i nuovi clienti',              '2026-01-01 00:00:00', '2026-12-31 23:59:59'),
+(2, 'ESTATE20',     0.20, 'Sconto 20% per il periodo estivo',            '2026-06-01 00:00:00', '2026-08-31 23:59:59'),
+(3, 'FEDELTA5',     0.5, 'Sconto 5% per i clienti fedeli',              '2026-01-01 00:00:00', '2026-12-31 23:59:59'),
+(4, 'NATALE15',     0.15, 'Sconto 15% per le festività natalizie',       '2026-12-01 00:00:00', '2026-12-31 23:59:59'),
+(5, 'COMPLEANNO25', 0.25, 'Sconto 25% nel giorno del compleanno',        '2026-01-01 00:00:00', '2026-12-31 23:59:59');
 
 -- customers: gpadoan (4), fbaldan (5)
 INSERT INTO "public"."orders" ("id", "user_id", "promotion_id", "total_amount", "status") VALUES

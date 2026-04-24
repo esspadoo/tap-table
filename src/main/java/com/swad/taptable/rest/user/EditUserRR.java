@@ -13,8 +13,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * REST resource that handles editing of an existing user
+ *
+ * @author SWAD Team
+ */
 public class EditUserRR extends AbstractRR {
 
+    /**
+     * Creates the REST resource that updates a user profile.
+     *
+     * @param req the HTTP request.
+     * @param res the HTTP response.
+     */
     public EditUserRR(final HttpServletRequest req, final HttpServletResponse res) {
         super(Actions.EDIT_USER, req, res);
     }
