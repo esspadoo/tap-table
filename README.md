@@ -10,7 +10,8 @@ This repository is the repository for the homeworks to developed in the Web Appl
 - Sanavia Thomas (2197484)
 
 ### How to run
-- docker compose up
+- `mvn clean package`
+- `docker compose up`
 
 ### License ###
 
