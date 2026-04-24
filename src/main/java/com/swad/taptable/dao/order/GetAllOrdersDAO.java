@@ -8,7 +8,6 @@ import com.swad.taptable.resources.ResourceList;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,20 +15,18 @@ public class GetAllOrdersDAO extends AbstractDAO<ResourceList<Order>> {
 
   private static final String ORDERS_STATEMENT = "SELECT * FROM orders";
   private static final String ORDER_DISHES_STATEMENT =
-          "SELECT dish_id, quantity, is_liked  FROM order_dishes WHERE order_id = ?";
+      "SELECT dish_id, quantity, is_liked  FROM order_dishes WHERE order_id = ?";
 
   @Override
   protected void doAccess() throws Exception {
     List<Order> orders = new ArrayList<>();
 
-    con.setAutoCommit(false);
-
     try (PreparedStatement ordersPstmt = con.prepareStatement(ORDERS_STATEMENT);
-         ResultSet ordersRs = ordersPstmt.executeQuery()) {
+        ResultSet ordersRs = ordersPstmt.executeQuery()) {
       while (ordersRs.next()) {
         int orderId = ordersRs.getInt("id");
         int userId = ordersRs.getInt("user_id");
-        int promotionId = ordersRs.getInt("promotion_id");
+        Integer promotionId = ordersRs.getObject("promotion_id", Integer.class);
         float totalPrice = ordersRs.getFloat("total_amount");
         OrderStatus status = OrderStatus.valueOf(ordersRs.getString("status"));
 
@@ -47,15 +44,10 @@ public class GetAllOrdersDAO extends AbstractDAO<ResourceList<Order>> {
             }
 
             orders.add(new Order.Builder().id(orderId).userId(userId).promotionId(promotionId)
-                    .totalPrice(totalPrice).status(status).dishes(orderDishes).build());
+                .totalPrice(totalPrice).status(status).dishes(orderDishes).build());
           }
         }
       }
-
-      con.commit();
-    } catch (SQLException e) {
-      con.rollback();
-      throw e;
     }
 
     outputParam = new ResourceList<>(orders);
