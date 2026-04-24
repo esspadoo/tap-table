@@ -85,16 +85,10 @@ public abstract class AbstractDAO<T> implements DataAccessObject<T> {
   protected AbstractDAO() {
 
     try {
-      con = ConnectionPoolSingleton.getConnection(); // TODO: ask professor for the validity of this
-                                                     // approach
+      con = ConnectionPoolSingleton.getConnection();
     } catch (final SQLException e) {
-      // TODO: understand wheter to use error or fatal (ask the team and professor)
       LOGGER.error("Unable to acquire a connection from the pool.", e);
 
-      // TODO: handle by throwing the SQLException in order to handle it and return 500 error
-      // for the moment, throws a RuntimeException to avoid the need of declaring the
-      // SQLException in the signature of the constructor, which would be a problem for the
-      // sub-classes, that would have to declare it as well
       throw new RuntimeException("Unable to acquire a connection from the pool.", e);
     }
 
@@ -227,4 +221,6 @@ public abstract class AbstractDAO<T> implements DataAccessObject<T> {
    * @throws Exception if there is any issue.
    */
   protected abstract void doAccess() throws Exception;
+
+
 }
