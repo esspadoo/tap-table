@@ -5,6 +5,26 @@ package com.swad.taptable.util;
  */
 public final class Actions {
   /**
+   * The retrieval of a user by its id
+   */
+  public static final String GET_USER = "GET_USER";
+
+  /**
+   * The logout of a user
+   */
+  public static final String LOGOUT_USER = "LOGOUT_USER";
+
+  /**
+   * The update of a user profile
+   */
+  public static final String EDIT_USER = "EDIT_USER";
+
+  /**
+   * The deletion of a user account
+   */
+  public static final String DELETE_USER = "DELETE_USER";
+
+  /**
    * The authentication of a user
    */
   public static final String AUTHENTICATE_USER = "AUTHENTICATE_USER";
@@ -80,9 +100,14 @@ public final class Actions {
   public static final String GET_ORDER = "GET_ORDER";
 
   /**
+   * Get user orders
+   */
+  public static final String GET_USER_ORDERS = "GET_ORDERS";
+
+  /**
    * Get all orders
    */
-  public static final String GET_ORDERS = "GET_ORDERS";
+  public static final String GET_ORDERS = "GET_ALL_ORDERS";
 
   /**
    * Edit order
@@ -118,5 +143,40 @@ public final class Actions {
    * The deletion of a dish
    */
   public static final String DELETE_DISH = "DELETE_DISH";
+
+  /**
+   * The creation of a new category
+   */
+  public static final String CREATE_CATEGORY = "CREATE_CATEGORY";
+
+  /**
+   * The retrieval of all categories
+   */
+  public static final String GET_CATEGORIES = "GET_CATEGORIES";
+
+  /**
+   * The deletion of a category
+   */
+  public static final String DELETE_CATEGORY = "DELETE_CATEGORY";
+
+  /**
+   * Serving the login page
+   */
+  public static final String VIEW_LOGIN = "VIEW_LOGIN";
+
+  /**
+   * Serving the registration page
+   */
+  public static final String VIEW_REGISTER = "VIEW_REGISTER";
+
+  /**
+   * Serving the dashboard page
+   */
+  public static final String VIEW_DASHBOARD = "VIEW_DASHBOARD";
+
+  /**
+   * Serving the ingredients page
+   */
+  public static final String VIEW_INGREDIENTS = "VIEW_INGREDIENTS";
 
 }
