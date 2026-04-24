@@ -1,5 +1,18 @@
 \subsection{Other Information}
+Below there is a list of important points that could be useful to know:
 
-%if needed write here other details about your Data Logic Layer that cannot be expressed directly through the ER schema
+\begin{itemize}
+    \item Most entity identifiers are of type \texttt{SERIAL} (auto-incrementing integer), which guarantees uniqueness and offers efficient joins on numeric keys. The main exception is \texttt{categories} whose primary key is the attribute \texttt{name} of type \texttt{VARCHAR(255)}.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    \item Passwords are never stored in plain text. The \texttt{password\_hash} column in the \texttt{users} table contains a bcrypt hash generated at registration time using the jBCrypt library. At authentication time the submitted password is checked against the stored hash using \texttt{BCrypt.checkpw}.
+
+    \item The \texttt{price} column in the \texttt{dishes} table stores monetary values as \texttt{DECIMAL(10,2)}. In the Java business logic layer, the \texttt{Dish} resource represents the price as a \texttt{Double}, while \texttt{CreateDishRR} validates that the price is present and strictly positive before delegating the insertion to the DAO layer.
+
+    \item The \texttt{is\_liked} field in \texttt{order\_dishes} is nullable: it is intended to be populated only after an order reaches the \texttt{COMPLETED} status, when the customer can rate a dish. As of the current implementation, no database trigger enforces this rule: it is the responsibility of the application layer to avoid setting this field on non-completed orders.
+
+    \item The \texttt{allergen} column in \texttt{ingredients} is a PostgreSQL array of the custom \texttt{ALLERGEN} enum type which lists all 14 allergens defined by EU food regulation. This allows a single ingredient to carry multiple allergens without introducing an additional join table. 
+
+    \item The application connects to PostgreSQL through a container-managed \texttt{DataSource} looked up via JNDI (\texttt{java:comp/env/jdbc/taptable}), configured in Tomcat's \texttt{context.xml}. A dedicated \texttt{taptable\_manager} database role with limited privileges (no superuser, no create database, no create role, no inherit) is used for all application queries.
+
+    \item The JWT signing secret is configured as a \texttt{context-param} named \texttt{jwt.secret} in \texttt{web.xml}. The current value is a placeholder (\texttt{change-me-in-production-use-a-long-random-string}) that must be replaced with a strong random secret before any production deployment.
+\end{itemize}
