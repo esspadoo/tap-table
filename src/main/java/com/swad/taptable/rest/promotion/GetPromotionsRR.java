@@ -26,19 +26,17 @@ public class GetPromotionsRR extends AbstractRR {
 
       if (promotions == null) {
         res.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        new Message("No promotions found.", ErrorCodes.RESOURCE_NOT_FOUND, null)
-            .toJSON(res.getOutputStream());
+        Message m = new Message("No promotions found.", ErrorCodes.RESOURCE_NOT_FOUND, null);
+        m.toJSON(res.getOutputStream());
         return;
       }
 
       res.setStatus(HttpServletResponse.SC_OK);
-      res.setContentType(JSON_UTF_8_MEDIA_TYPE);
       promotions.toJSON(res.getOutputStream());
     } catch (SQLException e) {
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       Message m = new Message("Unexpected database error: no. " + e.getErrorCode(),
           ErrorCodes.UNEXPECTED_DB_ERROR, e.getMessage());
-      res.setContentType(JSON_UTF_8_MEDIA_TYPE);
       m.toJSON(res.getOutputStream());
     }
   }

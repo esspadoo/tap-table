@@ -25,13 +25,13 @@ public class GetDishesRR extends AbstractRR {
       final ResourceList<Dish> out = new GetDishesDAO().access().getOutputParam();
 
       res.setStatus(HttpServletResponse.SC_OK);
-      res.setContentType(JSON_UTF_8_MEDIA_TYPE);
       out.toJSON(res.getOutputStream());
 
     } catch (final SQLException e) {
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      new Message("Database error while retrieving dishes.", ErrorCodes.UNEXPECTED_DB_ERROR,
-          e.getMessage()).toJSON(res.getOutputStream());
+      Message m = new Message("Database error while retrieving dishes.",
+          ErrorCodes.UNEXPECTED_DB_ERROR, e.getMessage());
+      m.toJSON(res.getOutputStream());
     }
   }
 }

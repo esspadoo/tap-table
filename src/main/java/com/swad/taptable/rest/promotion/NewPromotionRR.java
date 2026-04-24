@@ -63,22 +63,22 @@ public class NewPromotionRR extends AbstractRR {
         res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         Message m =
             new Message("Failed to create promotion.", ErrorCodes.UNEXPECTED_DB_ERROR, null);
-        res.setContentType(JSON_UTF_8_MEDIA_TYPE);
         m.toJSON(res.getOutputStream());
         return;
       }
 
       res.setStatus(HttpServletResponse.SC_CREATED);
-      res.setContentType(JSON_UTF_8_MEDIA_TYPE);
       out.toJSON(res.getOutputStream());
     } catch (final UnexpectedKeyException e) {
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      new Message("Malformed JSON in request body.", ErrorCodes.WRONG_RESOURCE_PROVIDED,
-          e.getMessage()).toJSON(res.getOutputStream());
+      Message m = new Message("Malformed JSON in request body.", ErrorCodes.WRONG_RESOURCE_PROVIDED,
+          e.getMessage());
+      m.toJSON(res.getOutputStream());
     } catch (final SQLException ex) {
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      new Message("Unexpected database error: no. " + ex.getErrorCode(),
-          ErrorCodes.UNEXPECTED_DB_ERROR, ex.getMessage()).toJSON(res.getOutputStream());
+      Message m = new Message("Unexpected database error: no. " + ex.getErrorCode(),
+          ErrorCodes.UNEXPECTED_DB_ERROR, ex.getMessage());
+      m.toJSON(res.getOutputStream());
     }
   }
 }

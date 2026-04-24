@@ -38,20 +38,17 @@ public class CheckPromotionRR extends AbstractRR {
         res.setStatus(HttpServletResponse.SC_NOT_FOUND);
         Message m = new Message("Promotion with code " + code + " not found.",
             ErrorCodes.RESOURCE_NOT_FOUND, null);
-        res.setContentType(JSON_UTF_8_MEDIA_TYPE);
         m.toJSON(res.getOutputStream());
         return;
       }
 
       LOGGER.info("Promotion with code %s successfully retrieved.", promotion.getCode());
       res.setStatus(HttpServletResponse.SC_OK);
-      res.setContentType(JSON_UTF_8_MEDIA_TYPE);
       promotion.toJSON(res.getOutputStream());
     } catch (SQLException ex) {
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       Message m = new Message("Unexpected database error: no. " + ex.getErrorCode(),
           ErrorCodes.UNEXPECTED_DB_ERROR, ex.getMessage());
-      res.setContentType(JSON_UTF_8_MEDIA_TYPE);
       m.toJSON(res.getOutputStream());
     }
   }

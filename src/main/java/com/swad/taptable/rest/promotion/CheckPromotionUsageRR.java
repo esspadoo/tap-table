@@ -38,7 +38,6 @@ public class CheckPromotionUsageRR extends AbstractRR {
       }
 
       res.setStatus(HttpServletResponse.SC_OK);
-      res.setContentType(JSON_UTF_8_MEDIA_TYPE);
       isPromotionAlreadyUsed.toJSON(res.getOutputStream());
 
     } catch (SQLException e) {

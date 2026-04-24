@@ -14,62 +14,58 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class EditIngredientRR extends AbstractRR {
 
-    public EditIngredientRR(HttpServletRequest req, HttpServletResponse res) {
-        super(Actions.EDIT_INGREDIENT, req, res);
+  public EditIngredientRR(HttpServletRequest req, HttpServletResponse res) {
+    super(Actions.EDIT_INGREDIENT, req, res);
+  }
+
+  @Override
+  protected void doServe() throws IOException {
+    try {
+      final Ingredient in = Ingredient.fromJSON(req.getInputStream());
+
+      /**
+       * Check that the required fields provided are not null nor empty. The id is required to
+       * identify the ingredient to edit, while name and isFrozen are required by the DAO (and the
+       * DB as the value cannot be null) to update the ingredient.
+       */
+      if (in.getId() == null || in.getName() == null || in.isFrozen() == null
+          || in.getName().isBlank()) {
+        res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        Message m = new Message("Missing required fields: name and isFrozen must be provided",
+            ErrorCodes.INVALID_INPUT_PARAMETER, null);
+        m.toJSON(res.getOutputStream());
+
+        // Return early since the input is not valid
+        return;
+      }
+
+      // If the input is valid, proceed with the edit operation
+      EditIngredientDAO dao = new EditIngredientDAO(in);
+      Ingredient out = dao.access().getOutputParam();
+
+      if (out == null) {
+        LOGGER.warn("Ingredient with id %d not found for editing.", in.getId());
+        res.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        Message m = new Message("Ingredient with id " + in.getId() + " not found.",
+            ErrorCodes.RESOURCE_NOT_FOUND, null);
+        m.toJSON(res.getOutputStream());
+        return;
+      }
+
+      res.setStatus(HttpServletResponse.SC_OK);
+      out.toJSON(res.getOutputStream());
+
+    } catch (final UnexpectedKeyException e) {
+      res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+
+      Message m = new Message("Unexpected key in JSON: " + e.getMessage(),
+          ErrorCodes.WRONG_RESOURCE_PROVIDED, null);
+      m.toJSON(res.getOutputStream());
+    } catch (final SQLException e) {
+      res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      Message m = new Message("Database error while editing ingredient.",
+          ErrorCodes.UNEXPECTED_DB_ERROR, e.getMessage());
+      m.toJSON(res.getOutputStream());
     }
-
-    @Override
-    protected void doServe() throws IOException {
-        try {
-            final Ingredient in = Ingredient.fromJSON(req.getInputStream());
-
-            /**
-             * Check that the required fields provided are not null nor empty. The id is required to
-             * identify the ingredient to edit, while name and isFrozen are required by the DAO (and
-             * the DB as the value cannot be null) to update the ingredient.
-             */
-            if (in.getId() == null || in.getName() == null || in.isFrozen() == null
-                    || in.getName().isBlank()) {
-                res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                Message m =
-                        new Message("Missing required fields: name and isFrozen must be provided",
-                                ErrorCodes.INVALID_INPUT_PARAMETER, null);
-                m.toJSON(res.getOutputStream());
-
-                // Return early since the input is not valid
-                return;
-            }
-
-            // If the input is valid, proceed with the edit operation
-            EditIngredientDAO dao = new EditIngredientDAO(in);
-            Ingredient out = dao.access().getOutputParam();
-
-            if (out == null) {
-                LOGGER.warn("Ingredient with id %d not found for editing.", in.getId());
-                res.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                Message m = new Message("Ingredient with id " + in.getId() + " not found.",
-                        ErrorCodes.RESOURCE_NOT_FOUND, null);
-                m.toJSON(res.getOutputStream());
-                return;
-            }
-
-            res.setStatus(HttpServletResponse.SC_OK);
-            res.setContentType(JSON_UTF_8_MEDIA_TYPE);
-            out.toJSON(res.getOutputStream());
-
-        } catch (final UnexpectedKeyException e) {
-            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-
-            Message m = new Message("Unexpected key in JSON: " + e.getMessage(),
-                    ErrorCodes.WRONG_RESOURCE_PROVIDED, null);
-            res.setContentType(JSON_UTF_8_MEDIA_TYPE);
-            m.toJSON(res.getOutputStream());
-        } catch (final SQLException e) {
-            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            Message m = new Message("Database error while editing ingredient.",
-                    ErrorCodes.UNEXPECTED_DB_ERROR, e.getMessage());
-            res.setContentType(JSON_UTF_8_MEDIA_TYPE);
-            m.toJSON(res.getOutputStream());
-        }
-    }
+  }
 }

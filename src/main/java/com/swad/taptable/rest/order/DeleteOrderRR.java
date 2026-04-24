@@ -51,7 +51,7 @@ public class DeleteOrderRR extends AbstractRR {
       m.toJSON(res.getOutputStream());
     } catch (SQLException ex) {
       // FIXME: better sql handling (dont return 500 everytime)
-      Message m = new Message("Unexpected database error" + ex.getErrorCode(),
+      Message m = new Message("Unexpected database error: no. " + ex.getErrorCode(),
           ErrorCodes.UNEXPECTED_DB_ERROR, ex.getMessage());
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       m.toJSON(res.getOutputStream());
