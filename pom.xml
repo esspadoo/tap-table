@@ -10,6 +10,47 @@
     <packaging>war</packaging>
 
     <name>TapTable</name>
+    <description>TapTable is a web application for the management of a dining, enabling customers to browse and reserve dishes online while providing managers and staff tools to oversee reservations and payments.</description>
+    <url>https://bitbucket.org/upd-dei-stud-prj/wa2526-swad/</url>
+    <organization>
+        <name>SWAD - Scalable Web Application Development</name>
+    </organization>
+
+    <developers>
+        <developer>
+            <id>fbaldan</id>
+            <name>Fabio Baldan</name>
+            <email>fabio.baldan.1@studenti.unipd.it</email>
+        </developer>
+        <developer>
+            <id>agarberino</id>
+            <name>Alvise Garberino</name>
+            <email>alvise.garberino@studenti.unipd.it</email>
+        </developer>
+        <developer>
+            <id>kmerja</id>
+            <name>Klaudio Merja</name>
+            <email>klaudio.merja@studenti.unipd.it</email>
+        </developer>
+        <developer>
+            <id>gpadoan</id>
+            <name>Giancarlo Padoan</name>
+            <email>giancarlo.padoan@studenti.unipd.it</email>
+        </developer>
+        <developer>
+            <id>tsanavia</id>
+            <name>Thomas Sanavia</name>
+            <email>thomas.sanavia@studenti.unipd.it</email>
+        </developer>
+    </developers>
+    <inceptionYear>2026</inceptionYear>
+    <licenses>
+        <license>
+            <name>Creative Commons Attribution-ShareAlike 4.0 International</name>
+            <url>https://creativecommons.org/licenses/by-sa/4.0/</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -89,19 +130,6 @@
             <version>${log4j.version}</version>
         </dependency>
 
-        <!-- Test -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>6.0.3</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>5.11.0</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -159,8 +187,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.12.0</version>
-                <configuration>
-                </configuration>
             </plugin>
         </plugins>
     </reporting>
