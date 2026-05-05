@@ -1,12 +1,13 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.dao.promotions;
 
+import com.swad.taptable.dao.AbstractDAO;
+import com.swad.taptable.resources.Promotion;
+import com.swad.taptable.resources.ResourceList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import com.swad.taptable.dao.AbstractDAO;
-import com.swad.taptable.resources.Promotion;
-import com.swad.taptable.resources.ResourceList;
 
 public class GetPromotionsDAO extends AbstractDAO<ResourceList<Promotion>> {
 
@@ -16,17 +17,20 @@ public class GetPromotionsDAO extends AbstractDAO<ResourceList<Promotion>> {
   @Override
   protected void doAccess() throws Exception {
     List<Promotion> promotions = new ArrayList<>();
-    try (PreparedStatement pstmt = con.prepareStatement(STATEMENT);) {
+    try (PreparedStatement pstmt = con.prepareStatement(STATEMENT); ) {
       try (ResultSet rs = pstmt.executeQuery()) {
         while (rs.next()) {
-          promotions.add(new Promotion(rs.getString("code"), rs.getFloat("discount"),
-              rs.getString("description"), rs.getTimestamp("valid_from").toLocalDateTime(),
-              rs.getTimestamp("valid_to").toLocalDateTime()));
+          promotions.add(
+              new Promotion(
+                  rs.getString("code"),
+                  rs.getFloat("discount"),
+                  rs.getString("description"),
+                  rs.getTimestamp("valid_from").toLocalDateTime(),
+                  rs.getTimestamp("valid_to").toLocalDateTime()));
         }
       }
     }
 
     outputParam = new ResourceList<>(promotions);
   }
-
 }

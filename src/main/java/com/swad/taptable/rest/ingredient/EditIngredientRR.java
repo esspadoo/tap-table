@@ -1,16 +1,17 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.ingredient;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import com.swad.taptable.dao.ingredient.EditIngredientDAO;
-import com.swad.taptable.rest.AbstractRR;
-import com.swad.taptable.util.Actions;
-import com.swad.taptable.util.ErrorCodes;
 import com.swad.taptable.exception.json.UnexpectedKeyException;
 import com.swad.taptable.resources.Ingredient;
 import com.swad.taptable.resources.Message;
+import com.swad.taptable.rest.AbstractRR;
+import com.swad.taptable.util.Actions;
+import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * REST resource that handles editing of an existing ingredient
@@ -39,11 +40,16 @@ public class EditIngredientRR extends AbstractRR {
        * identify the ingredient to edit, while name and isFrozen are required by the DAO (and the
        * DB as the value cannot be null) to update the ingredient.
        */
-      if (in.getId() == null || in.getName() == null || in.isFrozen() == null
+      if (in.getId() == null
+          || in.getName() == null
+          || in.isFrozen() == null
           || in.getName().isBlank()) {
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        Message m = new Message("Missing required fields: name and isFrozen must be provided",
-            ErrorCodes.INVALID_INPUT_PARAMETER, null);
+        Message m =
+            new Message(
+                "Missing required fields: name and isFrozen must be provided",
+                ErrorCodes.INVALID_INPUT_PARAMETER,
+                null);
         m.toJSON(res.getOutputStream());
 
         // Return early since the input is not valid
@@ -57,8 +63,11 @@ public class EditIngredientRR extends AbstractRR {
       if (out == null) {
         LOGGER.warn("Ingredient with id %d not found for editing.", in.getId());
         res.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        Message m = new Message("Ingredient with id " + in.getId() + " not found.",
-            ErrorCodes.RESOURCE_NOT_FOUND, null);
+        Message m =
+            new Message(
+                "Ingredient with id " + in.getId() + " not found.",
+                ErrorCodes.RESOURCE_NOT_FOUND,
+                null);
         m.toJSON(res.getOutputStream());
         return;
       }
@@ -69,13 +78,19 @@ public class EditIngredientRR extends AbstractRR {
     } catch (final UnexpectedKeyException e) {
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
-      Message m = new Message("Unexpected key in JSON: " + e.getMessage(),
-          ErrorCodes.WRONG_RESOURCE_PROVIDED, null);
+      Message m =
+          new Message(
+              "Unexpected key in JSON: " + e.getMessage(),
+              ErrorCodes.WRONG_RESOURCE_PROVIDED,
+              null);
       m.toJSON(res.getOutputStream());
     } catch (final SQLException e) {
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      Message m = new Message("Database error while editing ingredient.",
-          ErrorCodes.UNEXPECTED_DB_ERROR, e.getMessage());
+      Message m =
+          new Message(
+              "Database error while editing ingredient.",
+              ErrorCodes.UNEXPECTED_DB_ERROR,
+              e.getMessage());
       m.toJSON(res.getOutputStream());
     }
   }

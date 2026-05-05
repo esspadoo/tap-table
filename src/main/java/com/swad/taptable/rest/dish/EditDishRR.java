@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.dish;
 
 import com.swad.taptable.dao.dish.EditDishDAO;
@@ -10,7 +11,6 @@ import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -36,9 +36,13 @@ public class EditDishRR extends AbstractRR {
     try {
       final Dish in = Dish.fromJSON(req.getInputStream());
 
-      if (in.getName() == null || in.getName().isBlank() || in.getPrice() == null
-          || in.getIngredientIds() == null || in.getIngredientIds().isEmpty()
-          || in.getCategory() == null || in.getId() == null) {
+      if (in.getName() == null
+          || in.getName().isBlank()
+          || in.getPrice() == null
+          || in.getIngredientIds() == null
+          || in.getIngredientIds().isEmpty()
+          || in.getCategory() == null
+          || in.getId() == null) {
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         Message m =
             new Message("Missing required fields", ErrorCodes.INVALID_INPUT_PARAMETER, null);
@@ -50,8 +54,9 @@ public class EditDishRR extends AbstractRR {
 
       if (out == null) {
         res.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        Message m = new Message("Dish with id " + in.getId() + " not found.",
-            ErrorCodes.RESOURCE_NOT_FOUND, null);
+        Message m =
+            new Message(
+                "Dish with id " + in.getId() + " not found.", ErrorCodes.RESOURCE_NOT_FOUND, null);
         m.toJSON(res.getOutputStream());
         return;
       }
@@ -66,18 +71,23 @@ public class EditDishRR extends AbstractRR {
       m.toJSON(res.getOutputStream());
     } catch (final NotValidDishException e) {
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      Message m = new Message("Invalid dish data: " + e.getMessage(),
-          ErrorCodes.INVALID_INPUT_PARAMETER, null);
+      Message m =
+          new Message(
+              "Invalid dish data: " + e.getMessage(), ErrorCodes.INVALID_INPUT_PARAMETER, null);
       m.toJSON(res.getOutputStream());
     } catch (final UnexpectedKeyException e) {
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      Message m = new Message("Malformed JSON in request body.", ErrorCodes.WRONG_RESOURCE_PROVIDED,
-          e.getMessage());
+      Message m =
+          new Message(
+              "Malformed JSON in request body.",
+              ErrorCodes.WRONG_RESOURCE_PROVIDED,
+              e.getMessage());
       m.toJSON(res.getOutputStream());
     } catch (final SQLException e) {
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      Message m = new Message("Database error while editing dish.", ErrorCodes.UNEXPECTED_DB_ERROR,
-          e.getMessage());
+      Message m =
+          new Message(
+              "Database error while editing dish.", ErrorCodes.UNEXPECTED_DB_ERROR, e.getMessage());
       m.toJSON(res.getOutputStream());
     }
   }

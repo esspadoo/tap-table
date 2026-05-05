@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.dish;
 
 import com.swad.taptable.dao.dish.GetDishesDAO;
@@ -9,7 +10,6 @@ import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -40,8 +40,11 @@ public class GetDishesRR extends AbstractRR {
 
     } catch (final SQLException e) {
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      Message m = new Message("Database error while retrieving dishes.",
-          ErrorCodes.UNEXPECTED_DB_ERROR, e.getMessage());
+      Message m =
+          new Message(
+              "Database error while retrieving dishes.",
+              ErrorCodes.UNEXPECTED_DB_ERROR,
+              e.getMessage());
       m.toJSON(res.getOutputStream());
     }
   }

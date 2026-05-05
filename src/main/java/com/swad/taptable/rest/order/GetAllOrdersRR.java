@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.order;
 
 import com.swad.taptable.dao.order.GetAllOrdersDAO;
@@ -9,7 +10,6 @@ import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -39,11 +39,15 @@ public class GetAllOrdersRR extends AbstractRR {
       orders.toJSON(res.getOutputStream());
 
     } catch (final SQLException e) {
-      LOGGER.error("Database error (no. %d) while retrieving all orders: %s", e.getErrorCode(),
-          e.getMessage());
+      LOGGER.error(
+          "Database error (no. %d) while retrieving all orders: %s",
+          e.getErrorCode(), e.getMessage());
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      new Message("Database error while retrieving orders.", ErrorCodes.UNEXPECTED_DB_ERROR,
-          e.getMessage()).toJSON(res.getOutputStream());
+      new Message(
+              "Database error while retrieving orders.",
+              ErrorCodes.UNEXPECTED_DB_ERROR,
+              e.getMessage())
+          .toJSON(res.getOutputStream());
     }
   }
 }

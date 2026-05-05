@@ -1,9 +1,9 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.dao.ingredient;
 
 import com.swad.taptable.dao.AbstractDAO;
 import com.swad.taptable.resources.Allergen;
 import com.swad.taptable.resources.Ingredient;
-
 import java.sql.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -42,8 +42,9 @@ public class GetIngredientDAO extends AbstractDAO<Ingredient> {
           }
 
           // Create the ingredient object with the retrieved values
-          i = new Ingredient(rs.getInt("id"), rs.getString("name"), allergens,
-              rs.getBoolean("is_frozen"));
+          i =
+              new Ingredient(
+                  rs.getInt("id"), rs.getString("name"), allergens, rs.getBoolean("is_frozen"));
         }
       }
     }

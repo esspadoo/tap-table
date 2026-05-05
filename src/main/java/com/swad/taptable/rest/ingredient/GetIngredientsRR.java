@@ -1,7 +1,6 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.ingredient;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import com.swad.taptable.dao.ingredient.GetIngredientsDAO;
 import com.swad.taptable.resources.Ingredient;
 import com.swad.taptable.resources.Message;
@@ -11,6 +10,8 @@ import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * REST resource that handles retrieval of all ingredients in the system
@@ -40,8 +41,9 @@ public class GetIngredientsRR extends AbstractRR {
     } catch (SQLException e) {
       // FIXME: check the code for known error that could happen and handle them properly
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      Message m = new Message("Database error while retrieving ingredients",
-          ErrorCodes.UNEXPECTED_DB_ERROR, null);
+      Message m =
+          new Message(
+              "Database error while retrieving ingredients", ErrorCodes.UNEXPECTED_DB_ERROR, null);
       m.toJSON(res.getOutputStream());
     }
   }

@@ -1,17 +1,17 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.dao.user;
 
-import org.mindrot.jbcrypt.BCrypt;
 import com.swad.taptable.dao.AbstractDAO;
 import com.swad.taptable.resources.User;
 import com.swad.taptable.resources.UserRole;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * Verifies user credentials and returns the user object on success.
  *
- * <p>
- * Returns {@code null} if the email is not found or the password does not match.
+ * <p>Returns {@code null} if the email is not found or the password does not match.
  */
 public class AuthenticateUserDAO extends AbstractDAO<User> {
 
@@ -42,8 +42,16 @@ public class AuthenticateUserDAO extends AbstractDAO<User> {
           final UserRole role = UserRole.valueOf(rs.getString("role"));
 
           if (BCrypt.checkpw(password, passwordHash)) {
-            user = new User.Builder().id(userId).email(email).name(name).surname(surname)
-                .phoneNumber(phoneNumber).role(role).passwordHash(passwordHash).build();
+            user =
+                new User.Builder()
+                    .id(userId)
+                    .email(email)
+                    .name(name)
+                    .surname(surname)
+                    .phoneNumber(phoneNumber)
+                    .role(role)
+                    .passwordHash(passwordHash)
+                    .build();
           }
         }
       }

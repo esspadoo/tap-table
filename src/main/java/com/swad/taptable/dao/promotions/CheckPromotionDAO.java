@@ -1,8 +1,8 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.dao.promotions;
 
 import com.swad.taptable.dao.AbstractDAO;
 import com.swad.taptable.resources.Promotion;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,9 +33,13 @@ public class CheckPromotionDAO extends AbstractDAO<Promotion> {
       try (ResultSet rs = pstmt.executeQuery()) {
 
         if (rs.next()) {
-          p = new Promotion(rs.getString("code"), rs.getFloat("discount"),
-              rs.getString("description"), rs.getTimestamp("valid_from").toLocalDateTime(),
-              rs.getTimestamp("valid_to").toLocalDateTime());
+          p =
+              new Promotion(
+                  rs.getString("code"),
+                  rs.getFloat("discount"),
+                  rs.getString("description"),
+                  rs.getTimestamp("valid_from").toLocalDateTime(),
+                  rs.getTimestamp("valid_to").toLocalDateTime());
         }
       }
     }

@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.dao;
 
 import java.sql.SQLException;
@@ -22,9 +23,8 @@ public interface DataAccessObject<T> {
 
   /**
    * Retrieves any output parameters, after the access to the database.
-   * 
+   *
    * @return output parameter, or @code{null} if there is no output parameter.
    */
   T getOutputParam();
-
 }

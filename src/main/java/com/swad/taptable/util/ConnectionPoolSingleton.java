@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.util;
 
 import java.sql.Connection;
@@ -12,11 +13,9 @@ import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 /**
  * Acquires and exposes the container-managed DataSource via JNDI.
  *
- * <p>
- * Connection pool lifecycle (sizing, timeouts, credentials) is fully owned by Tomcat - configured
- * in {@code context.xml} outside the WAR. This class only performs the lookup and delegates every
- * call to the container.
- * </p>
+ * <p>Connection pool lifecycle (sizing, timeouts, credentials) is fully owned by Tomcat -
+ * configured in {@code context.xml} outside the WAR. This class only performs the lookup and
+ * delegates every call to the container.
  *
  * @author SWAD Team
  */
@@ -35,8 +34,8 @@ public final class ConnectionPoolSingleton {
       LOGGER.info("Connection pool to the database successfully acquired.");
     } catch (NamingException e) {
       LOGGER.fatal("Unable to acquire the connection pool to the database.", e);
-      throw new ExceptionInInitializerError(e); // https://www.baeldung.com/java-exceptionininitializererror#the-exception
-
+      throw new ExceptionInInitializerError(
+          e); // https://www.baeldung.com/java-exceptionininitializererror#the-exception
     }
   }
 

@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.servlet;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -11,11 +12,10 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormatterMessageFactory;
-
-import java.io.IOException;
 
 public final class DashboardServlet extends HttpServlet {
 
@@ -41,8 +41,8 @@ public final class DashboardServlet extends HttpServlet {
               LOGGER.debug("Serving dashboard for user %d.", userId);
               req.getRequestDispatcher("/jsp/dashboard/index.jsp").forward(req, res);
             } catch (Exception e) {
-              LOGGER.warn("Invalid or expired JWT during dashboard access, redirecting to login.",
-                  e);
+              LOGGER.warn(
+                  "Invalid or expired JWT during dashboard access, redirecting to login.", e);
               res.sendRedirect(req.getContextPath() + "/login");
             }
             return;

@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.user;
 
 import com.swad.taptable.dao.user.DeleteUserDAO;
@@ -8,7 +9,6 @@ import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -39,8 +39,11 @@ public class DeleteUserRR extends AbstractRR {
       if (deleted == null) {
         LOGGER.warn("User with id %d not found.", userId);
         res.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        new Message(String.format("User with id %d not found.", userId),
-            ErrorCodes.RESOURCE_NOT_FOUND, null).toJSON(res.getOutputStream());
+        new Message(
+                String.format("User with id %d not found.", userId),
+                ErrorCodes.RESOURCE_NOT_FOUND,
+                null)
+            .toJSON(res.getOutputStream());
         return;
       }
 
@@ -51,13 +54,19 @@ public class DeleteUserRR extends AbstractRR {
     } catch (final NumberFormatException e) {
       LOGGER.warn("Invalid user ID format: %s", req.getAttribute("user_id"));
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      Message m = new Message("Invalid user ID: " + req.getAttribute("user_id"),
-          ErrorCodes.INVALID_INPUT_PARAMETER, e.getMessage());
+      Message m =
+          new Message(
+              "Invalid user ID: " + req.getAttribute("user_id"),
+              ErrorCodes.INVALID_INPUT_PARAMETER,
+              e.getMessage());
       m.toJSON(res.getOutputStream());
     } catch (final SQLException e) {
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      Message m = new Message("Database error while deleting user.", ErrorCodes.UNEXPECTED_DB_ERROR,
-          e.getMessage());
+      Message m =
+          new Message(
+              "Database error while deleting user.",
+              ErrorCodes.UNEXPECTED_DB_ERROR,
+              e.getMessage());
       m.toJSON(res.getOutputStream());
     }
   }

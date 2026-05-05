@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.dao.order;
 
 import com.swad.taptable.dao.AbstractDAO;
@@ -5,7 +6,6 @@ import com.swad.taptable.resources.Order;
 import com.swad.taptable.resources.OrderDish;
 import com.swad.taptable.resources.OrderStatus;
 import com.swad.taptable.resources.ResourceList;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -52,8 +52,15 @@ public class GetUserOrdersDAO extends AbstractDAO<ResourceList<Order>> {
               }
             }
 
-            orders.add(new Order.Builder().id(orderId).userId(userId).promotionId(promotionId)
-                .totalPrice(totalPrice).status(status).dishes(orderDishes).build());
+            orders.add(
+                new Order.Builder()
+                    .id(orderId)
+                    .userId(userId)
+                    .promotionId(promotionId)
+                    .totalPrice(totalPrice)
+                    .status(status)
+                    .dishes(orderDishes)
+                    .build());
           }
         }
       }

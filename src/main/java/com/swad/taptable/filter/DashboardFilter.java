@@ -1,12 +1,18 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.filter;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.swad.taptable.util.JWTUtil;
-import jakarta.servlet.*;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.annotation.WebFilter;
-import jakarta.servlet.http.*;
-
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -14,13 +20,16 @@ import java.io.IOException;
  * Redirects to {@code /login} if the token is missing or invalid. Sets the {@code user_id} request
  * attribute on success.
  */
-@WebFilter(urlPatterns = "/dashboard/*", filterName = "DashboardFilter",
+@WebFilter(
+    urlPatterns = "/dashboard/*",
+    filterName = "DashboardFilter",
     description = "Filter all dashboard URLs")
 public class DashboardFilter implements Filter {
 
   @Override
-  public void doFilter(final ServletRequest request, final ServletResponse response,
-      final FilterChain chain) throws IOException, ServletException {
+  public void doFilter(
+      final ServletRequest request, final ServletResponse response, final FilterChain chain)
+      throws IOException, ServletException {
 
     HttpServletRequest req = (HttpServletRequest) request;
     HttpServletResponse res = (HttpServletResponse) response;

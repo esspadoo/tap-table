@@ -1,39 +1,31 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.util;
 
 import org.apache.logging.log4j.ThreadContext;
 
-
 /**
  * Provides the log context for the application on a per-thread basis.
- * 
+ *
  * @author SWAD Team
  */
 public final class LogContext {
 
-  /**
-   * The user who is performing an action
-   */
+  /** The user who is performing an action */
   private static final String USER = "USER";
 
-  /**
-   * The IP address of the user who is performing an action
-   */
+  /** The IP address of the user who is performing an action */
   private static final String IP = "IP";
 
-  /**
-   * The action performed by the user
-   */
+  /** The action performed by the user */
   private static final String ACTION = "ACTION";
 
-  /**
-   * The resource currently processed
-   */
+  /** The resource currently processed */
   private static final String RESOURCE = "RESOURCE";
 
   /**
    * Sets the {@code user} currently performing actions.
-   * <p>
-   * If {@code null}, it simply returns.
+   *
+   * <p>If {@code null}, it simply returns.
    *
    * @param user the {@code user} currently performing actions.
    */
@@ -43,17 +35,15 @@ public final class LogContext {
     }
   }
 
-  /**
-   * Removes the {@code User} currently performing actions.
-   */
+  /** Removes the {@code User} currently performing actions. */
   public static void removeUser() {
     ThreadContext.remove(USER);
   }
 
   /**
    * Sets the {@code IP} addressed of the user currently performing actions.
-   * <p>
-   * If {@code null} or empty, it simply returns.
+   *
+   * <p>If {@code null} or empty, it simply returns.
    *
    * @param ip the {@code IP} addressed of the user currently performing actions.
    */
@@ -63,18 +53,15 @@ public final class LogContext {
     }
   }
 
-  /**
-   * Removes the {@code IP} addressed of the user currently performing actions.
-   */
+  /** Removes the {@code IP} addressed of the user currently performing actions. */
   public static void removeIPAddress() {
     ThreadContext.remove(IP);
   }
 
-
   /**
    * Sets the {@code action} currently performed.
-   * <p>
-   * If {@code null}, it simply returns.
+   *
+   * <p>If {@code null}, it simply returns.
    *
    * @param action the action currently performed.
    */
@@ -84,18 +71,15 @@ public final class LogContext {
     }
   }
 
-
-  /**
-   * Removes the action currently performed.
-   */
+  /** Removes the action currently performed. */
   public static void removeAction() {
     ThreadContext.remove(ACTION);
   }
 
   /**
    * Sets the {@code resource} currently processed.
-   * <p>
-   * If {@code null}, it simply returns.
+   *
+   * <p>If {@code null}, it simply returns.
    *
    * @param resource the resource currently processed.
    */
@@ -105,16 +89,12 @@ public final class LogContext {
     }
   }
 
-  /**
-   * Removes the resource currently processed.
-   */
+  /** Removes the resource currently processed. */
   public static void removeResource() {
     ThreadContext.remove(RESOURCE);
   }
 
-  /**
-   * This class can be neither instantiated nor sub-classed.
-   */
+  /** This class can be neither instantiated nor sub-classed. */
   private LogContext() {
     throw new AssertionError(
         String.format("No instances of %s allowed.", LogContext.class.getName()));

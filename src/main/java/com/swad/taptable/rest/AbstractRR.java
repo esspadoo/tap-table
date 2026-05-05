@@ -1,55 +1,40 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 import com.swad.taptable.resources.Message;
 import com.swad.taptable.util.ErrorCodes;
 import com.swad.taptable.util.LogContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 
-/**
- * Represents a generic REST resource.
- */
+/** Represents a generic REST resource. */
 public abstract class AbstractRR implements RestResource {
 
-  /**
-   * A LOGGER available for all the subclasses.
-   */
+  /** A LOGGER available for all the subclasses. */
   protected static final Logger LOGGER =
       LogManager.getLogger(AbstractRR.class, StringFormatterMessageFactory.INSTANCE);
 
-  /**
-   * The JSON MIME media type
-   */
+  /** The JSON MIME media type */
   protected static final String JSON_MEDIA_TYPE = "application/json";
 
-  /**
-   * The JSON UTF-8 MIME media type
-   */
+  /** The JSON UTF-8 MIME media type */
   protected static final String JSON_UTF_8_MEDIA_TYPE = "application/json; charset=utf-8";
 
-  /**
-   * The any MIME media type
-   */
+  /** The any MIME media type */
   protected static final String ALL_MEDIA_TYPE = "*/*";
 
-  /**
-   * The HTTP request
-   */
+  /** The HTTP request */
   protected final HttpServletRequest req;
 
-  /**
-   * The HTTP response
-   */
+  /** The HTTP response */
   protected final HttpServletResponse res;
 
-  /**
-   * The {@link Actions} performed by this REST resource.
-   */
+  /** The {@link Actions} performed by this REST resource. */
   private final String action;
 
   /**
@@ -59,8 +44,8 @@ public abstract class AbstractRR implements RestResource {
    * @param req the HTTP request.
    * @param res the HTTP response.
    */
-  protected AbstractRR(final String action, final HttpServletRequest req,
-      final HttpServletResponse res) {
+  protected AbstractRR(
+      final String action, final HttpServletRequest req, final HttpServletResponse res) {
 
     if (action == null || action.isBlank()) {
       LOGGER.warn("Action is null or empty.");
@@ -99,8 +84,11 @@ public abstract class AbstractRR implements RestResource {
     } catch (Throwable t) {
       LOGGER.error("Unable to serve the REST request.", t);
 
-      final Message m = new Message(String.format("Unable to serve the REST request: %s.", action),
-          ErrorCodes.UNEXPECTED_ERROR, t.getMessage());
+      final Message m =
+          new Message(
+              String.format("Unable to serve the REST request: %s.", action),
+              ErrorCodes.UNEXPECTED_ERROR,
+              t.getMessage());
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       m.toJSON(res.getOutputStream());
     } finally {
@@ -112,8 +100,8 @@ public abstract class AbstractRR implements RestResource {
   /**
    * Performs the actual logic needed for serving the REST request.
    *
-   * Subclasses have to implement this method in order to define the actual strategy for serving the
-   * REST request.
+   * <p>Subclasses have to implement this method in order to define the actual strategy for serving
+   * the REST request.
    *
    * @throws IOException if any error occurs in the client/server communication.
    */
@@ -122,19 +110,17 @@ public abstract class AbstractRR implements RestResource {
   /**
    * Checks that the request method and MIME media type are allowed.
    *
-   * Subclasses may override it to customize their behaviour, e.g. not limiting the MIME media types
-   * to JSON.
+   * <p>Subclasses may override it to customize their behaviour, e.g. not limiting the MIME media
+   * types to JSON.
    *
    * @param req the HTTP request.
    * @param res the HTTP response.
-   *
    * @return {@code true} if the request method and the MIME type are allowed; {@code false}
-   *         otherwise.
-   *
+   *     otherwise.
    * @throws IOException if any error occurs in the client/server communication.
    */
-  protected boolean checkMethodMediaType(final HttpServletRequest req,
-      final HttpServletResponse res) throws IOException {
+  protected boolean checkMethodMediaType(
+      final HttpServletRequest req, final HttpServletResponse res) throws IOException {
 
     final String method = req.getMethod();
     final String contentType = req.getHeader("Content-Type");
@@ -145,8 +131,11 @@ public abstract class AbstractRR implements RestResource {
 
     if (accept == null) {
       LOGGER.error("Output media type not specified. Accept request header missing.");
-      m = new Message("Output media type not specified.",
-          ErrorCodes.OUTPUT_MEDIA_TYPE_NOT_SPECIFIED, "Accept request header missing.");
+      m =
+          new Message(
+              "Output media type not specified.",
+              ErrorCodes.OUTPUT_MEDIA_TYPE_NOT_SPECIFIED,
+              "Accept request header missing.");
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       m.toJSON(out);
       return false;
@@ -156,10 +145,11 @@ public abstract class AbstractRR implements RestResource {
       LOGGER.error(
           "Unsupported output media type. Resources are represented only in application/json. Requested representation is %s.",
           accept);
-      m = new Message(
-          "Unsupported output media type. Resources are represented only in application/json.",
-          ErrorCodes.UNSUPPORTED_OUTPUT_MEDIA_TYPE,
-          String.format("Requested representation is %s.", accept));
+      m =
+          new Message(
+              "Unsupported output media type. Resources are represented only in application/json.",
+              ErrorCodes.UNSUPPORTED_OUTPUT_MEDIA_TYPE,
+              String.format("Requested representation is %s.", accept));
       res.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
       m.toJSON(out);
       return false;
@@ -176,8 +166,11 @@ public abstract class AbstractRR implements RestResource {
       case "PUT":
         if (contentType == null) {
           LOGGER.error("Input media type not specified. Content-Type request header missing.");
-          m = new Message("Input media type not specified.",
-              ErrorCodes.INPUT_MEDIA_TYPE_NOT_SPECIFIED, "Content-Type request header missing.");
+          m =
+              new Message(
+                  "Input media type not specified.",
+                  ErrorCodes.INPUT_MEDIA_TYPE_NOT_SPECIFIED,
+                  "Content-Type request header missing.");
           res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
           m.toJSON(out);
           return false;
@@ -187,10 +180,11 @@ public abstract class AbstractRR implements RestResource {
           LOGGER.error(
               "Unsupported input media type. Resources are represented only in application/json. Submitted representation is %s.",
               contentType);
-          m = new Message(
-              "Unsupported input media type. Resources are represented only in application/json.",
-              ErrorCodes.UNSUPPORTED_INPUT_MEDIA_TYPE,
-              String.format("Submitted representation is %s.", contentType));
+          m =
+              new Message(
+                  "Unsupported input media type. Resources are represented only in application/json.",
+                  ErrorCodes.UNSUPPORTED_INPUT_MEDIA_TYPE,
+                  String.format("Submitted representation is %s.", contentType));
           res.setStatus(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
           m.toJSON(out);
           return false;
@@ -199,8 +193,11 @@ public abstract class AbstractRR implements RestResource {
         break;
       default:
         LOGGER.error("Unsupported operation. Requested operation %s.", method);
-        m = new Message("Unsupported operation.", ErrorCodes.UNSUPPORTED_OPERATION,
-            String.format("Requested operation %s.", method));
+        m =
+            new Message(
+                "Unsupported operation.",
+                ErrorCodes.UNSUPPORTED_OPERATION,
+                String.format("Requested operation %s.", method));
         res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
         m.toJSON(out);
         return false;
@@ -208,5 +205,4 @@ public abstract class AbstractRR implements RestResource {
 
     return true;
   }
-
 }

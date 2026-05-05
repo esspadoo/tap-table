@@ -189,8 +189,7 @@
                             <formatAnnotations />
 
                             <licenseHeader>
-                                <content>/* Copyright (c) $YEAR University of Padua, Italy - MIT
-                                    License */</content>
+                                <content>/* Copyright (c) $YEAR University of Padua, Italy - MIT License */</content>
                             </licenseHeader>
                         </java>
                     </configuration>

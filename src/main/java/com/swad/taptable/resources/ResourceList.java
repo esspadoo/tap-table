@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.resources;
 
 import com.fasterxml.jackson.core.JsonGenerator;

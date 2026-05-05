@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.category;
 
 import com.swad.taptable.dao.category.DeleteCategoryDAO;
@@ -8,7 +9,6 @@ import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -39,8 +39,11 @@ public class DeleteCategoryRR extends AbstractRR {
       if (deleted == null) {
         LOGGER.warn("Category '%s' not found.", categoryName);
         res.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        new Message(String.format("Category '%s' not found.", categoryName),
-            ErrorCodes.RESOURCE_NOT_FOUND, null).toJSON(res.getOutputStream());
+        new Message(
+                String.format("Category '%s' not found.", categoryName),
+                ErrorCodes.RESOURCE_NOT_FOUND,
+                null)
+            .toJSON(res.getOutputStream());
         return;
       }
 
@@ -52,12 +55,18 @@ public class DeleteCategoryRR extends AbstractRR {
       if ("23503".equals(e.getSQLState())) {
         LOGGER.warn("Cannot delete category: it is still referenced by existing dishes.");
         res.setStatus(HttpServletResponse.SC_CONFLICT);
-        new Message("Cannot delete category: it is referenced by existing dishes.",
-            ErrorCodes.UNEXPECTED_DB_ERROR, e.getMessage()).toJSON(res.getOutputStream());
+        new Message(
+                "Cannot delete category: it is referenced by existing dishes.",
+                ErrorCodes.UNEXPECTED_DB_ERROR,
+                e.getMessage())
+            .toJSON(res.getOutputStream());
       } else {
         res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        new Message("Database error while deleting category.", ErrorCodes.UNEXPECTED_DB_ERROR,
-            e.getMessage()).toJSON(res.getOutputStream());
+        new Message(
+                "Database error while deleting category.",
+                ErrorCodes.UNEXPECTED_DB_ERROR,
+                e.getMessage())
+            .toJSON(res.getOutputStream());
       }
     }
   }

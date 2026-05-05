@@ -1,19 +1,28 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.filter;
 
 import com.swad.taptable.util.JWTUtil;
-import jakarta.servlet.*;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.annotation.WebFilter;
-import jakarta.servlet.http.*;
-
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/login", "/register"}, filterName = "AuthFlowFilter",
+@WebFilter(
+    urlPatterns = {"/login", "/register"},
+    filterName = "AuthFlowFilter",
     description = "Redirects already-authenticated users away to /dashboard")
 public class AuthFlowFilter implements Filter {
 
   @Override
-  public void doFilter(final ServletRequest request, final ServletResponse response,
-      final FilterChain chain) throws IOException, ServletException {
+  public void doFilter(
+      final ServletRequest request, final ServletResponse response, final FilterChain chain)
+      throws IOException, ServletException {
 
     HttpServletRequest req = (HttpServletRequest) request;
     HttpServletResponse res = (HttpServletResponse) response;

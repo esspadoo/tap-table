@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.util;
 
 import com.auth0.jwt.JWT;
@@ -6,7 +7,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.swad.taptable.resources.UserRole;
-
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
@@ -25,24 +25,18 @@ public final class JWTUtil {
   /** Token expiry in seconds (8 hours). */
   public static final int EXPIRY_SECONDS = 8 * 60 * 60;
 
-  /**
-   * Signing algorithm initialized from the application secret and reused for token generation.
-   */
+  /** Signing algorithm initialized from the application secret and reused for token generation. */
   private static Algorithm algorithm;
 
-  /**
-   * Verifier configured with the current signing algorithm and reused for token validation.
-   */
+  /** Verifier configured with the current signing algorithm and reused for token validation. */
   private static JWTVerifier verifier;
 
-  /**
-   * Private constructor to prevent instantiation of this utility class.
-   */
+  /** Private constructor to prevent instantiation of this utility class. */
   private JWTUtil() {}
 
   /**
-   * Initializes the JWTUtil with the given secret key. Called once by
-   * {@link AppContextListener#contextInitialized} at application startup.
+   * Initializes the JWTUtil with the given secret key. Called once by {@link
+   * AppContextListener#contextInitialized} at application startup.
    *
    * @param secret the secret key for signing and verifying JWTs.
    */
@@ -65,8 +59,11 @@ public final class JWTUtil {
     if (algorithm == null) {
       throw new IllegalStateException("JWTUtil.init() has not been called");
     }
-    return JWT.create().withClaim("user_id", userId).withClaim("user_role", role.name())
-        .withExpiresAt(Instant.now().plus(EXPIRY_SECONDS, ChronoUnit.SECONDS)).sign(algorithm);
+    return JWT.create()
+        .withClaim("user_id", userId)
+        .withClaim("user_role", role.name())
+        .withExpiresAt(Instant.now().plus(EXPIRY_SECONDS, ChronoUnit.SECONDS))
+        .sign(algorithm);
   }
 
   /**

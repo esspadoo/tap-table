@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.servlet;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -9,11 +10,10 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormatterMessageFactory;
-
-import java.io.IOException;
 
 public final class LogoutServlet extends HttpServlet {
 
@@ -42,8 +42,8 @@ public final class LogoutServlet extends HttpServlet {
 
     try {
       LOGGER.info("User logged out.");
-      res.addHeader("Set-Cookie",
-          JWTUtil.COOKIE_NAME + "=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0");
+      res.addHeader(
+          "Set-Cookie", JWTUtil.COOKIE_NAME + "=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0");
       res.sendRedirect(req.getContextPath() + "/login");
     } catch (Exception e) {
       LOGGER.error("Error during logout: %s", e.getMessage());

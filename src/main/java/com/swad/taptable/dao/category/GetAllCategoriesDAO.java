@@ -1,9 +1,9 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.dao.category;
 
 import com.swad.taptable.dao.AbstractDAO;
 import com.swad.taptable.resources.Category;
 import com.swad.taptable.resources.ResourceList;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;

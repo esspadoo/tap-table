@@ -1,7 +1,8 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.resources;
 
-import java.io.OutputStream;
 import com.fasterxml.jackson.core.JsonGenerator;
+import java.io.OutputStream;
 
 /**
  * Represents whether a promotion has already been used by a customer.
@@ -24,7 +25,7 @@ public class PromotionUsageFlag extends AbstractResource {
    * Returns whether the promotion has already been used.
    *
    * @return {@code true} if the promotion has already been used, {@code false} if not used, or
-   *         {@code null} if the information is unavailable.
+   *     {@code null} if the information is unavailable.
    */
   public Boolean isUsed() {
     return alreadyUsed;

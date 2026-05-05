@@ -1,10 +1,11 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.dao.user;
 
 import com.swad.taptable.dao.AbstractDAO;
 import com.swad.taptable.resources.User;
-import org.mindrot.jbcrypt.BCrypt;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * DAO for the registration of a new user. Inserts a new row into the users table and returns the

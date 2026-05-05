@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.dish;
 
 import com.swad.taptable.dao.dish.DeleteDishDAO;
@@ -7,7 +8,6 @@ import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -37,8 +37,9 @@ public class DeleteDishRR extends AbstractRR {
 
       if (!deleted) {
         res.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        Message m = new Message("Dish with id " + dishId + " not found.",
-            ErrorCodes.RESOURCE_NOT_FOUND, null);
+        Message m =
+            new Message(
+                "Dish with id " + dishId + " not found.", ErrorCodes.RESOURCE_NOT_FOUND, null);
         m.toJSON(res.getOutputStream());
         return;
       }
@@ -52,8 +53,11 @@ public class DeleteDishRR extends AbstractRR {
       m.toJSON(res.getOutputStream());
     } catch (final SQLException e) {
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      Message m = new Message("Database error while deleting dish.", ErrorCodes.UNEXPECTED_DB_ERROR,
-          e.getMessage());
+      Message m =
+          new Message(
+              "Database error while deleting dish.",
+              ErrorCodes.UNEXPECTED_DB_ERROR,
+              e.getMessage());
       m.toJSON(res.getOutputStream());
     }
   }

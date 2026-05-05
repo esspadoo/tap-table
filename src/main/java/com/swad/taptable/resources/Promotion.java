@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.resources;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -30,8 +31,12 @@ public class Promotion extends AbstractResource {
    * @param validFrom the date and time from which the promotion is valid.
    * @param validTo the date and time until which the promotion is valid.
    */
-  public Promotion(final String code, final Float discount, final String description,
-      final LocalDateTime validFrom, final LocalDateTime validTo) {
+  public Promotion(
+      final String code,
+      final Float discount,
+      final String description,
+      final LocalDateTime validFrom,
+      final LocalDateTime validTo) {
     this.code = code;
     this.discount = discount;
     this.description = description;
@@ -90,30 +95,20 @@ public class Promotion extends AbstractResource {
 
     jg.writeStartObject();
 
-    if (code == null)
-      jg.writeNullField("code");
-    else
-      jg.writeStringField("code", code);
+    if (code == null) jg.writeNullField("code");
+    else jg.writeStringField("code", code);
 
-    if (discount == null)
-      jg.writeNullField("discount");
-    else
-      jg.writeNumberField("discount", discount);
+    if (discount == null) jg.writeNullField("discount");
+    else jg.writeNumberField("discount", discount);
 
-    if (description == null)
-      jg.writeNullField("description");
-    else
-      jg.writeStringField("description", description);
+    if (description == null) jg.writeNullField("description");
+    else jg.writeStringField("description", description);
 
-    if (validFrom == null)
-      jg.writeNullField("valid_from");
-    else
-      jg.writeStringField("valid_from", validFrom.toString());
+    if (validFrom == null) jg.writeNullField("valid_from");
+    else jg.writeStringField("valid_from", validFrom.toString());
 
-    if (validTo == null)
-      jg.writeNullField("valid_to");
-    else
-      jg.writeStringField("valid_to", validTo.toString());
+    if (validTo == null) jg.writeNullField("valid_to");
+    else jg.writeStringField("valid_to", validTo.toString());
 
     jg.writeEndObject();
 
@@ -158,13 +153,17 @@ public class Promotion extends AbstractResource {
           break;
         case "valid_from":
           jp.nextToken();
-          jValidFrom = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null
-              : LocalDateTime.parse(jp.getText());
+          jValidFrom =
+              jp.getCurrentToken() == JsonToken.VALUE_NULL
+                  ? null
+                  : LocalDateTime.parse(jp.getText());
           break;
         case "valid_to":
           jp.nextToken();
-          jValidTo = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null
-              : LocalDateTime.parse(jp.getText());
+          jValidTo =
+              jp.getCurrentToken() == JsonToken.VALUE_NULL
+                  ? null
+                  : LocalDateTime.parse(jp.getText());
           break;
         default:
           throw new UnexpectedKeyException("Unexpected field: " + jp.currentName());

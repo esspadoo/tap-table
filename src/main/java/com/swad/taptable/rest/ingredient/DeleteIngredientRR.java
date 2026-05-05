@@ -1,7 +1,6 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.ingredient;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import com.swad.taptable.dao.ingredient.DeleteIngredientDAO;
 import com.swad.taptable.resources.Ingredient;
 import com.swad.taptable.resources.Message;
@@ -10,16 +9,18 @@ import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * REST resource for deleting an ingredient given its id.
- * 
+ *
  * @author SWAD Team
  */
 public class DeleteIngredientRR extends AbstractRR {
   /**
    * Creates a new {@code DeleteIngredientRR} object.
-   * 
+   *
    * @param req the HTTP request
    * @param res the HTTP response
    */
@@ -42,8 +43,11 @@ public class DeleteIngredientRR extends AbstractRR {
 
           // Log the case when the ingredient with the specified id is not found
           LOGGER.warn("Ingredient with id %d not found.", ingredientId);
-          Message m = new Message(String.format("Ingredient with id %d not found", ingredientId),
-              ErrorCodes.RESOURCE_NOT_FOUND, null);
+          Message m =
+              new Message(
+                  String.format("Ingredient with id %d not found", ingredientId),
+                  ErrorCodes.RESOURCE_NOT_FOUND,
+                  null);
           res.setStatus(HttpServletResponse.SC_NOT_FOUND);
           m.toJSON(res.getOutputStream());
           return;
@@ -57,16 +61,22 @@ public class DeleteIngredientRR extends AbstractRR {
       } catch (final SQLException ex) {
         // FIXME: check the code for known error that could happen and handle them properly
         // SQLException is already logged by the DAO
-        Message m = new Message("Unexpected database error: no. " + ex.getErrorCode(),
-            ErrorCodes.UNEXPECTED_DB_ERROR, ex.getMessage());
+        Message m =
+            new Message(
+                "Unexpected database error: no. " + ex.getErrorCode(),
+                ErrorCodes.UNEXPECTED_DB_ERROR,
+                ex.getMessage());
         res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         m.toJSON(res.getOutputStream());
       }
     } catch (final NumberFormatException ex) {
       // Log the exception and return an error message with the appropriate error code
       LOGGER.error("Invalid ingredient id format: %s", req.getPathInfo());
-      Message m = new Message("Invalid ingredient id format: " + req.getPathInfo(),
-          ErrorCodes.INVALID_INPUT_PARAMETER, ex.getMessage());
+      Message m =
+          new Message(
+              "Invalid ingredient id format: " + req.getPathInfo(),
+              ErrorCodes.INVALID_INPUT_PARAMETER,
+              ex.getMessage());
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       m.toJSON(res.getOutputStream());
     }

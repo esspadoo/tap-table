@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.order;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,7 +12,6 @@ import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
@@ -50,8 +50,9 @@ public class NewOrderRR extends AbstractRR {
       if (in.getDishes() == null || in.getDishes().isEmpty()) {
         LOGGER.warn("Order with no items.");
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        Message m = new Message("Order must contain at least one item",
-            ErrorCodes.INVALID_INPUT_PARAMETER, null);
+        Message m =
+            new Message(
+                "Order must contain at least one item", ErrorCodes.INVALID_INPUT_PARAMETER, null);
         m.toJSON(res.getOutputStream());
         return;
       }
@@ -62,8 +63,11 @@ public class NewOrderRR extends AbstractRR {
       if (out == null) {
         LOGGER.warn("Failed to create order for user %d", userId);
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        Message m = new Message("Failed to create order. Please check the provided data.",
-            ErrorCodes.WRONG_RESOURCE_PROVIDED, null);
+        Message m =
+            new Message(
+                "Failed to create order. Please check the provided data.",
+                ErrorCodes.WRONG_RESOURCE_PROVIDED,
+                null);
         m.toJSON(res.getOutputStream());
         return;
       }
@@ -75,8 +79,11 @@ public class NewOrderRR extends AbstractRR {
     } catch (UnexpectedKeyException | MalformedURLException | JsonProcessingException e) {
       LOGGER.error("Malformed JSON Exception", e);
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      Message m = new Message("Malformed JSON in request body.", ErrorCodes.WRONG_RESOURCE_PROVIDED,
-          e.getMessage());
+      Message m =
+          new Message(
+              "Malformed JSON in request body.",
+              ErrorCodes.WRONG_RESOURCE_PROVIDED,
+              e.getMessage());
       m.toJSON(res.getOutputStream());
     } catch (NotValidOrderException e) {
       LOGGER.error("Invalid order", e);
@@ -84,8 +91,11 @@ public class NewOrderRR extends AbstractRR {
       Message m = new Message("Invalid order.", ErrorCodes.WRONG_RESOURCE_PROVIDED, e.getMessage());
       m.toJSON(res.getOutputStream());
     } catch (SQLException e) {
-      Message m = new Message("Unexpected database error: no. " + e.getErrorCode(),
-          ErrorCodes.UNEXPECTED_DB_ERROR, e.getMessage());
+      Message m =
+          new Message(
+              "Unexpected database error: no. " + e.getErrorCode(),
+              ErrorCodes.UNEXPECTED_DB_ERROR,
+              e.getMessage());
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       m.toJSON(res.getOutputStream());
     }

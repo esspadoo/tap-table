@@ -1,9 +1,9 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.dao.ingredient;
 
 import com.swad.taptable.dao.AbstractDAO;
 import com.swad.taptable.resources.Allergen;
 import com.swad.taptable.resources.Ingredient;
-
 import java.sql.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,9 +32,10 @@ public final class CreateIngredientDAO extends AbstractDAO<Ingredient> {
 
     try (PreparedStatement stmt = con.prepareStatement(STATEMENT)) {
       // Convert the list of allergens to an SQL array
-      final String[] allergenNames = ingredient.getAllergens() != null
-          ? ingredient.getAllergens().stream().map(Enum::name).toArray(String[]::new)
-          : new String[0];
+      final String[] allergenNames =
+          ingredient.getAllergens() != null
+              ? ingredient.getAllergens().stream().map(Enum::name).toArray(String[]::new)
+              : new String[0];
       final Array sqlAllergens = con.createArrayOf("allergen", allergenNames);
 
       // Set the parameters for the prepared statement
@@ -56,8 +57,9 @@ public final class CreateIngredientDAO extends AbstractDAO<Ingredient> {
           }
 
           // Create the ingredient object from the result set
-          i = new Ingredient(rs.getInt("id"), rs.getString("name"), allergens,
-              rs.getBoolean("is_frozen"));
+          i =
+              new Ingredient(
+                  rs.getInt("id"), rs.getString("name"), allergens, rs.getBoolean("is_frozen"));
         }
       }
     }

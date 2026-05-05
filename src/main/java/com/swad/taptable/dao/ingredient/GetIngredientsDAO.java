@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.dao.ingredient;
 
 import com.swad.taptable.dao.AbstractDAO;
@@ -12,7 +13,7 @@ import java.util.List;
 
 /**
  * DAO for retrieving all the ingredients from the database.
- * 
+ *
  * @author SWAD Team
  */
 public class GetIngredientsDAO extends AbstractDAO<ResourceList<Ingredient>> {
@@ -39,8 +40,9 @@ public class GetIngredientsDAO extends AbstractDAO<ResourceList<Ingredient>> {
             }
           }
 
-          ingredients.add(new Ingredient(rs.getInt("id"), rs.getString("name"), allergens,
-              rs.getBoolean("is_frozen")));
+          ingredients.add(
+              new Ingredient(
+                  rs.getInt("id"), rs.getString("name"), allergens, rs.getBoolean("is_frozen")));
         }
       }
     }

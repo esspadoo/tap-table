@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.resources;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -26,12 +27,12 @@ public class Ingredient extends AbstractResource {
    *
    * @param id the unique identifier of the ingredient.
    * @param name the name of the ingredient.
-   * @param allergens the allergens associated with the ingredient; copied defensively if not
-   *        {@code null}.
+   * @param allergens the allergens associated with the ingredient; copied defensively if not {@code
+   *     null}.
    * @param frozen whether the ingredient is frozen.
    */
-  public Ingredient(final Integer id, final String name, final List<Allergen> allergens,
-      final Boolean frozen) {
+  public Ingredient(
+      final Integer id, final String name, final List<Allergen> allergens, final Boolean frozen) {
     this.id = id;
     this.name = name;
     this.allergens = allergens != null ? List.copyOf(allergens) : null;
@@ -89,15 +90,11 @@ public class Ingredient extends AbstractResource {
 
     jg.writeStartObject();
 
-    if (id == null)
-      jg.writeNullField("id");
-    else
-      jg.writeNumberField("id", id);
+    if (id == null) jg.writeNullField("id");
+    else jg.writeNumberField("id", id);
 
-    if (name == null)
-      jg.writeNullField("name");
-    else
-      jg.writeStringField("name", name);
+    if (name == null) jg.writeNullField("name");
+    else jg.writeStringField("name", name);
 
     if (allergens == null) {
       jg.writeNullField("allergens");
@@ -109,10 +106,8 @@ public class Ingredient extends AbstractResource {
       jg.writeEndArray();
     }
 
-    if (frozen == null)
-      jg.writeNullField("is_frozen");
-    else
-      jg.writeBooleanField("is_frozen", frozen);
+    if (frozen == null) jg.writeNullField("is_frozen");
+    else jg.writeBooleanField("is_frozen", frozen);
 
     jg.writeEndObject();
 
@@ -122,10 +117,10 @@ public class Ingredient extends AbstractResource {
   /**
    * Parses a JSON input stream to create an instance of {@code Ingredient}
    *
+   * <p>The {@code allergens} array may be empty.
+   *
    * <p>
-   * The {@code allergens} array may be empty.
-   * <p>
-   * 
+   *
    * @param in the input stream containing the JSON payload.
    * @return a new {@code Ingredient} built from the parsed fields.
    * @throws IOException if there is an error reading from the stream or parsing the JSON.
@@ -157,8 +152,7 @@ public class Ingredient extends AbstractResource {
             jName = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText();
             break;
           case "allergens":
-            if (jp.nextToken() == JsonToken.VALUE_NULL)
-              break;
+            if (jp.nextToken() == JsonToken.VALUE_NULL) break;
 
             jAllergens = new ArrayList<>();
 

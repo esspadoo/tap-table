@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.resources;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -39,10 +40,8 @@ public class Category extends AbstractResource {
     final JsonGenerator jg = JSON_FACTORY.createGenerator(out);
 
     jg.writeStartObject();
-    if (name == null)
-      jg.writeNullField("name");
-    else
-      jg.writeStringField("name", name);
+    if (name == null) jg.writeNullField("name");
+    else jg.writeStringField("name", name);
     jg.writeEndObject();
 
     jg.flush();
@@ -63,8 +62,7 @@ public class Category extends AbstractResource {
       final JsonParser jp = JSON_FACTORY.createParser(in);
 
       while (jp.nextToken() != JsonToken.END_OBJECT) {
-        if (jp.getCurrentToken() != JsonToken.FIELD_NAME)
-          continue;
+        if (jp.getCurrentToken() != JsonToken.FIELD_NAME) continue;
 
         switch (jp.currentName()) {
           case "name":

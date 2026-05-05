@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.resources;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -5,7 +6,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.swad.taptable.exception.json.UnexpectedKeyException;
 import jakarta.servlet.ServletInputStream;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -123,8 +123,10 @@ public class Order extends AbstractResource {
           break;
         case "status":
           jp.nextToken();
-          status = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null
-              : OrderStatus.fromString(jp.getText());
+          status =
+              jp.getCurrentToken() == JsonToken.VALUE_NULL
+                  ? null
+                  : OrderStatus.fromString(jp.getText());
           break;
         case "total_price":
           jp.nextToken();
@@ -139,8 +141,7 @@ public class Order extends AbstractResource {
           promotionId = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getIntValue();
           break;
         case "dishes":
-          if (jp.nextToken() == JsonToken.VALUE_NULL)
-            break;
+          if (jp.nextToken() == JsonToken.VALUE_NULL) break;
 
           dishes = new ArrayList<>();
           while (jp.nextToken() != JsonToken.END_ARRAY) {
@@ -148,8 +149,7 @@ public class Order extends AbstractResource {
             Integer quantity = null;
             Boolean isLiked = null;
             while (jp.nextToken() != JsonToken.END_OBJECT) {
-              if (jp.getCurrentToken() != JsonToken.FIELD_NAME)
-                continue;
+              if (jp.getCurrentToken() != JsonToken.FIELD_NAME) continue;
               switch (jp.currentName()) {
                 case "dish_id":
                   jp.nextToken();
@@ -178,8 +178,14 @@ public class Order extends AbstractResource {
       }
     }
 
-    return new Order.Builder().id(id).status(status).totalPrice(totalPrice).userId(userId)
-        .promotionId(promotionId).dishes(dishes).build();
+    return new Order.Builder()
+        .id(id)
+        .status(status)
+        .totalPrice(totalPrice)
+        .userId(userId)
+        .promotionId(promotionId)
+        .dishes(dishes)
+        .build();
   }
 
   @Override
@@ -188,30 +194,20 @@ public class Order extends AbstractResource {
 
     jg.writeStartObject();
 
-    if (id == null)
-      jg.writeNullField("id");
-    else
-      jg.writeNumberField("id", id);
+    if (id == null) jg.writeNullField("id");
+    else jg.writeNumberField("id", id);
 
-    if (status == null)
-      jg.writeNullField("status");
-    else
-      jg.writeStringField("status", status.name());
+    if (status == null) jg.writeNullField("status");
+    else jg.writeStringField("status", status.name());
 
-    if (totalPrice == null)
-      jg.writeNullField("total_price");
-    else
-      jg.writeNumberField("total_price", totalPrice);
+    if (totalPrice == null) jg.writeNullField("total_price");
+    else jg.writeNumberField("total_price", totalPrice);
 
-    if (userId == null)
-      jg.writeNullField("user_id");
-    else
-      jg.writeNumberField("user_id", userId);
+    if (userId == null) jg.writeNullField("user_id");
+    else jg.writeNumberField("user_id", userId);
 
-    if (promotionId == null)
-      jg.writeNullField("promotion_id");
-    else
-      jg.writeNumberField("promotion_id", promotionId);
+    if (promotionId == null) jg.writeNullField("promotion_id");
+    else jg.writeNumberField("promotion_id", promotionId);
 
     if (dishes == null) {
       jg.writeNullField("dishes");
@@ -219,18 +215,12 @@ public class Order extends AbstractResource {
       jg.writeArrayFieldStart("dishes");
       for (final OrderDish dish : dishes) {
         jg.writeStartObject();
-        if (dish.getDishId() == null)
-          jg.writeNullField("dish_id");
-        else
-          jg.writeNumberField("dish_id", dish.getDishId());
-        if (dish.getQuantity() == null)
-          jg.writeNullField("quantity");
-        else
-          jg.writeNumberField("quantity", dish.getQuantity());
-        if (dish.isLiked() == null)
-          jg.writeNullField("is_liked");
-        else
-          jg.writeBooleanField("is_liked", dish.isLiked());
+        if (dish.getDishId() == null) jg.writeNullField("dish_id");
+        else jg.writeNumberField("dish_id", dish.getDishId());
+        if (dish.getQuantity() == null) jg.writeNullField("quantity");
+        else jg.writeNumberField("quantity", dish.getQuantity());
+        if (dish.isLiked() == null) jg.writeNullField("is_liked");
+        else jg.writeBooleanField("is_liked", dish.isLiked());
         jg.writeEndObject();
       }
 
@@ -242,9 +232,7 @@ public class Order extends AbstractResource {
     jg.flush();
   }
 
-  /**
-   * Builder used to assemble immutable {@link Order} instances.
-   */
+  /** Builder used to assemble immutable {@link Order} instances. */
   public static class Builder {
     private Integer id;
     private OrderStatus status;

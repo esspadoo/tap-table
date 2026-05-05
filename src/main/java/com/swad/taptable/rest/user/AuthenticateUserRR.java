@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.user;
 
 import com.swad.taptable.dao.user.AuthenticateUserDAO;
@@ -11,7 +12,6 @@ import com.swad.taptable.util.ErrorCodes;
 import com.swad.taptable.util.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -41,14 +41,19 @@ public final class AuthenticateUserRR extends AbstractRR {
       if (isMissing(credentials.getEmail()) || isMissing(credentials.getPassword())) {
         LOGGER.warn("Login request missing email or password.");
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        Message m = new Message("Missing email or password.", ErrorCodes.WRONG_RESOURCE_PROVIDED,
-            "Fields 'email' and 'password' are required.");
+        Message m =
+            new Message(
+                "Missing email or password.",
+                ErrorCodes.WRONG_RESOURCE_PROVIDED,
+                "Fields 'email' and 'password' are required.");
         m.toJSON(res.getOutputStream());
         return;
       }
 
-      final User user = new AuthenticateUserDAO(credentials.getEmail(), credentials.getPassword())
-          .access().getOutputParam();
+      final User user =
+          new AuthenticateUserDAO(credentials.getEmail(), credentials.getPassword())
+              .access()
+              .getOutputParam();
 
       if (user == null) {
         LOGGER.warn("Failed login attempt for email '%s'.", credentials.getEmail());
@@ -60,8 +65,13 @@ public final class AuthenticateUserRR extends AbstractRR {
 
       final String jwt = JWTUtil.generateToken(user.getId(), user.getRole());
 
-      res.addHeader("Set-Cookie", JWTUtil.COOKIE_NAME + "=" + jwt
-          + "; Path=/; HttpOnly; SameSite=Strict; Max-Age=" + JWTUtil.EXPIRY_SECONDS);
+      res.addHeader(
+          "Set-Cookie",
+          JWTUtil.COOKIE_NAME
+              + "="
+              + jwt
+              + "; Path=/; HttpOnly; SameSite=Strict; Max-Age="
+              + JWTUtil.EXPIRY_SECONDS);
 
       LOGGER.info("User %d logged in successfully.", user.getId());
       res.setStatus(HttpServletResponse.SC_OK);
@@ -69,20 +79,25 @@ public final class AuthenticateUserRR extends AbstractRR {
     } catch (UnexpectedKeyException e) {
       LOGGER.error("Unexpected key in JSON login request: %s", e.getMessage());
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      Message m = new Message("Malformed request body.", ErrorCodes.WRONG_RESOURCE_PROVIDED,
-          e.getMessage());
+      Message m =
+          new Message(
+              "Malformed request body.", ErrorCodes.WRONG_RESOURCE_PROVIDED, e.getMessage());
       m.toJSON(res.getOutputStream());
     } catch (IOException e) {
       LOGGER.error("Failed to parse JSON login request: %s", e.getMessage());
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      Message m = new Message("Malformed JSON in request body.", ErrorCodes.INVALID_INPUT_PARAMETER,
-          e.getMessage());
+      Message m =
+          new Message(
+              "Malformed JSON in request body.",
+              ErrorCodes.INVALID_INPUT_PARAMETER,
+              e.getMessage());
       m.toJSON(res.getOutputStream());
     } catch (SQLException ex) {
       LOGGER.warn("Unexpected DB error during login.");
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      Message m = new Message("Login failed: database error.", ErrorCodes.UNEXPECTED_DB_ERROR,
-          ex.getMessage());
+      Message m =
+          new Message(
+              "Login failed: database error.", ErrorCodes.UNEXPECTED_DB_ERROR, ex.getMessage());
       m.toJSON(res.getOutputStream());
     }
   }

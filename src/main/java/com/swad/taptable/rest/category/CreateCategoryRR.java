@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.category;
 
 import com.swad.taptable.dao.category.CreateCategoryDAO;
@@ -9,7 +10,6 @@ import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -38,8 +38,11 @@ public class CreateCategoryRR extends AbstractRR {
       if (in.getName() == null || in.getName().isBlank()) {
         LOGGER.warn("Missing required field: name.");
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        new Message("Missing required field: name must be provided.",
-            ErrorCodes.INVALID_INPUT_PARAMETER, null).toJSON(res.getOutputStream());
+        new Message(
+                "Missing required field: name must be provided.",
+                ErrorCodes.INVALID_INPUT_PARAMETER,
+                null)
+            .toJSON(res.getOutputStream());
         return;
       }
 
@@ -51,8 +54,9 @@ public class CreateCategoryRR extends AbstractRR {
 
     } catch (final UnexpectedKeyException e) {
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      new Message("Malformed JSON in request body.", ErrorCodes.WRONG_RESOURCE_PROVIDED,
-          e.getMessage()).toJSON(res.getOutputStream());
+      new Message(
+              "Malformed JSON in request body.", ErrorCodes.WRONG_RESOURCE_PROVIDED, e.getMessage())
+          .toJSON(res.getOutputStream());
     } catch (final SQLException e) {
       if ("23505".equals(e.getSQLState())) {
         LOGGER.warn("Category '%s' already exists.", e.getMessage());
@@ -61,8 +65,11 @@ public class CreateCategoryRR extends AbstractRR {
             .toJSON(res.getOutputStream());
       } else {
         res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        new Message("Database error while creating category.", ErrorCodes.UNEXPECTED_DB_ERROR,
-            e.getMessage()).toJSON(res.getOutputStream());
+        new Message(
+                "Database error while creating category.",
+                ErrorCodes.UNEXPECTED_DB_ERROR,
+                e.getMessage())
+            .toJSON(res.getOutputStream());
       }
     }
   }

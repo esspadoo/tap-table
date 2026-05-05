@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.servlet;
 
 import com.swad.taptable.dao.user.RegisterUserDAO;
@@ -8,12 +9,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormatterMessageFactory;
-
-import java.io.IOException;
-import java.sql.SQLException;
 
 public final class RegisterServlet extends HttpServlet {
 
@@ -54,8 +54,15 @@ public final class RegisterServlet extends HttpServlet {
         return;
       }
 
-      final User user = new User.Builder().name(name).surname(surname).username(username)
-          .email(email).phoneNumber(phoneNumber).password(password).build();
+      final User user =
+          new User.Builder()
+              .name(name)
+              .surname(surname)
+              .username(username)
+              .email(email)
+              .phoneNumber(phoneNumber)
+              .password(password)
+              .build();
 
       try {
         new RegisterUserDAO(user).access();
@@ -63,8 +70,8 @@ public final class RegisterServlet extends HttpServlet {
         res.sendRedirect(req.getContextPath() + "/login");
       } catch (SQLException e) {
         if ("23505".equals(e.getSQLState())) {
-          LOGGER.warn("Registration conflict: username or email already in use for '%s'.",
-              username);
+          LOGGER.warn(
+              "Registration conflict: username or email already in use for '%s'.", username);
           req.setAttribute("error", "Username or email already in use.");
         } else {
           LOGGER.error("Unexpected database error during registration for '%s'.", username, e);

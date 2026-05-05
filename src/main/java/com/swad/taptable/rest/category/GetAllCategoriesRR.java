@@ -1,15 +1,15 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.category;
 
 import com.swad.taptable.dao.category.GetAllCategoriesDAO;
 import com.swad.taptable.resources.Category;
-import com.swad.taptable.resources.ResourceList;
 import com.swad.taptable.resources.Message;
+import com.swad.taptable.resources.ResourceList;
 import com.swad.taptable.rest.AbstractRR;
 import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -40,8 +40,11 @@ public class GetAllCategoriesRR extends AbstractRR {
 
     } catch (final SQLException e) {
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      new Message("Database error while retrieving categories.", ErrorCodes.UNEXPECTED_DB_ERROR,
-          e.getMessage()).toJSON(res.getOutputStream());
+      new Message(
+              "Database error while retrieving categories.",
+              ErrorCodes.UNEXPECTED_DB_ERROR,
+              e.getMessage())
+          .toJSON(res.getOutputStream());
     }
   }
 }

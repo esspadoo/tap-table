@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.promotion;
 
 import com.swad.taptable.dao.promotions.CheckPromotionDAO;
@@ -8,7 +9,6 @@ import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -41,8 +41,9 @@ public class CheckPromotionRR extends AbstractRR {
       if (promotion == null) {
         LOGGER.warn("Promotion with code %s not found.", code);
         res.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        Message m = new Message("Promotion with code " + code + " not found.",
-            ErrorCodes.RESOURCE_NOT_FOUND, null);
+        Message m =
+            new Message(
+                "Promotion with code " + code + " not found.", ErrorCodes.RESOURCE_NOT_FOUND, null);
         m.toJSON(res.getOutputStream());
         return;
       }
@@ -52,8 +53,11 @@ public class CheckPromotionRR extends AbstractRR {
       promotion.toJSON(res.getOutputStream());
     } catch (SQLException ex) {
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      Message m = new Message("Unexpected database error: no. " + ex.getErrorCode(),
-          ErrorCodes.UNEXPECTED_DB_ERROR, ex.getMessage());
+      Message m =
+          new Message(
+              "Unexpected database error: no. " + ex.getErrorCode(),
+              ErrorCodes.UNEXPECTED_DB_ERROR,
+              ex.getMessage());
       m.toJSON(res.getOutputStream());
     }
   }

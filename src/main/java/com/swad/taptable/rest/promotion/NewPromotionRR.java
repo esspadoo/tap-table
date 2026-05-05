@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.promotion;
 
 import com.swad.taptable.dao.promotions.NewPromotionDAO;
@@ -9,7 +10,6 @@ import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -35,9 +35,13 @@ public class NewPromotionRR extends AbstractRR {
       final Promotion in = Promotion.fromJSON(req.getInputStream());
 
       // Check if the required fields are present and valid
-      if (in.getCode() == null || in.getCode().isBlank() || in.getDiscount() == null
-          || in.getDescription() == null || in.getDescription().isBlank()
-          || in.getValidFrom() == null || in.getValidTo() == null) {
+      if (in.getCode() == null
+          || in.getCode().isBlank()
+          || in.getDiscount() == null
+          || in.getDescription() == null
+          || in.getDescription().isBlank()
+          || in.getValidFrom() == null
+          || in.getValidTo() == null) {
         LOGGER.warn("Missing required fields: code, discount or description is empty.");
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         Message m =
@@ -50,8 +54,11 @@ public class NewPromotionRR extends AbstractRR {
 
       if (in.getDiscount() <= 0 || in.getDiscount() > 100) {
         LOGGER.warn("Invalid promotion discount: %f.", in.getDiscount());
-        Message m = new Message("Invalid discount: it must be between 0 and 100.",
-            ErrorCodes.INVALID_INPUT_PARAMETER, null);
+        Message m =
+            new Message(
+                "Invalid discount: it must be between 0 and 100.",
+                ErrorCodes.INVALID_INPUT_PARAMETER,
+                null);
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         m.toJSON(res.getOutputStream());
 
@@ -63,8 +70,11 @@ public class NewPromotionRR extends AbstractRR {
       if (in.getValidTo().isBefore(in.getValidFrom())) {
         LOGGER.warn("Invalid promotion dates: validTo is before validFrom.");
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        Message m = new Message("Invalid promotion dates: validTo must be after validFrom",
-            ErrorCodes.INVALID_INPUT_PARAMETER, null);
+        Message m =
+            new Message(
+                "Invalid promotion dates: validTo must be after validFrom",
+                ErrorCodes.INVALID_INPUT_PARAMETER,
+                null);
         m.toJSON(res.getOutputStream());
 
         // Return early since the promotion dates are not valid
@@ -87,13 +97,19 @@ public class NewPromotionRR extends AbstractRR {
       out.toJSON(res.getOutputStream());
     } catch (final UnexpectedKeyException e) {
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      Message m = new Message("Malformed JSON in request body.", ErrorCodes.WRONG_RESOURCE_PROVIDED,
-          e.getMessage());
+      Message m =
+          new Message(
+              "Malformed JSON in request body.",
+              ErrorCodes.WRONG_RESOURCE_PROVIDED,
+              e.getMessage());
       m.toJSON(res.getOutputStream());
     } catch (final SQLException ex) {
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      Message m = new Message("Unexpected database error: no. " + ex.getErrorCode(),
-          ErrorCodes.UNEXPECTED_DB_ERROR, ex.getMessage());
+      Message m =
+          new Message(
+              "Unexpected database error: no. " + ex.getErrorCode(),
+              ErrorCodes.UNEXPECTED_DB_ERROR,
+              ex.getMessage());
       m.toJSON(res.getOutputStream());
     }
   }

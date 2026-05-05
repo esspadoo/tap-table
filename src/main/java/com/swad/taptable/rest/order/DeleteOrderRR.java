@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.order;
 
 import com.swad.taptable.dao.order.DeleteOrderDAO;
@@ -7,7 +8,6 @@ import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -43,20 +43,28 @@ public class DeleteOrderRR extends AbstractRR {
         // return a 404 Not Found
         LOGGER.warn("Order with id %d not found for deletion.", orderId);
         res.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        Message m = new Message("Order with id " + orderId + " not found for deletion",
-            ErrorCodes.RESOURCE_NOT_FOUND, null);
+        Message m =
+            new Message(
+                "Order with id " + orderId + " not found for deletion",
+                ErrorCodes.RESOURCE_NOT_FOUND,
+                null);
         m.toJSON(res.getOutputStream());
       }
     } catch (NumberFormatException e) {
       LOGGER.warn("Invalid format of order ID: " + req.getAttribute("order_id") + " to be deleted");
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      Message m = new Message(
-          "Invalid format of order ID " + req.getAttribute("order_id") + " to be deleted",
-          ErrorCodes.INVALID_INPUT_PARAMETER, e.getMessage());
+      Message m =
+          new Message(
+              "Invalid format of order ID " + req.getAttribute("order_id") + " to be deleted",
+              ErrorCodes.INVALID_INPUT_PARAMETER,
+              e.getMessage());
       m.toJSON(res.getOutputStream());
     } catch (SQLException ex) {
-      Message m = new Message("Unexpected database error n. " + ex.getErrorCode(),
-          ErrorCodes.UNEXPECTED_DB_ERROR, ex.getMessage());
+      Message m =
+          new Message(
+              "Unexpected database error n. " + ex.getErrorCode(),
+              ErrorCodes.UNEXPECTED_DB_ERROR,
+              ex.getMessage());
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       m.toJSON(res.getOutputStream());
     }

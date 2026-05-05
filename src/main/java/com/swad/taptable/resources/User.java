@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.resources;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -12,12 +13,12 @@ import java.time.LocalDateTime;
 /**
  * Representation of the user's resource.
  *
- * <p>
- * Use {@link Builder} to construct instances. Two typical paths:
+ * <p>Use {@link Builder} to construct instances. Two typical paths:
+ *
  * <ul>
- * <li>Input (registration): built via {@link #fromJSON} - carries a plain-text {@code password}, no
- * {@code passwordHash}, no timestamps.</li>
- * <li>DB read: set {@code passwordHash} and timestamps via the builder instead.</li>
+ *   <li>Input (registration): built via {@link #fromJSON} - carries a plain-text {@code password},
+ *       no {@code passwordHash}, no timestamps.
+ *   <li>DB read: set {@code passwordHash} and timestamps via the builder instead.
  * </ul>
  *
  * @author SWAD Team
@@ -156,7 +157,7 @@ public class User extends AbstractResource {
   /**
    * Builder for {@link User}. All fields are optional, but typically only a subset will be
    * populated depending on the use case (e.g. registration input vs DB read).
-   * 
+   *
    * @author SWAD Team
    */
   public static final class Builder {
@@ -176,7 +177,7 @@ public class User extends AbstractResource {
     /**
      * Sets the id. Typically only used when building a User object from a DB read, not for
      * registration input.
-     * 
+     *
      * @param id the id to set
      * @return the builder for chaining
      */
@@ -198,7 +199,7 @@ public class User extends AbstractResource {
 
     /**
      * Sets the email. Required for both registration and DB read.
-     * 
+     *
      * @param email the email to set
      * @return the builder for chaining
      */
@@ -220,7 +221,7 @@ public class User extends AbstractResource {
 
     /**
      * Sets the surname. Required for both registration and DB read.
-     * 
+     *
      * @param surname the surname to set
      * @return the builder for chaining
      */
@@ -231,7 +232,7 @@ public class User extends AbstractResource {
 
     /**
      * Sets the phone number. Required for both registration and DB read.
-     * 
+     *
      * @param phoneNumber the phone number to set
      * @return the builder for chaining
      */
@@ -266,7 +267,7 @@ public class User extends AbstractResource {
     /**
      * Sets the password hash. Only used when building a User from a DB read; should not be set for
      * registration input.
-     * 
+     *
      * @param passwordHash the password hash to set
      * @return the builder for chaining
      */
@@ -278,7 +279,7 @@ public class User extends AbstractResource {
     /**
      * Sets the creation timestamp. Only used when building a User from a DB read; should not be set
      * for registration input.
-     * 
+     *
      * @param createdAt the creation timestamp to set
      * @return the builder for chaining
      */
@@ -290,7 +291,7 @@ public class User extends AbstractResource {
     /**
      * Sets the update timestamp. Only used when building a User from a DB read; should not be set
      * for registration input.
-     * 
+     *
      * @param updatedAt the update timestamp to set
      * @return the builder for chaining
      */
@@ -303,7 +304,7 @@ public class User extends AbstractResource {
      * Builds the User object. No validation is performed, so it's the caller's responsibility to
      * ensure that the appropriate fields are set for the intended use case (e.g. registration vs DB
      * read).
-     * 
+     *
      * @return a new User object with the fields set in the builder
      */
     public User build() {
@@ -320,25 +321,18 @@ public class User extends AbstractResource {
 
     jg.writeStartObject();
 
-    if (id != null)
-      jg.writeNumberField("id", id);
+    if (id != null) jg.writeNumberField("id", id);
 
-    if (username != null)
-      jg.writeStringField("username", username);
+    if (username != null) jg.writeStringField("username", username);
 
-    if (email != null)
-      jg.writeStringField("email", email);
+    if (email != null) jg.writeStringField("email", email);
 
-    if (name != null)
-      jg.writeStringField("name", name);
+    if (name != null) jg.writeStringField("name", name);
 
-    if (surname != null)
-      jg.writeStringField("surname", surname);
-    if (phoneNumber != null)
-      jg.writeStringField("phone_number", phoneNumber);
+    if (surname != null) jg.writeStringField("surname", surname);
+    if (phoneNumber != null) jg.writeStringField("phone_number", phoneNumber);
 
-    if (role != null)
-      jg.writeStringField("role", role.name());
+    if (role != null) jg.writeStringField("role", role.name());
 
     if (createdAt != null) {
       jg.writeStringField("created_at", createdAt.toString());

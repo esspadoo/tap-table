@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.dao.dish;
 
 import com.swad.taptable.dao.AbstractDAO;
@@ -5,7 +6,6 @@ import com.swad.taptable.resources.Allergen;
 import com.swad.taptable.resources.Dish;
 import com.swad.taptable.resources.Ingredient;
 import com.swad.taptable.resources.ResourceList;
-
 import java.sql.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,16 +40,25 @@ public class GetDishesDAO extends AbstractDAO<ResourceList<Dish>> {
                   allergens.add(Allergen.valueOf(a));
                 }
               }
-              ingredients
-                  .add(new Ingredient(ingredientsRs.getInt("id"), ingredientsRs.getString("name"),
-                      allergens, ingredientsRs.getBoolean("is_frozen")));
+              ingredients.add(
+                  new Ingredient(
+                      ingredientsRs.getInt("id"),
+                      ingredientsRs.getString("name"),
+                      allergens,
+                      ingredientsRs.getBoolean("is_frozen")));
             }
           }
         }
 
-        dishes.add(new Dish.Builder().id(dishId).name(dishesRs.getString("name"))
-            .description(dishesRs.getString("description")).price(dishesRs.getDouble("price"))
-            .ingredients(ingredients).category(dishesRs.getString("category_name")).build());
+        dishes.add(
+            new Dish.Builder()
+                .id(dishId)
+                .name(dishesRs.getString("name"))
+                .description(dishesRs.getString("description"))
+                .price(dishesRs.getDouble("price"))
+                .ingredients(ingredients)
+                .category(dishesRs.getString("category_name"))
+                .build());
       }
     }
 

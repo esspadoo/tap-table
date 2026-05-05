@@ -1,7 +1,6 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.ingredient;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import com.swad.taptable.dao.ingredient.CreateIngredientDAO;
 import com.swad.taptable.exception.json.UnexpectedKeyException;
 import com.swad.taptable.resources.Ingredient;
@@ -11,17 +10,19 @@ import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * REST resource for creating a new ingredient.
- * 
+ *
  * @author SWAD Team
  */
 public class CreateIngredientRR extends AbstractRR {
 
   /**
    * Creates a new {@code NewIngredientRR} object.
-   * 
+   *
    * @param req the HTTP request
    * @param res the HTTP response
    */
@@ -39,8 +40,11 @@ public class CreateIngredientRR extends AbstractRR {
       if (in.getName() == null) {
         LOGGER.warn("Invalid input for creating ingredient: missing required fields");
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        Message m = new Message("Missing required fields: name and isFrozen must be provided",
-            ErrorCodes.INVALID_INPUT_PARAMETER, null);
+        Message m =
+            new Message(
+                "Missing required fields: name and isFrozen must be provided",
+                ErrorCodes.INVALID_INPUT_PARAMETER,
+                null);
         m.toJSON(res.getOutputStream());
         return;
       }
@@ -63,13 +67,19 @@ public class CreateIngredientRR extends AbstractRR {
       out.toJSON(res.getOutputStream());
     } catch (final UnexpectedKeyException e) {
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      Message m = new Message("Malformed JSON in request body.", ErrorCodes.WRONG_RESOURCE_PROVIDED,
-          e.getMessage());
+      Message m =
+          new Message(
+              "Malformed JSON in request body.",
+              ErrorCodes.WRONG_RESOURCE_PROVIDED,
+              e.getMessage());
       m.toJSON(res.getOutputStream());
     } catch (final SQLException e) {
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      Message m = new Message("Database error while creating ingredient.",
-          ErrorCodes.UNEXPECTED_DB_ERROR, e.getMessage());
+      Message m =
+          new Message(
+              "Database error while creating ingredient.",
+              ErrorCodes.UNEXPECTED_DB_ERROR,
+              e.getMessage());
       m.toJSON(res.getOutputStream());
     }
   }

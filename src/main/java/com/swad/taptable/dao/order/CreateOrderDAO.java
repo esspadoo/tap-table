@@ -1,14 +1,15 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.dao.order;
 
+import com.swad.taptable.dao.AbstractDAO;
+import com.swad.taptable.resources.Order;
+import com.swad.taptable.resources.OrderDish;
+import com.swad.taptable.resources.OrderStatus;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import com.swad.taptable.dao.AbstractDAO;
-import com.swad.taptable.resources.Order;
-import com.swad.taptable.resources.OrderDish;
-import com.swad.taptable.resources.OrderStatus;
 
 public class CreateOrderDAO extends AbstractDAO<Order> {
   private static final String GET_DISH_PRICE_STATEMENT = "SELECT price FROM dishes WHERE id = ?";
@@ -91,8 +92,15 @@ public class CreateOrderDAO extends AbstractDAO<Order> {
                 orderDishes.add(new OrderDish(dishId, quantity, isLiked));
               }
             }
-            o = new Order.Builder().id(orderId).userId(userId).promotionId(promotionId)
-                .totalPrice(totalPrice).status(status).dishes(orderDishes).build();
+            o =
+                new Order.Builder()
+                    .id(orderId)
+                    .userId(userId)
+                    .promotionId(promotionId)
+                    .totalPrice(totalPrice)
+                    .status(status)
+                    .dishes(orderDishes)
+                    .build();
           }
         }
       }
@@ -103,5 +111,4 @@ public class CreateOrderDAO extends AbstractDAO<Order> {
     }
     outputParam = o;
   }
-
 }

@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.dao.dish;
 
 import com.swad.taptable.dao.AbstractDAO;
@@ -87,15 +88,25 @@ public class EditDishDAO extends AbstractDAO<Dish> {
                   allergens.add(Allergen.valueOf(a));
                 }
               }
-              ingredients
-                  .add(new Ingredient(ingredientsRs.getInt("id"), ingredientsRs.getString("name"),
-                      allergens, ingredientsRs.getBoolean("is_frozen")));
+              ingredients.add(
+                  new Ingredient(
+                      ingredientsRs.getInt("id"),
+                      ingredientsRs.getString("name"),
+                      allergens,
+                      ingredientsRs.getBoolean("is_frozen")));
             }
           }
         }
 
-        d = new Dish.Builder().id(dishId).name(dishName).description(dishDescription)
-            .category(dishCategory).price(dishPrice).ingredients(ingredients).build();
+        d =
+            new Dish.Builder()
+                .id(dishId)
+                .name(dishName)
+                .description(dishDescription)
+                .category(dishCategory)
+                .price(dishPrice)
+                .ingredients(ingredients)
+                .build();
       }
 
       con.commit();

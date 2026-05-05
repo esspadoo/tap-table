@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.order;
 
 import com.swad.taptable.dao.order.GetOrderDAO;
@@ -8,7 +9,6 @@ import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -43,23 +43,31 @@ public class GetOrderRR extends AbstractRR {
           order.toJSON(res.getOutputStream());
         } else {
           LOGGER.warn("Order with id %d not found.", orderId);
-          Message m = new Message("Order with id " + orderId + " not found.",
-              ErrorCodes.RESOURCE_NOT_FOUND, null);
+          Message m =
+              new Message(
+                  "Order with id " + orderId + " not found.", ErrorCodes.RESOURCE_NOT_FOUND, null);
           res.setStatus(HttpServletResponse.SC_NOT_FOUND);
           m.toJSON(res.getOutputStream());
         }
       } catch (SQLException ex) {
-        LOGGER.error("Database error (no. %d) while retrieving order with code %s: %s",
+        LOGGER.error(
+            "Database error (no. %d) while retrieving order with code %s: %s",
             ex.getErrorCode(), orderId, ex.getMessage());
-        Message m = new Message("Unexpected database error: no. " + ex.getErrorCode(),
-            ErrorCodes.UNEXPECTED_DB_ERROR, ex.getMessage());
+        Message m =
+            new Message(
+                "Unexpected database error: no. " + ex.getErrorCode(),
+                ErrorCodes.UNEXPECTED_DB_ERROR,
+                ex.getMessage());
         res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         m.toJSON(res.getOutputStream());
       }
     } catch (NumberFormatException e) {
       LOGGER.warn("Invalid order ID: " + req.getAttribute("order_id"));
-      Message m = new Message("Invalid order ID " + req.getAttribute("order_id"),
-          ErrorCodes.INVALID_INPUT_PARAMETER, e.getMessage());
+      Message m =
+          new Message(
+              "Invalid order ID " + req.getAttribute("order_id"),
+              ErrorCodes.INVALID_INPUT_PARAMETER,
+              e.getMessage());
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       m.toJSON(res.getOutputStream());
     }

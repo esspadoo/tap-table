@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.resources;
 
 /**
@@ -45,7 +46,7 @@ public class OrderDish {
    * Returns whether the user liked the dish.
    *
    * @return {@code true} if the dish is marked as liked, {@code false} if disliked, or {@code null}
-   *         if no feedback is available.
+   *     if no feedback is available.
    */
   public Boolean isLiked() {
     return isLiked;

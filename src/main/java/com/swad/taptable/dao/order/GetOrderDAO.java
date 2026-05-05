@@ -1,10 +1,10 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.dao.order;
 
 import com.swad.taptable.dao.AbstractDAO;
 import com.swad.taptable.resources.Order;
 import com.swad.taptable.resources.OrderDish;
 import com.swad.taptable.resources.OrderStatus;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -29,8 +29,7 @@ public class GetOrderDAO extends AbstractDAO<Order> {
       orderPstmt.setInt(1, orderId);
 
       try (ResultSet rs = orderPstmt.executeQuery()) {
-        if (!rs.next())
-          return;
+        if (!rs.next()) return;
 
         int userId = rs.getInt("user_id");
         Integer promotionId = rs.getObject("promotion_id", Integer.class);
@@ -52,8 +51,15 @@ public class GetOrderDAO extends AbstractDAO<Order> {
           }
         }
 
-        o = new Order.Builder().id(orderId).status(status).totalPrice(totalPrice).userId(userId)
-            .promotionId(promotionId).dishes(orderDishes).build();
+        o =
+            new Order.Builder()
+                .id(orderId)
+                .status(status)
+                .totalPrice(totalPrice)
+                .userId(userId)
+                .promotionId(promotionId)
+                .dishes(orderDishes)
+                .build();
       }
     }
 

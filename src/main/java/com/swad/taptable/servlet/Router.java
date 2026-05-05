@@ -1,9 +1,9 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.servlet;
 
 import com.swad.taptable.resources.UserRole;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,10 +47,10 @@ public final class Router {
    * role before invoking the handler.
    *
    * @param callerRole the authenticated user's role, or {@code null} if unauthenticated.
-   * @return the dispatch result: {@link DispatchResult#OK} if handled,
-   *         {@link DispatchResult#NOT_FOUND} if no route matched,
-   *         {@link DispatchResult#UNAUTHORIZED} if authentication is required but missing, or
-   *         {@link DispatchResult#FORBIDDEN} if the role is insufficient.
+   * @return the dispatch result: {@link DispatchResult#OK} if handled, {@link
+   *     DispatchResult#NOT_FOUND} if no route matched, {@link DispatchResult#UNAUTHORIZED} if
+   *     authentication is required but missing, or {@link DispatchResult#FORBIDDEN} if the role is
+   *     insufficient.
    */
   public DispatchResult dispatch(HttpServletRequest req, HttpServletResponse res) throws Exception {
     String method = req.getMethod();
@@ -79,21 +79,25 @@ public final class Router {
     return switch (access) {
       case PUBLIC -> DispatchResult.OK;
       case AUTHENTICATED -> role != null ? DispatchResult.OK : DispatchResult.UNAUTHORIZED;
-      case STAFF_OR_ADMIN -> role == null ? DispatchResult.UNAUTHORIZED
-          : (role == UserRole.STAFF || role == UserRole.ADMIN) ? DispatchResult.OK
-              : DispatchResult.FORBIDDEN;
-      case ADMIN_ONLY -> role == null ? DispatchResult.UNAUTHORIZED
-          : role == UserRole.ADMIN ? DispatchResult.OK : DispatchResult.FORBIDDEN;
+      case STAFF_OR_ADMIN ->
+          role == null
+              ? DispatchResult.UNAUTHORIZED
+              : (role == UserRole.STAFF || role == UserRole.ADMIN)
+                  ? DispatchResult.OK
+                  : DispatchResult.FORBIDDEN;
+      case ADMIN_ONLY ->
+          role == null
+              ? DispatchResult.UNAUTHORIZED
+              : role == UserRole.ADMIN ? DispatchResult.OK : DispatchResult.FORBIDDEN;
     };
   }
 
   /**
-   * Note: this class is intentionally package-private since it's an implementation detail of
-   * {@link Router}.
+   * Note: this class is intentionally package-private since it's an implementation detail of {@link
+   * Router}.
    *
-   * <p>
-   * Represents a registered route with a method, path pattern, required access level, and handler.
-   * </p>
+   * <p>Represents a registered route with a method, path pattern, required access level, and
+   * handler.
    */
   private static final class Route {
     private final String method;
@@ -108,9 +112,7 @@ public final class Router {
       this.access = access;
     }
 
-    /**
-     * Returns a map of extracted path parameters if this route matches, or {@code null} if not.
-     */
+    /** Returns a map of extracted path parameters if this route matches, or {@code null} if not. */
     Map<String, String> match(String method, String path) {
       if (!this.method.equalsIgnoreCase(method)) {
         return null;

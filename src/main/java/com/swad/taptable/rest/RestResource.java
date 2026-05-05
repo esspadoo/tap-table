@@ -1,7 +1,7 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest;
 
 import java.io.IOException;
-
 
 /**
  * Represents a generic REST resource. The {@link #serve()} method handles the request served by
@@ -16,5 +16,5 @@ public interface RestResource {
    *
    * @throws IOException if any error occurs in the client/server communication.
    */
-  public void serve() throws IOException;
+  void serve() throws IOException;
 }

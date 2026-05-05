@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.order;
 
 import com.swad.taptable.dao.order.GetUserOrdersDAO;
@@ -9,7 +10,6 @@ import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -50,15 +50,22 @@ public class GetUserOrdersRR extends AbstractRR {
 
     } catch (NumberFormatException e) {
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      Message m = new Message("Invalid user ID: must be a number.",
-          ErrorCodes.INVALID_INPUT_PARAMETER, e.getMessage());
+      Message m =
+          new Message(
+              "Invalid user ID: must be a number.",
+              ErrorCodes.INVALID_INPUT_PARAMETER,
+              e.getMessage());
       m.toJSON(res.getOutputStream());
     } catch (SQLException e) {
-      LOGGER.error("Database error (no. %d) while retrieving orders for user: %s", e.getErrorCode(),
-          e.getMessage());
+      LOGGER.error(
+          "Database error (no. %d) while retrieving orders for user: %s",
+          e.getErrorCode(), e.getMessage());
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      Message m = new Message("Unexpected database error: no. " + e.getErrorCode(),
-          ErrorCodes.UNEXPECTED_DB_ERROR, e.getMessage());
+      Message m =
+          new Message(
+              "Unexpected database error: no. " + e.getErrorCode(),
+              ErrorCodes.UNEXPECTED_DB_ERROR,
+              e.getMessage());
       m.toJSON(res.getOutputStream());
     }
   }

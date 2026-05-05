@@ -1,7 +1,6 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.promotion;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import com.swad.taptable.dao.promotions.GetPromotionsDAO;
 import com.swad.taptable.resources.Message;
 import com.swad.taptable.resources.Promotion;
@@ -11,6 +10,8 @@ import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * REST resource that handles retrieval of all promotions
@@ -46,8 +47,11 @@ public class GetPromotionsRR extends AbstractRR {
       promotions.toJSON(res.getOutputStream());
     } catch (SQLException e) {
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      Message m = new Message("Unexpected database error: no. " + e.getErrorCode(),
-          ErrorCodes.UNEXPECTED_DB_ERROR, e.getMessage());
+      Message m =
+          new Message(
+              "Unexpected database error: no. " + e.getErrorCode(),
+              ErrorCodes.UNEXPECTED_DB_ERROR,
+              e.getMessage());
       m.toJSON(res.getOutputStream());
     }
   }

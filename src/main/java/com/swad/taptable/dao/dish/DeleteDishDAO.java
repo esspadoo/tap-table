@@ -1,7 +1,7 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.dao.dish;
 
 import com.swad.taptable.dao.AbstractDAO;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 

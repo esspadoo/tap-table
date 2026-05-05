@@ -1,9 +1,9 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.dao.ingredient;
 
 import com.swad.taptable.dao.AbstractDAO;
 import com.swad.taptable.resources.Allergen;
 import com.swad.taptable.resources.Ingredient;
-
 import java.sql.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * Data access object for deleting an ingredient from the database by its {@code id}.
- * 
+ *
  * @author SWAD Team
  */
 public class DeleteIngredientDAO extends AbstractDAO<Ingredient> {
@@ -23,7 +23,7 @@ public class DeleteIngredientDAO extends AbstractDAO<Ingredient> {
 
   /**
    * Constructor for DeleteIngredientDAO.
-   * 
+   *
    * @param ingredient the {@code id} of the ingredient to be deleted from the database.
    */
   public DeleteIngredientDAO(final Integer id) {
@@ -58,8 +58,9 @@ public class DeleteIngredientDAO extends AbstractDAO<Ingredient> {
           }
 
           // Create the ingredient object from the result set
-          i = new Ingredient(rs.getInt("id"), rs.getString("name"), allergens,
-              rs.getBoolean("is_frozen"));
+          i =
+              new Ingredient(
+                  rs.getInt("id"), rs.getString("name"), allergens, rs.getBoolean("is_frozen"));
         }
       }
     }

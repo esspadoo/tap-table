@@ -1,3 +1,4 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.resources;
 
 /**
@@ -6,5 +7,7 @@ package com.swad.taptable.resources;
  * @author SWAD Team
  */
 public enum UserRole {
-  STAFF, CUSTOMER, ADMIN
+  STAFF,
+  CUSTOMER,
+  ADMIN
 }

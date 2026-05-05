@@ -1,7 +1,6 @@
+/* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.promotion;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import com.swad.taptable.dao.promotions.CheckPromotionUsageDAO;
 import com.swad.taptable.resources.Message;
 import com.swad.taptable.resources.PromotionUsageFlag;
@@ -10,6 +9,8 @@ import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * REST resource that handles checking if a promotion code has already been used by a user
@@ -41,11 +42,12 @@ public class CheckPromotionUsageRR extends AbstractRR {
       final PromotionUsageFlag isPromotionAlreadyUsed = dao.access().getOutputParam();
 
       if (isPromotionAlreadyUsed.isUsed()) {
-        LOGGER.info("Promotion with code %s has already been used by user with id %d.",
+        LOGGER.info(
+            "Promotion with code %s has already been used by user with id %d.",
             promotionCode, userId);
       } else {
-        LOGGER.info("Promotion with code %s has not been used by user with id %d.", promotionCode,
-            userId);
+        LOGGER.info(
+            "Promotion with code %s has not been used by user with id %d.", promotionCode, userId);
       }
 
       res.setStatus(HttpServletResponse.SC_OK);
