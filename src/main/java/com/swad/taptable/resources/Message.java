@@ -1,23 +1,20 @@
 package com.swad.taptable.resources;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Represents a generic message or an error message to be shown in the logger.
- * 
- * <p>
- * When used for error messages, the {@code errorCode} and {@code errorDetails} fields can be used
- * to provide additional information about the error, which can be helpful for debugging and
+ *
+ * <p>When used for error messages, the {@code errorCode} and {@code errorDetails} fields can be
+ * used to provide additional information about the error, which can be helpful for debugging and
  * monitoring purposes.
- * </p>
- * 
- * <p>
- * In the context of the application, instances of this class can be used to encapsulate messages
+ *
+ * <p>In the context of the application, instances of this class can be used to encapsulate messages
  * that are returned in API responses, as well as messages that are logged for debugging and
  * monitoring purposes.
- * </p>
- * 
+ *
  * @author SWAD Team
  */
 public class Message extends AbstractResource {
@@ -28,7 +25,7 @@ public class Message extends AbstractResource {
 
   /**
    * Creates an error message.
-   * 
+   *
    * @param message the message.
    * @param errorCode the code of the error.
    * @param errorDetails additional details about the error.
@@ -42,7 +39,7 @@ public class Message extends AbstractResource {
 
   /**
    * Creates a generic message.
-   * 
+   *
    * @param message the message.
    */
   public Message(final String message) {
@@ -54,7 +51,7 @@ public class Message extends AbstractResource {
 
   /**
    * Returns the message.
-   * 
+   *
    * @return the message.
    */
   public final String getMessage() {
@@ -63,7 +60,7 @@ public class Message extends AbstractResource {
 
   /**
    * Returns the code of the error, if any.
-   * 
+   *
    * @return the code of the error, if any, {@code null} otherwise.
    */
   public final String getErrorCode() {
@@ -72,7 +69,7 @@ public class Message extends AbstractResource {
 
   /**
    * Returns additional details about the error, if any.
-   * 
+   *
    * @return additional details about the error, if any, {@code null} otherwise.
    */
   public final String getErrorDetails() {
@@ -81,7 +78,7 @@ public class Message extends AbstractResource {
 
   /**
    * Indicates whether the message is about an error or not.
-   * 
+   *
    * @return {@code true} is the message is about an error, {@code false} otherwise.
    */
   public final boolean isError() {

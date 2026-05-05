@@ -46,8 +46,8 @@
     <inceptionYear>2026</inceptionYear>
     <licenses>
         <license>
-            <name>Creative Commons Attribution-ShareAlike 4.0 International</name>
-            <url>https://creativecommons.org/licenses/by-sa/4.0/</url>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -170,10 +170,28 @@
                     <version>3.4.0</version>
                     <configuration>
                         <java>
-                            <eclipse>
-                                <file>
-                                    https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml</file>
-                            </eclipse>
+
+                            <!-- Cleanthat will refactor your code, but it may break your style:
+                            apply it before your formatter -->
+                            <cleanthat />
+
+                            <googleJavaFormat />
+
+                            <tableTestFormatter />
+
+                            <importOrder />
+
+                            <removeUnusedImports />
+                            <forbidWildcardImports /> <!-- yell if any import ends with '*' -->
+                            <forbidModuleImports /> <!-- yell if any module imports are found (Java
+                            25+) -->
+
+                            <formatAnnotations />
+
+                            <licenseHeader>
+                                <content>/* Copyright (c) $YEAR University of Padua, Italy - MIT
+                                    License */</content>
+                            </licenseHeader>
                         </java>
                     </configuration>
                 </plugin>

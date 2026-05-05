@@ -1,20 +1,18 @@
 package com.swad.taptable.resources;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Represents a list of {@link Resource} objects.
  *
  * @author SWAD Team
- *
  * @param <T> the type of resource contained in the list.
  */
 public final class ResourceList<T extends Resource> extends AbstractResource {
 
-  /**
-   * The list of resources.
-   */
+  /** The list of resources. */
   private final Iterable<T> list;
 
   /**
