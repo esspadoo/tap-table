@@ -1,28 +1,57 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%@ page
+contentType="text/html" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Login - TapTable</title>
-</head>
-<body>
-  <form method="post" action="${pageContext.request.contextPath}/login">
-    <h2>TapTable</h2>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - TapTable</title>
+    <link rel="stylesheet" href="<c:url value='/css/global.css'/>" />
+  </head>
+  <body>
+    <div class="page-center">
+      <div class="card">
+        <div class="card-header">
+          <h1 class="card-title">TapTable</h1>
+          <p class="card-description">Sign in to your account</p>
+        </div>
 
-    <c:if test="${not empty error}">
-      <div class="error"><c:out value="${error}" /></div>
-    </c:if>
+        <form class="form" method="post" action="<c:url value='/login'/>">
+          <div class="form-group">
+            <label class="label required" for="email">Email</label>
+            <input
+              class="input"
+              type="email"
+              id="email"
+              name="email"
+              required
+              autofocus
+            />
+          </div>
+          <div class="form-group">
+            <label class="label required" for="password">Password</label>
+            <input
+              class="input"
+              type="password"
+              id="password"
+              name="password"
+              required
+            />
+          </div>
+          <button class="btn btn-primary" type="submit">Sign in</button>
+        </form>
 
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" required autofocus />
+        <c:if test="${not empty error}">
+          <div class="alert alert-destructive">
+            <c:out value="${error}" />
+          </div>
+        </c:if>
 
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password" required />
-
-    <button type="submit">Login</button>
-
-    <p>Don't have an account? <a href="${pageContext.request.contextPath}/register">Register</a></p>
-  </form>
-</body>
+        <p class="card-footer">
+          Don't have an account?
+          <a class="link" href="<c:url value='/register'/>">Register</a>
+        </p>
+      </div>
+    </div>
+  </body>
 </html>
