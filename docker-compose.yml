@@ -9,8 +9,13 @@ services:
       db:
         condition: service_healthy
     volumes:
-      # Webapp and logs
-      - ./target/taptable.war:/usr/local/tomcat/webapps/taptable.war
+      # Webapp
+      # TODO: dev only - revert to WAR mount for production:
+      #   - ./target/taptable.war:/usr/local/tomcat/webapps/taptable.war
+      - ./target/taptable:/usr/local/tomcat/webapps/taptable
+      - ./src/main/webapp/css:/usr/local/tomcat/webapps/taptable/css
+      - ./src/main/webapp/jsp:/usr/local/tomcat/webapps/taptable/jsp
+      # Logs
       - ./logs:/usr/local/tomcat/webapps/logs/taptable
       # Tomcat config files
       - ./conf/server.xml:/usr/local/tomcat/conf/server.xml
@@ -28,14 +33,27 @@ services:
     secrets:
       - postgres_password
     volumes:
-       - postgres_data:/var/lib/postgresql
-       - ./db/CREATE.sql:/docker-entrypoint-initdb.d/01-init.sql
-       - ./db/DUMP.sql:/docker-entrypoint-initdb.d/02-dump.sql
+      - postgres_data:/var/lib/postgresql
+      - ./db/CREATE.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./db/DUMP.sql:/docker-entrypoint-initdb.d/02-dump.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U admin -d taptable"]
       interval: 5s
       timeout: 10s
       retries: 5
+
+  # TODO: dev only - remove for production
+  browsersync:
+    image: node:20-alpine
+    command: npx --yes browser-sync start --proxy "web:8080" --port 3000 --files "/watch/**/*" --no-open
+    ports:
+      - 3000:3000
+    volumes:
+      - ./src/main/webapp/css:/watch/css
+      - ./src/main/webapp/jsp:/watch/jsp
+      - npm_cache:/root/.npm
+    depends_on:
+      - web
 
   pgadmin:
     image: elestio/pgadmin
@@ -47,16 +65,17 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
 
       # Don't require the user to login
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_SERVER_MODE: "False"
 
       # Don't require a "master" password after logging in
-      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
     volumes:
       - pgadmin:/pgadmin4/servers.json
 
 volumes:
   postgres_data:
   pgadmin:
+  npm_cache:
 
 secrets:
   postgres_password:

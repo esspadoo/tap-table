@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Context>
-
+<Context reloadable="true">
     <Resource name="jdbc/taptable"
         auth="Container"
         type="javax.sql.DataSource"
@@ -20,6 +19,4 @@
         removeAbandoned="true"
         closeMethod="close"
     />
-
-
 </Context>
