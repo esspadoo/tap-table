@@ -2,42 +2,74 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Register - TapTable</title>
-</head>
-<body>
-  <form method="post" action="${pageContext.request.contextPath}/register">
-    <h2>TapTable</h2>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - TapTable</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/global.css" />
+  </head>
+  <body>
+    <div class="page-center">
+      <div class="card" style="max-width: 30rem;">
 
-    <c:if test="${not empty error}">
-      <div class="error"><c:out value="${error}" /></div>
-    </c:if>
+        <div class="card-header">
+          <h1 class="card-title">TapTable</h1>
+          <p class="card-description">Create your account</p>
+        </div>
 
-    <label for="name">Name</label>
-    <input type="text" id="name" name="name" required />
+        <form class="form" method="post" action="${pageContext.request.contextPath}/register">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="label required" for="name">Name</label>
+              <input class="input" type="text" id="name" name="name" required autofocus />
+            </div>
+            <div class="form-group">
+              <label class="label required" for="surname">Surname</label>
+              <input class="input" type="text" id="surname" name="surname" required />
+            </div>
+          </div>
 
-    <label for="surname">Surname</label>
-    <input type="text" id="surname" name="surname" required />
+          <div class="form-group">
+            <label class="label required" for="phone_number">Phone number</label>
+            <input class="input" type="tel" id="phone_number" name="phone_number" placeholder="+39 333 123 4567" required />
+          </div>
 
-    <label for="username">Username</label>
-    <input type="text" id="username" name="username" required />
+          <div class="form-group">
+            <label class="label required" for="username">Username</label>
+            <input class="input" type="text" id="username" name="username" required />
+          </div>
 
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" required />
+          <div class="form-group">
+            <label class="label required" for="email">Email</label>
+            <input class="input" type="email" id="email" name="email" required />
+          </div>
 
-    <label for="phone_number">Phone number</label>
-    <input type="tel" id="phone_number" name="phone_number" required />
+          <div class="form-row">
+            <div class="form-group">
+              <label class="label required" for="password">Password</label>
+              <input class="input" type="password" id="password" name="password" required />
+            </div>
+            <div class="form-group">
+              <label class="label required" for="confirm_password">Confirm</label>
+              <input class="input" type="password" id="confirm_password" name="confirm_password" required />
+            </div>
+          </div>
 
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password" required />
+          <button class="btn btn-primary" type="submit">Create account</button>
+        </form>
 
-    <label for="confirm_password">Confirm password</label>
-    <input type="password" id="confirm_password" name="confirm_password" required />
+        <c:if test="${not empty error}">
+          <div class="alert alert-destructive">
+            <c:out value="${error}" />
+          </div>
+        </c:if>
 
-    <button type="submit">Register</button>
+        <p class="card-footer">
+          Already have an account?
+          <a class="link" href="${pageContext.request.contextPath}/login">Sign in</a>
+        </p>
 
-    <p>Already have an account? <a href="${pageContext.request.contextPath}/login">Login</a></p>
-  </form>
-</body>
+      </div>
+    </div>
+  </body>
 </html>
