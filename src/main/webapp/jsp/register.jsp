@@ -10,7 +10,7 @@
   </head>
   <body>
     <div class="page-center">
-      <div class="card" style="max-width: 30rem;">
+      <div class="card card-wide">
 
         <div class="card-header">
           <h1 class="card-title">TapTable</h1>

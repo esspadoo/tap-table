@@ -58,6 +58,10 @@ body {
   animation: fade-in 0.35s ease both;
 }
 
+.card-wide {
+  max-width: 30rem;
+}
+
 .card-header {
   display: flex;
   flex-direction: column;
