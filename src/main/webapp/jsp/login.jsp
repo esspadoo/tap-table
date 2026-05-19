@@ -12,8 +12,8 @@ contentType="text/html" pageEncoding="UTF-8" %>
     <div class="page-center">
       <div class="card">
         <div class="card-header">
-          <h1 class="card-title">TapTable</h1>
-          <p class="card-description">Sign in to your account</p>
+          <h1>TapTable</h1>
+          <p>Sign in to your account</p>
         </div>
 
         <form class="form" method="post" action="<c:url value='/login'/>">
@@ -47,10 +47,10 @@ contentType="text/html" pageEncoding="UTF-8" %>
           </div>
         </c:if>
 
-        <p class="card-footer">
+        <footer>
           Don't have an account?
           <a class="link" href="<c:url value='/register'/>">Register</a>
-        </p>
+        </footer>
       </div>
     </div>
   </body>

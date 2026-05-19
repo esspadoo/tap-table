@@ -15,6 +15,7 @@ services:
       - ./target/taptable:/usr/local/tomcat/webapps/taptable
       - ./src/main/webapp/css:/usr/local/tomcat/webapps/taptable/css
       - ./src/main/webapp/jsp:/usr/local/tomcat/webapps/taptable/jsp
+      - ./src/main/webapp/js:/usr/local/tomcat/webapps/taptable/js
       # Logs
       - ./logs:/usr/local/tomcat/webapps/logs/taptable
       # Tomcat config files
@@ -51,6 +52,7 @@ services:
     volumes:
       - ./src/main/webapp/css:/watch/css
       - ./src/main/webapp/jsp:/watch/jsp
+      - ./src/main/webapp/js:/watch/js
       - npm_cache:/root/.npm
     depends_on:
       - web

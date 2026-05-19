@@ -6,6 +6,10 @@
 
     <display-name>TapTable</display-name>
 
+    <welcome-file-list>
+        <welcome-file>jsp/homepage.jsp</welcome-file>
+    </welcome-file-list>
+
     <!-- Datasource configuration within the JNDI -->
     <resource-ref>
         <description>Connection pool to the database</description>

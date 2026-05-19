@@ -6,18 +6,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register - TapTable</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/global.css" />
+    <link rel="stylesheet" href="<c:url value='/css/global.css'/>" />
   </head>
   <body>
     <div class="page-center">
       <div class="card card-wide">
 
         <div class="card-header">
-          <h1 class="card-title">TapTable</h1>
-          <p class="card-description">Create your account</p>
+          <h1>TapTable</h1>
+          <p>Create your account</p>
         </div>
 
-        <form class="form" method="post" action="${pageContext.request.contextPath}/register">
+        <form class="form" method="post" action="<c:url value='/register'/>">
           <div class="form-row">
             <div class="form-group">
               <label class="label required" for="name">Name</label>
@@ -64,10 +64,10 @@
           </div>
         </c:if>
 
-        <p class="card-footer">
+        <footer>
           Already have an account?
-          <a class="link" href="${pageContext.request.contextPath}/login">Sign in</a>
-        </p>
+          <a class="link" href="<c:url value='/login'/>">Sign in</a>
+        </footer>
 
       </div>
     </div>
