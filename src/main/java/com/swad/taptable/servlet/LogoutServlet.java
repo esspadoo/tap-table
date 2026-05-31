@@ -44,7 +44,7 @@ public final class LogoutServlet extends HttpServlet {
       LOGGER.info("User logged out.");
       res.addHeader(
           "Set-Cookie", JWTUtil.COOKIE_NAME + "=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0");
-      res.sendRedirect(req.getContextPath() + "/login");
+      res.sendRedirect(req.getContextPath() + "/");
     } catch (Exception e) {
       LOGGER.error("Error during logout: %s", e.getMessage());
       res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

@@ -2,8 +2,13 @@
 package com.swad.taptable.servlet;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.swad.taptable.dao.order.GetAllOrdersDAO;
+import com.swad.taptable.dao.order.GetUserOrdersDAO;
 import com.swad.taptable.dao.user.GetUserDAO;
+import com.swad.taptable.resources.Order;
+import com.swad.taptable.resources.ResourceList;
 import com.swad.taptable.resources.User;
+import com.swad.taptable.resources.UserRole;
 import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.JWTUtil;
 import com.swad.taptable.util.LogContext;
@@ -35,10 +40,19 @@ public final class DashboardServlet extends HttpServlet {
             try {
               DecodedJWT decoded = JWTUtil.verify(cookie.getValue());
               int userId = decoded.getClaim("user_id").asInt();
+              UserRole role = UserRole.valueOf(decoded.getClaim("user_role").asString());
               LogContext.setUser(String.valueOf(userId));
+
               User user = new GetUserDAO(userId).access().getOutputParam();
               req.setAttribute("user", user);
-              LOGGER.debug("Serving dashboard for user %d.", userId);
+
+              ResourceList<Order> orderList =
+                  role == UserRole.CUSTOMER
+                      ? new GetUserOrdersDAO(userId).access().getOutputParam()
+                      : new GetAllOrdersDAO().access().getOutputParam();
+              req.setAttribute("orders", orderList.getList());
+
+              LOGGER.debug("Serving dashboard for user %d (%s).", userId, role);
               req.getRequestDispatcher("/jsp/dashboard/index.jsp").forward(req, res);
             } catch (Exception e) {
               LOGGER.warn(
