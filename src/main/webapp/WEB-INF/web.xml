@@ -30,6 +30,10 @@
     <servlet>
         <servlet-name>RestDispatcherServlet</servlet-name>
         <servlet-class>com.swad.taptable.servlet.RestDispatcherServlet</servlet-class>
+        <multipart-config>
+            <max-file-size>5242880</max-file-size>
+            <max-request-size>5505024</max-request-size>
+        </multipart-config>
     </servlet>
     <servlet-mapping>
         <servlet-name>RestDispatcherServlet</servlet-name>

@@ -14,11 +14,14 @@ import java.util.List;
 
 public class CreateDishDAO extends AbstractDAO<Dish> {
   private static final String DISHES_INSERT_STATEMENT =
-      "INSERT INTO dishes(name, description, category_name, price) VALUES (?, ?, ?, ?) RETURNING *";
+      "INSERT INTO dishes(name, description, category_name, price, image, image_type)"
+          + " VALUES (?, ?, ?, ?, ?, ?) RETURNING *";
   private static final String INGREDIENTS_INSERT_STATEMENT =
       "INSERT INTO dish_ingredients(dish_id, ingredient_id) VALUES (?, ?)";
   private static final String INGREDIENTS_SELECT_STATEMENT =
-      "SELECT i.id, i.name, i.allergen, i.is_frozen FROM ingredients i JOIN dish_ingredients di ON i.id = di.ingredient_id WHERE di.dish_id = ?";
+      "SELECT i.id, i.name, i.allergen, i.is_frozen"
+          + " FROM ingredients i JOIN dish_ingredients di ON i.id = di.ingredient_id"
+          + " WHERE di.dish_id = ?";
 
   private final Dish dish;
 
@@ -37,6 +40,8 @@ public class CreateDishDAO extends AbstractDAO<Dish> {
       dishesPstmt.setString(2, dish.getDescription());
       dishesPstmt.setString(3, dish.getCategory());
       dishesPstmt.setDouble(4, dish.getPrice());
+      dishesPstmt.setBytes(5, dish.getImage());
+      dishesPstmt.setString(6, dish.getImageType());
 
       try (ResultSet rs = dishesPstmt.executeQuery()) {
         if (!rs.next()) {
@@ -45,17 +50,19 @@ public class CreateDishDAO extends AbstractDAO<Dish> {
         }
 
         // Get generated dish ID and other details returned
-        int dishId = rs.getInt("id");
-        String dishName = rs.getString("name");
-        String dishDescription = rs.getString("description");
-        String dishCategory = rs.getString("category_name");
-        double dishPrice = rs.getDouble("price");
+        final int dishId = rs.getInt("id");
+        final String dishName = rs.getString("name");
+        final String dishDescription = rs.getString("description");
+        final String dishCategory = rs.getString("category_name");
+        final double dishPrice = rs.getDouble("price");
+        final byte[] dishImage = rs.getBytes("image");
+        final String dishImageType = rs.getString("image_type");
 
         // Insert into dish_ingredients
         try (PreparedStatement ingredientsPstmt =
             con.prepareStatement(INGREDIENTS_INSERT_STATEMENT)) {
           // Client should provide an array of ingredient IDs to associate with the dish
-          for (int ingredientId : dish.getIngredientIds()) {
+          for (final int ingredientId : dish.getIngredientIds()) {
             ingredientsPstmt.setInt(1, dishId);
             ingredientsPstmt.setInt(2, ingredientId);
 
@@ -67,16 +74,16 @@ public class CreateDishDAO extends AbstractDAO<Dish> {
         }
 
         // Retrieve the detailed list of the ingredient composing the dish
-        List<Ingredient> ingredients = new ArrayList<>();
+        final List<Ingredient> ingredients = new ArrayList<>();
         try (PreparedStatement ingredientsSelectPstmt =
             con.prepareStatement(INGREDIENTS_SELECT_STATEMENT)) {
           ingredientsSelectPstmt.setInt(1, dishId);
           try (ResultSet ingredientsRs = ingredientsSelectPstmt.executeQuery()) {
             while (ingredientsRs.next()) {
-              List<Allergen> allergens = new ArrayList<>();
-              Array allergenArray = ingredientsRs.getArray("allergen");
+              final List<Allergen> allergens = new ArrayList<>();
+              final Array allergenArray = ingredientsRs.getArray("allergen");
               if (allergenArray != null) {
-                for (String a : (String[]) allergenArray.getArray()) {
+                for (final String a : (String[]) allergenArray.getArray()) {
                   allergens.add(Allergen.valueOf(a));
                 }
               }
@@ -98,13 +105,14 @@ public class CreateDishDAO extends AbstractDAO<Dish> {
                 .category(dishCategory)
                 .price(dishPrice)
                 .ingredients(ingredients)
+                .image(dishImage)
+                .imageType(dishImageType)
                 .build();
       }
 
       con.commit();
-
       outputParam = d;
-    } catch (SQLException e) {
+    } catch (final SQLException e) {
       con.rollback();
       throw e;
     }

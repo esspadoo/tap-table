@@ -13,7 +13,8 @@ import java.util.List;
 public final class CreateIngredientDAO extends AbstractDAO<Ingredient> {
 
   private static final String STATEMENT =
-      "INSERT INTO ingredients(name, allergen, is_frozen) VALUES (?, ?, ?) RETURNING *";
+      "INSERT INTO ingredients(name, allergen, is_frozen, image, image_type)"
+          + " VALUES (?, ?, ?, ?, ?) RETURNING *";
 
   private final Ingredient ingredient;
 
@@ -41,17 +42,19 @@ public final class CreateIngredientDAO extends AbstractDAO<Ingredient> {
       // Set the parameters for the prepared statement
       stmt.setString(1, ingredient.getName());
       stmt.setArray(2, sqlAllergens);
-      stmt.setBoolean(3, ingredient.isFrozen());
+      stmt.setBoolean(3, ingredient.isFrozen() != null && ingredient.isFrozen());
+      stmt.setBytes(4, ingredient.getImage());
+      stmt.setString(5, ingredient.getImageType());
 
       try (ResultSet rs = stmt.executeQuery()) {
         if (rs.next()) {
           // Create a list to hold the allergens
-          List<Allergen> allergens = new ArrayList<>();
+          final List<Allergen> allergens = new ArrayList<>();
 
           // Convert the SQL array back to a list of allergens
-          Array allergenArray = rs.getArray("allergen");
+          final Array allergenArray = rs.getArray("allergen");
           if (allergenArray != null) {
-            for (String a : (String[]) allergenArray.getArray()) {
+            for (final String a : (String[]) allergenArray.getArray()) {
               allergens.add(Allergen.valueOf(a));
             }
           }
@@ -59,7 +62,12 @@ public final class CreateIngredientDAO extends AbstractDAO<Ingredient> {
           // Create the ingredient object from the result set
           i =
               new Ingredient(
-                  rs.getInt("id"), rs.getString("name"), allergens, rs.getBoolean("is_frozen"));
+                  rs.getInt("id"),
+                  rs.getString("name"),
+                  allergens,
+                  rs.getBoolean("is_frozen"),
+                  rs.getBytes("image"),
+                  rs.getString("image_type"));
         }
       }
     }

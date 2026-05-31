@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 
 /**
  * DAO for retrieving the image of an ingredient from the database.
- * 
+ *
  * @author SWAD Team
  */
 public final class GetIngredientImageDAO extends AbstractDAO<byte[]> {

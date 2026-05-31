@@ -61,6 +61,7 @@ CREATE TABLE dishes (
     category_name VARCHAR(255) NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     image BYTEA,
+    image_type VARCHAR(50),
     FOREIGN KEY (category_name) REFERENCES categories(name)
 );
 
@@ -83,7 +84,8 @@ CREATE TABLE ingredients (
     name VARCHAR(255) NOT NULL,
     allergen ALLERGEN[], -- this field can be null as the dish might not contain any allergen,
     is_frozen BOOLEAN,
-    image BYTEA
+    image BYTEA,
+    image_type VARCHAR(50)
 );
 
 -- DISH_INGREDIENTS

@@ -13,7 +13,10 @@ import java.util.List;
 public class EditIngredientDAO extends AbstractDAO<Ingredient> {
 
   private static final String STATEMENT =
-      "UPDATE ingredients SET name=?, is_frozen=?, allergen=? WHERE id=? RETURNING *";
+      "UPDATE ingredients"
+          + " SET name=?, is_frozen=?, allergen=?,"
+          + " image = COALESCE(?, image), image_type = COALESCE(?, image_type)"
+          + " WHERE id=? RETURNING *";
 
   private final Ingredient ingredient;
 
@@ -28,7 +31,6 @@ public class EditIngredientDAO extends AbstractDAO<Ingredient> {
 
   @Override
   protected void doAccess() throws Exception {
-
     Ingredient i = null;
 
     try (PreparedStatement pstmt = con.prepareStatement(STATEMENT)) {
@@ -41,22 +43,29 @@ public class EditIngredientDAO extends AbstractDAO<Ingredient> {
       pstmt.setString(1, ingredient.getName());
       pstmt.setBoolean(2, ingredient.isFrozen());
       pstmt.setArray(3, sqlAllergens);
-      pstmt.setInt(4, ingredient.getId());
+      pstmt.setBytes(4, ingredient.getImage());
+      pstmt.setString(5, ingredient.getImageType());
+      pstmt.setInt(6, ingredient.getId());
 
       try (ResultSet rs = pstmt.executeQuery()) {
         if (rs.next()) {
           // Create a list to hold the allergens
-          List<Allergen> allergens = new ArrayList<>();
-          Array allergenArray = rs.getArray("allergen");
+          final List<Allergen> allergens = new ArrayList<>();
+          final Array allergenArray = rs.getArray("allergen");
           if (allergenArray != null) {
-            for (String a : (String[]) allergenArray.getArray()) {
+            for (final String a : (String[]) allergenArray.getArray()) {
               allergens.add(Allergen.valueOf(a));
             }
           }
 
           i =
               new Ingredient(
-                  rs.getInt("id"), rs.getString("name"), allergens, rs.getBoolean("is_frozen"));
+                  rs.getInt("id"),
+                  rs.getString("name"),
+                  allergens,
+                  rs.getBoolean("is_frozen"),
+                  rs.getBytes("image"),
+                  rs.getString("image_type"));
         }
       }
     }

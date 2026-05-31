@@ -2,20 +2,21 @@
 package com.swad.taptable.rest.dish;
 
 import com.swad.taptable.dao.dish.CreateDishDAO;
-import com.swad.taptable.exception.NotValidDishException;
-import com.swad.taptable.exception.json.UnexpectedKeyException;
 import com.swad.taptable.resources.Dish;
 import com.swad.taptable.resources.Message;
 import com.swad.taptable.rest.AbstractRR;
 import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.awt.datatransfer.MimeTypeParseException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.SQLException;
 
 /**
- * REST resource that handles creation of a new dish
+ * REST resource that handles creation of a new dish.
  *
  * @author SWAD Team
  */
@@ -32,20 +33,63 @@ public class CreateDishRR extends AbstractRR {
   }
 
   @Override
+  protected boolean checkMethodMediaType(
+      final HttpServletRequest req, final HttpServletResponse res) throws IOException {
+    final String accept = req.getHeader("Accept");
+    final String contentType = req.getHeader("Content-Type");
+    final OutputStream out = res.getOutputStream();
+
+    if (accept == null) {
+      res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      Message m =
+          new Message(
+              "Output media type not specified.",
+              ErrorCodes.OUTPUT_MEDIA_TYPE_NOT_SPECIFIED,
+              "Accept request header missing.");
+      m.toJSON(out);
+      return false;
+    }
+
+    if (!accept.contains(JSON_MEDIA_TYPE) && !accept.contains(ALL_MEDIA_TYPE)) {
+      res.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+      Message m =
+          new Message(
+              "Unsupported output media type. Resources are represented only in application/json.",
+              ErrorCodes.UNSUPPORTED_OUTPUT_MEDIA_TYPE,
+              String.format("Requested representation is %s.", accept));
+      m.toJSON(out);
+      return false;
+    }
+
+    if (contentType == null || !contentType.contains(MULTIPART_MEDIA_TYPE)) {
+      res.setStatus(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+      Message m =
+          new Message(
+              "Unsupported input media type. This endpoint requires multipart/form-data.",
+              ErrorCodes.UNSUPPORTED_INPUT_MEDIA_TYPE,
+              String.format("Submitted representation is %s.", contentType));
+      m.toJSON(out);
+      return false;
+    }
+
+    return true;
+  }
+
+  @Override
   protected void doServe() throws IOException {
     try {
-      final Dish in = Dish.fromJSON(req.getInputStream());
+      final Dish in = Dish.fromMultipart(req);
 
       if (in.getName() == null
           || in.getName().isBlank()
           || in.getPrice() == null
           || in.getPrice() <= 0
+          || in.getCategory() == null
           || in.getIngredientIds() == null
-          || in.getIngredientIds().isEmpty()
-          || in.getCategory() == null) {
+          || in.getIngredientIds().isEmpty()) {
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         Message m =
-            new Message("Missing or invalid fields", ErrorCodes.INVALID_INPUT_PARAMETER, null);
+            new Message("Missing or invalid fields.", ErrorCodes.INVALID_INPUT_PARAMETER, null);
         m.toJSON(res.getOutputStream());
         return;
       }
@@ -62,17 +106,24 @@ public class CreateDishRR extends AbstractRR {
       res.setStatus(HttpServletResponse.SC_CREATED);
       out.toJSON(res.getOutputStream());
 
-    } catch (final NotValidDishException e) {
-      res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      Message m =
-          new Message(
-              "Invalid dish data: " + e.getMessage(), ErrorCodes.INVALID_INPUT_PARAMETER, null);
+    } catch (final MimeTypeParseException e) {
+      LOGGER.error("Unsupported image MIME type while creating dish: %s", e.getMessage());
+      res.setStatus(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+      Message m = new Message(e.getMessage(), ErrorCodes.UNSUPPORTED_INPUT_MEDIA_TYPE, null);
       m.toJSON(res.getOutputStream());
-    } catch (final UnexpectedKeyException e) {
+    } catch (final NumberFormatException e) {
+      LOGGER.error("Invalid numeric field while creating dish: %s", e.getMessage());
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       Message m =
           new Message(
-              "Malformed JSON in request body.",
+              "Invalid numeric field value.", ErrorCodes.INVALID_INPUT_PARAMETER, e.getMessage());
+      m.toJSON(res.getOutputStream());
+    } catch (final ServletException e) {
+      LOGGER.error("Failed to parse multipart request while creating dish: %s", e.getMessage());
+      res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      Message m =
+          new Message(
+              "Failed to parse multipart request.",
               ErrorCodes.WRONG_RESOURCE_PROVIDED,
               e.getMessage());
       m.toJSON(res.getOutputStream());

@@ -2,13 +2,16 @@
 package com.swad.taptable.resources;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
 import com.swad.taptable.exception.NotValidDishException;
 import com.swad.taptable.exception.json.UnexpectedKeyException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Part;
+import java.awt.datatransfer.MimeTypeParseException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +28,8 @@ public class Dish extends AbstractResource {
   private final List<Integer> ingredientIds;
   private final List<Ingredient> ingredients;
   private final String category;
+  private final byte[] image;
+  private final String imageType;
 
   /**
    * Creates a new {@code Dish} from the values collected by the builder.
@@ -39,6 +44,8 @@ public class Dish extends AbstractResource {
     this.ingredientIds = builder.ingredientIds;
     this.ingredients = builder.ingredients;
     this.category = builder.category;
+    this.image = builder.image;
+    this.imageType = builder.imageType;
   }
 
   /**
@@ -105,74 +112,130 @@ public class Dish extends AbstractResource {
   }
 
   /**
-   * Parses a {@code Dish} from a JSON payload.
+   * Returns the image associated with the dish, or {@code null} if not present.
    *
-   * @param in the input stream containing the JSON payload.
-   * @return the parsed dish.
-   * @throws IOException if an error occurs while reading the stream.
-   * @throws NotValidDishException if the status of the parsed payload is considered invalid by the
-   *     caller contract.
-   * @throws UnexpectedKeyException if the payload contains unsupported fields.
+   * @return the image bytes, or {@code null} if not present.
+   */
+  public byte[] getImage() {
+    return image;
+  }
+
+  /**
+   * Returns the MIME type of the dish image, or {@code null} if no image is present.
+   *
+   * @return
+   */
+  public String getImageType() {
+    return imageType;
+  }
+
+  /**
+   * Not supported. Dish create/edit endpoints now accept {@code multipart/form-data}; parse fields
+   * with {@code req.getParameter()} and the image with {@code req.getPart("image")}.
+   *
+   * @throws UnsupportedOperationException always.
    */
   public static Dish fromJSON(final InputStream in)
       throws IOException, NotValidDishException, UnexpectedKeyException {
-    Integer jId = null;
-    String jName = null;
-    String jDescription = null;
-    Double jPrice = null;
-    List<Integer> jIngredientIds = new ArrayList<>();
-    String jCategory = null;
+    throw new UnsupportedOperationException(
+        "Dish endpoints accept multipart/form-data, not application/json.");
+  }
 
-    final JsonParser jp = JSON_FACTORY.createParser(in);
+  /**
+   * Parses a {@code Dish} from a {@code multipart/form-data} request.
+   *
+   * @param req the HTTP request.
+   * @return the parsed dish.
+   * @throws IOException if an I/O error occurs reading the request.
+   * @throws ServletException if the request is not a valid multipart request.
+   * @throws MimeTypeParseException if an image part is present but its format is not recognised
+   *     (accepted: webp, png, jpeg).
+   */
+  public static Dish fromMultipart(final HttpServletRequest req)
+      throws IOException, ServletException, MimeTypeParseException {
+    Integer id = null;
+    String name = null;
+    String description = null;
+    Double price = null;
+    String category = null;
+    final List<Integer> ingredientIds = new ArrayList<>();
+    byte[] imageBytes = null;
+    String imageType = null;
 
-    while (jp.nextToken() != JsonToken.END_OBJECT) {
-      if (jp.getCurrentToken() != JsonToken.FIELD_NAME) {
-        continue;
-      }
-
-      switch (jp.currentName()) {
+    for (final Part p : req.getParts()) {
+      switch (p.getName()) {
         case "id":
-          jp.nextToken();
-          jId = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getIntValue();
+          try (InputStream is = p.getInputStream()) {
+            final String val = new String(is.readAllBytes(), StandardCharsets.UTF_8).trim();
+            if (!val.isEmpty()) id = Integer.parseInt(val);
+          }
           break;
+
         case "name":
-          jp.nextToken();
-          jName = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText();
+          try (InputStream is = p.getInputStream()) {
+            name = new String(is.readAllBytes(), StandardCharsets.UTF_8).trim();
+          }
           break;
+
         case "description":
-          jp.nextToken();
-          jDescription = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText();
+          try (InputStream is = p.getInputStream()) {
+            description = new String(is.readAllBytes(), StandardCharsets.UTF_8).trim();
+          }
           break;
+
         case "price":
-          jp.nextToken();
-          jPrice = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getDoubleValue();
-          break;
-        case "ingredient_ids":
-          if (jp.nextToken() == JsonToken.VALUE_NULL) {
-            jIngredientIds = null;
-            break;
-          }
-          while (jp.nextToken() != JsonToken.END_ARRAY) {
-            jIngredientIds.add(
-                jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getIntValue());
+          try (InputStream is = p.getInputStream()) {
+            final String val = new String(is.readAllBytes(), StandardCharsets.UTF_8).trim();
+            if (!val.isEmpty()) price = Double.parseDouble(val);
           }
           break;
+
         case "category":
-          jp.nextToken();
-          jCategory = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText();
+          try (InputStream is = p.getInputStream()) {
+            category = new String(is.readAllBytes(), StandardCharsets.UTF_8).trim();
+          }
           break;
-        default:
-          throw new UnexpectedKeyException("Unexpected field: " + jp.currentName());
+
+        case "ingredient_ids":
+          try (InputStream is = p.getInputStream()) {
+            final String val = new String(is.readAllBytes(), StandardCharsets.UTF_8).trim();
+            if (!val.isEmpty()) ingredientIds.add(Integer.parseInt(val));
+          }
+          break;
+
+        case "image":
+          imageType = p.getContentType();
+          switch (imageType.toLowerCase().trim()) {
+            case "image/webp":
+            case "image/png":
+            case "image/jpeg":
+              break;
+            default:
+              throw new MimeTypeParseException(
+                  String.format(
+                      "Unsupported image format %s. Accepted: image/webp, image/png, image/jpeg.",
+                      imageType));
+          }
+          try (InputStream is = p.getInputStream()) {
+            imageBytes = is.readAllBytes();
+            if (imageBytes.length == 0) {
+              imageBytes = null;
+              imageType = null;
+            }
+          }
+          break;
       }
     }
 
     return new Dish.Builder()
-        .id(jId)
-        .name(jName)
-        .description(jDescription)
-        .price(jPrice)
-        .ingredientIds(jIngredientIds)
-        .category(jCategory)
+        .id(id)
+        .name(name)
+        .description(description)
+        .price(price)
+        .category(category)
+        .ingredientIds(ingredientIds)
+        .image(imageBytes)
+        .imageType(imageType)
         .build();
   }
 
@@ -242,6 +305,8 @@ public class Dish extends AbstractResource {
     private List<Integer> ingredientIds;
     private List<Ingredient> ingredients;
     private String category;
+    private byte[] image;
+    private String imageType;
 
     /**
      * Sets the dish identifier.
@@ -317,6 +382,16 @@ public class Dish extends AbstractResource {
      */
     public Builder category(final String category) {
       this.category = category;
+      return this;
+    }
+
+    public Builder image(final byte[] image) {
+      this.image = image;
+      return this;
+    }
+
+    public Builder imageType(final String imageType) {
+      this.imageType = imageType;
       return this;
     }
 

@@ -2,12 +2,15 @@
 package com.swad.taptable.resources;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
 import com.swad.taptable.exception.json.UnexpectedKeyException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Part;
+import java.awt.datatransfer.MimeTypeParseException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,22 +24,45 @@ public class Ingredient extends AbstractResource {
   private final String name;
   private final List<Allergen> allergens;
   private final Boolean frozen;
+  private final byte[] image;
+  private final String imageType;
+
+  /**
+   * Creates a new {@code Ingredient} without image data.
+   *
+   * @param id the unique identifier of the ingredient.
+   * @param name the name of the ingredient.
+   * @param allergens the allergens associated with the ingredient.
+   * @param frozen whether the ingredient is frozen.
+   */
+  public Ingredient(
+      final Integer id, final String name, final List<Allergen> allergens, final Boolean frozen) {
+    this(id, name, allergens, frozen, null, null);
+  }
 
   /**
    * Creates a new {@code Ingredient}.
    *
    * @param id the unique identifier of the ingredient.
    * @param name the name of the ingredient.
-   * @param allergens the allergens associated with the ingredient; copied defensively if not {@code
-   *     null}.
+   * @param allergens the allergens associated with the ingredient.
    * @param frozen whether the ingredient is frozen.
+   * @param image the raw image bytes, or {@code null} if not present.
+   * @param imageType the MIME type of the image (e.g. {@code image/webp}), or {@code null}.
    */
   public Ingredient(
-      final Integer id, final String name, final List<Allergen> allergens, final Boolean frozen) {
+      final Integer id,
+      final String name,
+      final List<Allergen> allergens,
+      final Boolean frozen,
+      final byte[] image,
+      final String imageType) {
     this.id = id;
     this.name = name;
     this.allergens = allergens != null ? List.copyOf(allergens) : null;
     this.frozen = frozen;
+    this.image = image;
+    this.imageType = imageType;
   }
 
   /**
@@ -84,6 +110,16 @@ public class Ingredient extends AbstractResource {
     return frozen;
   }
 
+  /** Returns the raw image bytes, or {@code null} if not present. */
+  public byte[] getImage() {
+    return image;
+  }
+
+  /** Returns the MIME type of the image, or {@code null} if not present. */
+  public String getImageType() {
+    return imageType;
+  }
+
   @Override
   protected void writeJSON(final OutputStream out) throws IOException {
     final JsonGenerator jg = JSON_FACTORY.createGenerator(out);
@@ -115,65 +151,94 @@ public class Ingredient extends AbstractResource {
   }
 
   /**
-   * Parses a JSON input stream to create an instance of {@code Ingredient}
+   * Not supported. Ingredient create/edit endpoints now accept {@code multipart/form-data}; parse
+   * fields with {@code req.getParameter()} and the image with {@code req.getPart("image")}.
    *
-   * <p>The {@code allergens} array may be empty.
-   *
-   * <p>
-   *
-   * @param in the input stream containing the JSON payload.
-   * @return a new {@code Ingredient} built from the parsed fields.
-   * @throws IOException if there is an error reading from the stream or parsing the JSON.
-   * @throws UnexpectedKeyException if the payload contains unsupported fields.
+   * @throws UnsupportedOperationException always.
    */
   public static Ingredient fromJSON(final InputStream in)
       throws IOException, UnexpectedKeyException {
+    throw new UnsupportedOperationException(
+        "Ingredient endpoints accept multipart/form-data, not application/json.");
+  }
 
-    Integer jId = null;
-    String jName = null;
-    List<Allergen> jAllergens = null;
-    Boolean jIsFrozen = null;
+  /**
+   * Parses an {@code Ingredient} from a {@code multipart/form-data} request.
+   *
+   * <p>Expected fields: {@code name}, {@code is_frozen} (optional boolean), {@code allergens}
+   * (multi-value), {@code id} (optional, used by edit endpoints). Optional file part: {@code
+   * image}.
+   *
+   * @param req the HTTP request.
+   * @return the parsed ingredient.
+   * @throws IOException if an I/O error occurs reading the request.
+   * @throws ServletException if the request is not a valid multipart request.
+   * @throws MimeTypeParseException if an image part is present but its format is not recognised
+   *     (accepted: webp, png, jpeg).
+   * @throws IllegalArgumentException if an allergen value is not a valid {@link Allergen} constant.
+   */
+  public static Ingredient fromMultipart(final HttpServletRequest req)
+      throws IOException, ServletException, MimeTypeParseException {
+    Integer id = null;
+    String name = null;
+    Boolean isFrozen = null;
+    final List<Allergen> allergens = new ArrayList<>();
+    byte[] imageBytes = null;
+    String imageType = null;
 
-    try {
-      final JsonParser jp = JSON_FACTORY.createParser(in);
+    for (final Part p : req.getParts()) {
+      switch (p.getName()) {
+        case "id":
+          try (InputStream is = p.getInputStream()) {
+            final String val = new String(is.readAllBytes(), StandardCharsets.UTF_8).trim();
+            if (!val.isEmpty()) id = Integer.parseInt(val);
+          }
+          break;
 
-      while (jp.nextToken() != JsonToken.END_OBJECT) {
-        if (jp.getCurrentToken() != JsonToken.FIELD_NAME) {
-          continue;
-        }
+        case "name":
+          try (InputStream is = p.getInputStream()) {
+            name = new String(is.readAllBytes(), StandardCharsets.UTF_8).trim();
+          }
+          break;
 
-        switch (jp.currentName()) {
-          case "id":
-            jp.nextToken();
-            jId = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getIntValue();
-            break;
-          case "name":
-            jp.nextToken();
-            jName = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText();
-            break;
-          case "allergens":
-            if (jp.nextToken() == JsonToken.VALUE_NULL) break;
+        case "is_frozen":
+          try (InputStream is = p.getInputStream()) {
+            final String val = new String(is.readAllBytes(), StandardCharsets.UTF_8).trim();
+            if (!val.isEmpty()) isFrozen = Boolean.parseBoolean(val);
+          }
+          break;
 
-            jAllergens = new ArrayList<>();
+        case "allergens":
+          try (InputStream is = p.getInputStream()) {
+            final String val = new String(is.readAllBytes(), StandardCharsets.UTF_8).trim();
+            if (!val.isEmpty()) allergens.add(Allergen.valueOf(val));
+          }
+          break;
 
-            while (jp.nextToken() != JsonToken.END_ARRAY) {
-              jAllergens.add(Allergen.valueOf(jp.getText()));
+        case "image":
+          imageType = p.getContentType();
+          switch (imageType.toLowerCase().trim()) {
+            case "image/webp":
+            case "image/png":
+            case "image/jpeg":
+              break;
+            default:
+              throw new MimeTypeParseException(
+                  String.format(
+                      "Unsupported image format %s. Accepted: image/webp, image/png, image/jpeg.",
+                      imageType));
+          }
+          try (InputStream is = p.getInputStream()) {
+            imageBytes = is.readAllBytes();
+            if (imageBytes.length == 0) {
+              imageBytes = null;
+              imageType = null;
             }
-
-            break;
-          case "is_frozen":
-            jp.nextToken();
-            jIsFrozen = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getBooleanValue();
-            break;
-          default:
-            throw new UnexpectedKeyException("Unexpected field: " + jp.currentName());
-        }
+          }
+          break;
       }
-    } catch (IOException e) {
-      LOGGER.error("Unable to parse an Ingredient object from JSON.", e);
-      throw e;
     }
 
-    return new Ingredient(jId, jName, jAllergens, jIsFrozen);
+    return new Ingredient(id, name, allergens, isFrozen, imageBytes, imageType);
   }
 }

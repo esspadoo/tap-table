@@ -27,9 +27,12 @@ public abstract class AbstractRR implements RestResource {
 
   /** The WEBP MIME media type */
   protected static final String WEBP_MEDIA_TYPE = "image/webp";
-  
+
   /** The any MIME media type */
   protected static final String ALL_MEDIA_TYPE = "*/*";
+
+  /** The multipart/form-data MIME media type */
+  protected static final String MULTIPART_MEDIA_TYPE = "multipart/form-data";
 
   /** The HTTP request */
   protected final HttpServletRequest req;

@@ -2,15 +2,17 @@
 package com.swad.taptable.rest.ingredient;
 
 import com.swad.taptable.dao.ingredient.CreateIngredientDAO;
-import com.swad.taptable.exception.json.UnexpectedKeyException;
 import com.swad.taptable.resources.Ingredient;
 import com.swad.taptable.resources.Message;
 import com.swad.taptable.rest.AbstractRR;
 import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.awt.datatransfer.MimeTypeParseException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.SQLException;
 
 /**
@@ -21,7 +23,7 @@ import java.sql.SQLException;
 public class CreateIngredientRR extends AbstractRR {
 
   /**
-   * Creates a new {@code NewIngredientRR} object.
+   * Creates a new {@code CreateIngredientRR} object
    *
    * @param req the HTTP request
    * @param res the HTTP response
@@ -31,27 +33,65 @@ public class CreateIngredientRR extends AbstractRR {
   }
 
   @Override
+  protected boolean checkMethodMediaType(
+      final HttpServletRequest req, final HttpServletResponse res) throws IOException {
+    final String accept = req.getHeader("Accept");
+    final String contentType = req.getHeader("Content-Type");
+    final OutputStream out = res.getOutputStream();
+
+    if (accept == null) {
+      res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      Message m =
+          new Message(
+              "Output media type not specified.",
+              ErrorCodes.OUTPUT_MEDIA_TYPE_NOT_SPECIFIED,
+              "Accept request header missing.");
+      m.toJSON(out);
+      return false;
+    }
+
+    if (!accept.contains(JSON_MEDIA_TYPE) && !accept.contains(ALL_MEDIA_TYPE)) {
+      res.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+      Message m =
+          new Message(
+              "Unsupported output media type. Resources are represented only in application/json.",
+              ErrorCodes.UNSUPPORTED_OUTPUT_MEDIA_TYPE,
+              String.format("Requested representation is %s.", accept));
+      m.toJSON(out);
+      return false;
+    }
+
+    if (contentType == null || !contentType.contains(MULTIPART_MEDIA_TYPE)) {
+      res.setStatus(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+      Message m =
+          new Message(
+              "Unsupported input media type. This endpoint requires multipart/form-data.",
+              ErrorCodes.UNSUPPORTED_INPUT_MEDIA_TYPE,
+              String.format("Submitted representation is %s.", contentType));
+      m.toJSON(out);
+      return false;
+    }
+
+    return true;
+  }
+
+  @Override
   protected void doServe() throws IOException {
     try {
-      // Parse the ingredient from the request body
-      final Ingredient in = Ingredient.fromJSON(req.getInputStream());
+      final Ingredient in = Ingredient.fromMultipart(req);
 
-      // Check that the required fields provided are not null nor empty
-      if (in.getName() == null) {
-        LOGGER.warn("Invalid input for creating ingredient: missing required fields");
+      if (in.getName() == null || in.getName().isBlank()) {
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         Message m =
             new Message(
-                "Missing required fields: name and isFrozen must be provided",
+                "Missing required fields: name must be provided.",
                 ErrorCodes.INVALID_INPUT_PARAMETER,
                 null);
         m.toJSON(res.getOutputStream());
         return;
       }
 
-      final CreateIngredientDAO dao = new CreateIngredientDAO(in);
-
-      Ingredient out = dao.access().getOutputParam();
+      final Ingredient out = new CreateIngredientDAO(in).access().getOutputParam();
 
       if (out == null) {
         LOGGER.warn("Failed to create ingredient %s", in.getName());
@@ -65,11 +105,33 @@ public class CreateIngredientRR extends AbstractRR {
       LOGGER.info("Ingredient %s created with id %d", out.getName(), out.getId());
       res.setStatus(HttpServletResponse.SC_CREATED);
       out.toJSON(res.getOutputStream());
-    } catch (final UnexpectedKeyException e) {
+
+    } catch (final MimeTypeParseException e) {
+      LOGGER.error("Unsupported image MIME type while creating ingredient: %s", e.getMessage());
+      res.setStatus(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+      Message m = new Message(e.getMessage(), ErrorCodes.UNSUPPORTED_INPUT_MEDIA_TYPE, null);
+      m.toJSON(res.getOutputStream());
+    } catch (final NumberFormatException e) {
+      LOGGER.error("Invalid numeric field while creating ingredient: %s", e.getMessage());
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       Message m =
           new Message(
-              "Malformed JSON in request body.",
+              "Invalid numeric field value.", ErrorCodes.INVALID_INPUT_PARAMETER, e.getMessage());
+      m.toJSON(res.getOutputStream());
+    } catch (final IllegalArgumentException e) {
+      LOGGER.error("Invalid allergen value while creating ingredient: %s", e.getMessage());
+      res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      Message m =
+          new Message(
+              "Invalid allergen value.", ErrorCodes.INVALID_INPUT_PARAMETER, e.getMessage());
+      m.toJSON(res.getOutputStream());
+    } catch (final ServletException e) {
+      LOGGER.error(
+          "Failed to parse multipart request while creating ingredient: %s", e.getMessage());
+      res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      Message m =
+          new Message(
+              "Failed to parse multipart request.",
               ErrorCodes.WRONG_RESOURCE_PROVIDED,
               e.getMessage());
       m.toJSON(res.getOutputStream());
