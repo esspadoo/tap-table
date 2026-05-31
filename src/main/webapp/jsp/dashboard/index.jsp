@@ -21,7 +21,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
     >
       <div class="dashboard-header">
         <h1>Welcome, <c:out value="${user.name}" /></h1>
-        <p class="dashboard-subtitle"><c:out value="${user.email}" /></p>
+        <p><c:out value="${user.email}" /></p>
       </div>
 
       <c:choose>
@@ -37,7 +37,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
                 <div class="orders-list">
                   <c:forEach var="order" items="${orders}">
                     <div class="order-card">
-                      <div class="order-card-header">
+                      <header>
                         <span class="order-id"
                           >Order #<c:out value="${order.id}"
                         /></span>
@@ -52,7 +52,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
                             <span class="badge badge-cancelled">Cancelled</span>
                           </c:otherwise>
                         </c:choose>
-                      </div>
+                      </header>
 
                       <div class="order-dishes">
                         <c:forEach var="dish" items="${order.dishes}">
@@ -80,7 +80,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
                         </c:forEach>
                       </div>
 
-                      <div class="order-card-footer">
+                      <footer>
                         <span class="order-total">
                           &euro;<fmt:formatNumber
                             value="${order.totalPrice}"
@@ -92,7 +92,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
                             >Pay at the counter</span
                           >
                         </c:if>
-                      </div>
+                      </footer>
                     </div>
                   </c:forEach>
                 </div>

@@ -20,38 +20,38 @@
         <form class="form" method="post" action="<c:url value='/register'/>">
           <div class="form-row">
             <div class="form-group">
-              <label class="label required" for="name">Name</label>
-              <input class="input" type="text" id="name" name="name" required autofocus />
+              <label class="required" for="name">Name</label>
+              <input type="text" id="name" name="name" required autofocus />
             </div>
             <div class="form-group">
-              <label class="label required" for="surname">Surname</label>
-              <input class="input" type="text" id="surname" name="surname" required />
+              <label class="required" for="surname">Surname</label>
+              <input type="text" id="surname" name="surname" required />
             </div>
           </div>
 
           <div class="form-group">
-            <label class="label required" for="phone_number">Phone number</label>
-            <input class="input" type="tel" id="phone_number" name="phone_number" placeholder="+39 333 123 4567" required />
+            <label class="required" for="phone_number">Phone number</label>
+            <input type="tel" id="phone_number" name="phone_number" placeholder="+39 333 123 4567" required />
           </div>
 
           <div class="form-group">
-            <label class="label required" for="username">Username</label>
-            <input class="input" type="text" id="username" name="username" required />
+            <label class="required" for="username">Username</label>
+            <input type="text" id="username" name="username" required />
           </div>
 
           <div class="form-group">
-            <label class="label required" for="email">Email</label>
-            <input class="input" type="email" id="email" name="email" required />
+            <label class="required" for="email">Email</label>
+            <input type="email" id="email" name="email" required />
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label class="label required" for="password">Password</label>
-              <input class="input" type="password" id="password" name="password" required />
+              <label class="required" for="password">Password</label>
+              <input type="password" id="password" name="password" required />
             </div>
             <div class="form-group">
-              <label class="label required" for="confirm_password">Confirm</label>
-              <input class="input" type="password" id="confirm_password" name="confirm_password" required />
+              <label class="required" for="confirm_password">Confirm</label>
+              <input type="password" id="confirm_password" name="confirm_password" required />
             </div>
           </div>
 

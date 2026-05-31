@@ -18,9 +18,8 @@ contentType="text/html" pageEncoding="UTF-8" %>
 
         <form class="form" method="post" action="<c:url value='/login'/>">
           <div class="form-group">
-            <label class="label required" for="email">Email</label>
+            <label class="required" for="email">Email</label>
             <input
-              class="input"
               type="email"
               id="email"
               name="email"
@@ -29,9 +28,8 @@ contentType="text/html" pageEncoding="UTF-8" %>
             />
           </div>
           <div class="form-group">
-            <label class="label required" for="password">Password</label>
+            <label class="required" for="password">Password</label>
             <input
-              class="input"
               type="password"
               id="password"
               name="password"
