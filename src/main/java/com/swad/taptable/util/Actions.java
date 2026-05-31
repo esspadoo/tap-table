@@ -40,6 +40,9 @@ public final class Actions {
   /** The retrieval of an ingredient by its id */
   public static final String GET_INGREDIENT = "GET_INGREDIENT";
 
+  /** The retrieval of the image of an ingredient */
+  public static final String GET_INGREDIENT_IMAGE = "GET_INGREDIENT_IMAGE";
+
   /** The retrieval of all the ingredients */
   public static final String GET_INGREDIENTS = "GET_INGREDIENTS";
 
@@ -81,6 +84,9 @@ public final class Actions {
 
   /** The retrieval of a dish by its id */
   public static final String GET_DISH = "GET_DISH";
+
+  /** The retrieval of the image of a dish */
+  public static final String GET_DISH_IMAGE = "GET_DISH_IMAGE";
 
   /** The retrieval of all the dishes */
   public static final String GET_DISHES = "GET_DISHES";

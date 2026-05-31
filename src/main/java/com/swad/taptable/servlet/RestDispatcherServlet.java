@@ -11,11 +11,13 @@ import com.swad.taptable.rest.category.GetAllCategoriesRR;
 import com.swad.taptable.rest.dish.CreateDishRR;
 import com.swad.taptable.rest.dish.DeleteDishRR;
 import com.swad.taptable.rest.dish.EditDishRR;
+import com.swad.taptable.rest.dish.GetDishImageRR;
 import com.swad.taptable.rest.dish.GetDishRR;
 import com.swad.taptable.rest.dish.GetDishesRR;
 import com.swad.taptable.rest.ingredient.CreateIngredientRR;
 import com.swad.taptable.rest.ingredient.DeleteIngredientRR;
 import com.swad.taptable.rest.ingredient.EditIngredientRR;
+import com.swad.taptable.rest.ingredient.GetIngredientImageRR;
 import com.swad.taptable.rest.ingredient.GetIngredientRR;
 import com.swad.taptable.rest.ingredient.GetIngredientsRR;
 import com.swad.taptable.rest.order.DeleteOrderRR;
@@ -113,6 +115,10 @@ public final class RestDispatcherServlet extends HttpServlet {
               "/rest/ingredient/{ingredient_id}",
               (req, res) -> new GetIngredientRR(req, res).serve(),
               RouteAccess.PUBLIC)
+          .get(
+              "/rest/ingredient/{ingredient_id}/image",
+              (req, res) -> new GetIngredientImageRR(req, res).serve(),
+              RouteAccess.PUBLIC)
           .put(
               "/rest/ingredient",
               (req, res) -> new EditIngredientRR(req, res).serve(),
@@ -131,6 +137,10 @@ public final class RestDispatcherServlet extends HttpServlet {
           .get(
               "/rest/dish/{dish_id}",
               (req, res) -> new GetDishRR(req, res).serve(),
+              RouteAccess.PUBLIC)
+          .get(
+              "/rest/dish/{dish_id}/image",
+              (req, res) -> new GetDishImageRR(req, res).serve(),
               RouteAccess.PUBLIC)
           .put(
               "/rest/dish",

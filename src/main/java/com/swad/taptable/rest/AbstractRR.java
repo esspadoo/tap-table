@@ -25,6 +25,9 @@ public abstract class AbstractRR implements RestResource {
   /** The JSON UTF-8 MIME media type */
   protected static final String JSON_UTF_8_MEDIA_TYPE = "application/json; charset=utf-8";
 
+  /** The WEBP MIME media type */
+  protected static final String WEBP_MEDIA_TYPE = "image/webp";
+  
   /** The any MIME media type */
   protected static final String ALL_MEDIA_TYPE = "*/*";
 
@@ -70,7 +73,7 @@ public abstract class AbstractRR implements RestResource {
   public final void serve() throws IOException {
 
     // Defaulting to JSON UTF-8 media type for all the responses. Subclasses can override this
-    // behaviour by setting a different content type in the response with the same method
+    // behavior by setting a different content type in the response with the same method
     res.setContentType(JSON_UTF_8_MEDIA_TYPE);
 
     try {
@@ -110,14 +113,14 @@ public abstract class AbstractRR implements RestResource {
   /**
    * Checks that the request method and MIME media type are allowed.
    *
-   * <p>Subclasses may override it to customize their behaviour, e.g. not limiting the MIME media
-   * types to JSON.
+   * <p>Subclasses may override it to customize their behavior, e.g. not limiting the MIME media
+   * types to JSON
    *
-   * @param req the HTTP request.
-   * @param res the HTTP response.
+   * @param req the HTTP request
+   * @param res the HTTP response
    * @return {@code true} if the request method and the MIME type are allowed; {@code false}
-   *     otherwise.
-   * @throws IOException if any error occurs in the client/server communication.
+   *     otherwise
+   * @throws IOException if any error occurs in the client/server communication
    */
   protected boolean checkMethodMediaType(
       final HttpServletRequest req, final HttpServletResponse res) throws IOException {
