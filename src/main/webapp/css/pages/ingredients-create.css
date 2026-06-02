@@ -1,32 +1,13 @@
-#create-form {
+#ingredient-create-page {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 2.5rem;
 }
 
-.form-card {
-  background: rgb(var(--bg-card));
-  border: 1px solid rgba(var(--border), var(--border-transparency));
-  border-radius: var(--radius);
-  padding: 1.75rem;
-}
-
-.form-card > fieldset {
-  border: none;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.form-card > fieldset > legend {
-  font-size: 1.25rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  padding: 0;
-  margin-bottom: 0.75rem;
-}
-
-.breadcrumb {
+#ingredient-create-page .breadcrumb {
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -34,27 +15,79 @@
   color: rgb(var(--fg-muted));
 }
 
-.breadcrumb a {
+#ingredient-create-page .breadcrumb a {
   color: rgb(var(--fg-muted));
   text-decoration: none;
   transition: color 0.15s;
 }
 
-.breadcrumb a:hover {
+#ingredient-create-page .breadcrumb a:hover {
   color: rgb(var(--fg));
 }
 
-.breadcrumb-sep {
+#ingredient-create-page .breadcrumb-sep {
   opacity: 0.4;
 }
 
-/* FIXME: rename */
-.section-hint {
+#create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+#create-form .form-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+@media (min-width: 720px) {
+  #create-form .form-layout {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  #create-form .form-layout > .form-card {
+    flex: 1;
+  }
+}
+
+#create-form .form-card {
+  background: rgb(var(--bg-card));
+  border: 1px solid rgba(var(--border), var(--border-transparency));
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+#create-form .form-card-image {
+  min-height: 16rem;
+}
+
+#create-form .form-card-image > .form-section {
+  flex: 1;
+}
+
+#create-form .form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+#create-form .form-section > h2 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+#create-form .section-hint {
   font-size: 0.85rem;
   color: rgb(var(--fg-muted));
 }
 
-.toggle-field {
+#create-form .toggle-field {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -63,26 +96,26 @@
   user-select: none;
 }
 
-.toggle-field input[type="checkbox"] {
+#create-form .toggle-field input[type="checkbox"] {
   position: absolute;
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-.toggle-track {
+#create-form .toggle-track {
   width: 2.75rem;
   height: 1.5rem;
   background: rgb(var(--bg-input));
   border: 1px solid rgba(var(--border), var(--border-transparency));
-  border-radius: 9999px; /* https://basicfreetools.com/blog/css-border-radius-guide */
+  border-radius: 9999px;
   position: relative;
   transition:
     background 0.2s,
     border-color 0.2s;
 }
 
-.toggle-thumb {
+#create-form .toggle-thumb {
   position: absolute;
   top: 50%;
   left: 4px;
@@ -96,64 +129,80 @@
     background 0.2s;
 }
 
-.toggle-field input:checked ~ .toggle-track {
+#create-form .toggle-field input:checked ~ .toggle-track {
   background: rgba(var(--amber), 0.2);
   border-color: rgba(var(--amber), 0.45);
 }
 
-.toggle-field input:checked ~ .toggle-track .toggle-thumb {
+#create-form .toggle-field input:checked ~ .toggle-track .toggle-thumb {
   transform: translateY(-50%) translateX(1.2rem);
   background: rgb(var(--amber));
 }
 
-.toggle-label {
+#create-form .toggle-label {
   font-size: 0.9rem;
   color: rgb(var(--fg));
 }
 
+#create-form .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+#create-form .form-actions .btn {
+  width: auto;
+  padding: 0.65rem 1.75rem;
+}
+
 /* Image dropzone */
 
-.image-dropzone {
+#image-dropzone {
   border: 1.5px dashed rgba(var(--amber), 0.25);
   border-radius: var(--radius);
   padding: 1.25rem 1.5rem;
   text-align: center;
   cursor: pointer;
   position: relative;
+  flex: 1;
   transition:
     border-color 0.2s,
     background 0.2s;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.image-dropzone:hover,
-.image-dropzone.drag-over {
+#image-dropzone:hover,
+#image-dropzone.drag-over {
   border-color: rgba(var(--amber), 0.5);
   background: rgba(var(--amber), 0.03);
 }
 
-.image-dropzone input[type="file"] {
+#image-dropzone input[type="file"] {
   position: absolute;
   inset: 0;
   opacity: 0;
   cursor: pointer;
 }
 
-.dropzone-icon {
+#image-dropzone .dropzone-icon {
   font-size: 1.75rem;
   margin-bottom: 0.6rem;
   opacity: 0.35;
   pointer-events: none;
 }
 
-.dropzone-hint {
+#image-dropzone .dropzone-hint {
   font-size: 0.9rem;
   color: rgb(var(--fg));
   margin-bottom: 0.2rem;
   pointer-events: none;
 }
 
-.dropzone-formats {
+#image-dropzone .dropzone-formats {
   font-size: 0.75rem;
   color: rgb(var(--fg-muted));
   letter-spacing: 0.06em;
@@ -161,7 +210,15 @@
   pointer-events: none;
 }
 
-.image-preview {
+#image-dropzone .dropzone-content {
+  pointer-events: none;
+}
+
+#image-dropzone .dropzone-content.hidden {
+  display: none;
+}
+
+#image-preview {
   width: 100%;
   max-height: 16rem;
   object-fit: cover;
@@ -170,32 +227,9 @@
   pointer-events: none;
 }
 
-.image-preview.visible {
+#image-preview.visible {
   display: block;
 }
-
-.dropzone-content {
-  pointer-events: none;
-}
-
-.dropzone-content.hidden {
-  display: none;
-}
-
-/* Form actions */
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-}
-
-.form-actions .btn {
-  width: auto;
-  padding: 0.65rem 1.75rem;
-}
-
-/* Alert */
 
 #alert-container {
   display: none;
