@@ -1,0 +1,60 @@
+.alert {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.alert-destructive {
+  background: rgba(var(--red), 0.1);
+  color: #e07070;
+  border: 1px solid rgba(var(--red), 0.2);
+}
+
+.link {
+  color: rgb(var(--amber));
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 500;
+}
+
+.link:hover {
+  opacity: 0.75;
+}
+
+.badge {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.625rem;
+  border-radius: 99px;
+  border: 1px solid transparent;
+}
+
+.badge-pending {
+  background: rgba(var(--amber), 0.15);
+  color: rgb(var(--amber));
+  border-color: rgba(var(--amber), 0.25);
+}
+
+.badge-completed {
+  background: rgba(78, 160, 100, 0.12);
+  color: #6ecf8a;
+  border-color: rgba(78, 160, 100, 0.2);
+}
+
+.badge-cancelled {
+  background: rgba(var(--red), 0.1);
+  color: #e07070;
+  border-color: rgba(var(--red), 0.2);
+}
+
+.footer {
+  border-top: 1px solid rgba(var(--border), var(--border-transparency));
+  padding: 1.5rem 2rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: rgb(var(--fg-muted));
+  font-weight: 300;
+}

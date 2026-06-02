@@ -80,7 +80,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
                         </c:forEach>
                       </div>
 
-                      <footer>
+                      <div class="order-card-footer">
                         <span class="order-total">
                           &euro;<fmt:formatNumber
                             value="${order.totalPrice}"
@@ -92,7 +92,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
                             >Pay at the counter</span
                           >
                         </c:if>
-                      </footer>
+                      </div>
                     </div>
                   </c:forEach>
                 </div>
@@ -166,7 +166,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
                           <td>
                             <c:if test="${order.status == 'PENDING'}">
                               <button
-                                class="btn btn-secondary btn-sm"
+                                class="btn btn-secondary"
                                 data-order-id="<c:out value='${order.id}'/>"
                                 data-action="complete"
                               >

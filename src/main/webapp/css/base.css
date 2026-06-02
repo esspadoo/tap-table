@@ -1,0 +1,66 @@
+:root {
+  --bg: 11, 9, 7;
+  --bg-card: 22, 17, 9;
+  --bg-input: 27, 22, 16;
+  --fg: 245, 240, 232;
+  --fg-muted: 109, 98, 89;
+  --amber: 200, 132, 78;
+  --red: 191, 69, 69;
+  --border: 237, 232, 223;
+  --border-transparency: 0.14;
+  --radius: 6px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: 250, 247, 244;
+    --bg-card: 255, 255, 255;
+    --bg-input: 242, 237, 232;
+    --fg: 28, 21, 17;
+    --fg-muted: 138, 122, 110;
+    --amber: 184, 112, 58;
+    --red: 192, 64, 64;
+    --border: 26, 20, 16;
+    --border-transparency: 0.12;
+  }
+}
+
+/* Initialization */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 18px;
+}
+
+body {
+  font-family: "Jost", system-ui, sans-serif;
+  background: rgb(var(--bg));
+  color: rgb(var(--fg));
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+.page-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

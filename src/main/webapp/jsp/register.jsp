@@ -64,10 +64,10 @@
           </div>
         </c:if>
 
-        <footer>
+        <p class="card-footer">
           Already have an account?
           <a class="link" href="<c:url value='/login'/>">Sign in</a>
-        </footer>
+        </p>
 
       </div>
     </div>

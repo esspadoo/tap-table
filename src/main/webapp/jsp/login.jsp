@@ -45,10 +45,10 @@ contentType="text/html" pageEncoding="UTF-8" %>
           </div>
         </c:if>
 
-        <footer>
+        <p class="card-footer">
           Don't have an account?
           <a class="link" href="<c:url value='/register'/>">Register</a>
-        </footer>
+        </p>
       </div>
     </div>
   </body>

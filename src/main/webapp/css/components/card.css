@@ -1,0 +1,43 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  background: rgb(var(--bg-card));
+  border: 1px solid rgba(var(--border), var(--border-transparency));
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 24rem;
+  padding: 2rem;
+  gap: 1.5rem;
+  animation: fade-in 0.35s ease both;
+}
+
+.card-wide {
+  max-width: 30rem;
+}
+
+.card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.card-header h1 {
+  font-family: "Forum", Georgia, serif;
+  font-size: 3rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: rgb(var(--fg));
+}
+
+.card-header p {
+  font-size: 0.9rem;
+  color: rgb(var(--fg-muted));
+  font-weight: 300;
+}
+
+.card-footer {
+  font-size: 0.8rem;
+  color: rgb(var(--fg-muted));
+  text-align: center;
+}
