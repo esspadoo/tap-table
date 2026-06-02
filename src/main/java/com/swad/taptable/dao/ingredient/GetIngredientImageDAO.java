@@ -2,6 +2,8 @@
 package com.swad.taptable.dao.ingredient;
 
 import com.swad.taptable.dao.AbstractDAO;
+import com.swad.taptable.resources.Image;
+import com.swad.taptable.resources.ImageType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -10,9 +12,9 @@ import java.sql.ResultSet;
  *
  * @author SWAD Team
  */
-public final class GetIngredientImageDAO extends AbstractDAO<byte[]> {
+public final class GetIngredientImageDAO extends AbstractDAO<Image> {
 
-  private static final String STATEMENT = "SELECT image FROM ingredients WHERE id = ?";
+  private static final String STATEMENT = "SELECT image, image_type FROM ingredients WHERE id = ?";
 
   private final int ingredientId;
 
@@ -32,7 +34,9 @@ public final class GetIngredientImageDAO extends AbstractDAO<byte[]> {
 
       try (ResultSet rs = stmt.executeQuery()) {
         if (rs.next()) {
-          outputParam = rs.getBytes("image");
+          final byte[] bytes = rs.getBytes("image");
+          final ImageType type = ImageType.fromMimeType(rs.getString("image_type"));
+          if (bytes != null) outputParam = new Image(bytes, type);
         }
       }
     }

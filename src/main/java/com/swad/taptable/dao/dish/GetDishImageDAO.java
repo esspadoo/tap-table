@@ -2,12 +2,14 @@
 package com.swad.taptable.dao.dish;
 
 import com.swad.taptable.dao.AbstractDAO;
+import com.swad.taptable.resources.Image;
+import com.swad.taptable.resources.ImageType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public final class GetDishImageDAO extends AbstractDAO<byte[]> {
+public final class GetDishImageDAO extends AbstractDAO<Image> {
 
-  private static final String STATEMENT = "SELECT image FROM dishes WHERE id = ?";
+  private static final String STATEMENT = "SELECT image, image_type FROM dishes WHERE id = ?";
 
   private final int dishId;
 
@@ -27,7 +29,9 @@ public final class GetDishImageDAO extends AbstractDAO<byte[]> {
 
       try (ResultSet rs = stmt.executeQuery()) {
         if (rs.next()) {
-          outputParam = rs.getBytes("image");
+          final byte[] bytes = rs.getBytes("image");
+          final ImageType type = ImageType.fromMimeType(rs.getString("image_type"));
+          if (bytes != null) outputParam = new Image(bytes, type);
         }
       }
     }

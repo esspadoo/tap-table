@@ -29,7 +29,7 @@ public class Dish extends AbstractResource {
   private final List<Ingredient> ingredients;
   private final String category;
   private final byte[] image;
-  private final String imageType;
+  private final ImageType imageType;
 
   /**
    * Creates a new {@code Dish} from the values collected by the builder.
@@ -121,11 +121,11 @@ public class Dish extends AbstractResource {
   }
 
   /**
-   * Returns the MIME type of the dish image, or {@code null} if no image is present.
+   * Returns the image type of the dish image, or {@code null} if no image is present.
    *
-   * @return
+   * @return the image type.
    */
-  public String getImageType() {
+  public ImageType getImageType() {
     return imageType;
   }
 
@@ -160,7 +160,7 @@ public class Dish extends AbstractResource {
     String category = null;
     final List<Integer> ingredientIds = new ArrayList<>();
     byte[] imageBytes = null;
-    String imageType = null;
+    ImageType imageType = null;
 
     for (final Part p : req.getParts()) {
       switch (p.getName()) {
@@ -204,17 +204,13 @@ public class Dish extends AbstractResource {
           break;
 
         case "image":
-          imageType = p.getContentType();
-          switch (imageType.toLowerCase().trim()) {
-            case "image/webp":
-            case "image/png":
-            case "image/jpeg":
-              break;
-            default:
-              throw new MimeTypeParseException(
-                  String.format(
-                      "Unsupported image format %s. Accepted: image/webp, image/png, image/jpeg.",
-                      imageType));
+          try {
+            imageType = ImageType.fromMimeType(p.getContentType());
+          } catch (final IllegalArgumentException e) {
+            throw new MimeTypeParseException(
+                String.format(
+                    "Unsupported image format %s. Accepted: image/webp, image/png, image/jpeg.",
+                    p.getContentType()));
           }
           try (InputStream is = p.getInputStream()) {
             imageBytes = is.readAllBytes();
@@ -306,7 +302,7 @@ public class Dish extends AbstractResource {
     private List<Ingredient> ingredients;
     private String category;
     private byte[] image;
-    private String imageType;
+    private ImageType imageType;
 
     /**
      * Sets the dish identifier.
@@ -390,7 +386,7 @@ public class Dish extends AbstractResource {
       return this;
     }
 
-    public Builder imageType(final String imageType) {
+    public Builder imageType(final ImageType imageType) {
       this.imageType = imageType;
       return this;
     }

@@ -2,6 +2,7 @@
 package com.swad.taptable.rest.ingredient;
 
 import com.swad.taptable.dao.ingredient.GetIngredientImageDAO;
+import com.swad.taptable.resources.Image;
 import com.swad.taptable.resources.Message;
 import com.swad.taptable.rest.AbstractRR;
 import com.swad.taptable.util.Actions;
@@ -17,6 +18,7 @@ import java.sql.SQLException;
  * @author SWAD Team
  */
 public class GetIngredientImageRR extends AbstractRR {
+
   /**
    * Creates the REST resource that retrieves an ingredient image
    *
@@ -32,12 +34,14 @@ public class GetIngredientImageRR extends AbstractRR {
     try {
       final int ingredientId = Integer.parseInt((String) req.getAttribute("ingredient_id"));
 
-      final byte[] image = new GetIngredientImageDAO(ingredientId).access().getOutputParam();
+      final GetIngredientImageDAO dao = new GetIngredientImageDAO(ingredientId);
+      dao.access();
+      final Image image = dao.getOutputParam();
 
       if (image == null) {
         res.setContentType(JSON_UTF_8_MEDIA_TYPE);
         res.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        Message m =
+        final Message m =
             new Message(
                 "No image found for ingredient " + ingredientId,
                 ErrorCodes.RESOURCE_NOT_FOUND,
@@ -46,22 +50,22 @@ public class GetIngredientImageRR extends AbstractRR {
         return;
       }
 
-      res.setContentType(WEBP_MEDIA_TYPE);
-      res.setContentLength(image.length);
+      res.setContentType(image.getType().getMimeType());
+      res.setContentLength(image.getBytes().length);
       res.setStatus(HttpServletResponse.SC_OK);
-      res.getOutputStream().write(image);
+      res.getOutputStream().write(image.getBytes());
 
     } catch (final NumberFormatException e) {
       res.setContentType(JSON_UTF_8_MEDIA_TYPE);
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      Message m =
+      final Message m =
           new Message(
               "Invalid ingredient id format.", ErrorCodes.INVALID_INPUT_PARAMETER, e.getMessage());
       m.toJSON(res.getOutputStream());
     } catch (final SQLException e) {
       res.setContentType(JSON_UTF_8_MEDIA_TYPE);
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      Message m =
+      final Message m =
           new Message(
               "Database error while retrieving ingredient image.",
               ErrorCodes.UNEXPECTED_DB_ERROR,

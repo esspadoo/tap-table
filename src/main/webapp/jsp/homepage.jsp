@@ -19,8 +19,9 @@ contentType="text/html" pageEncoding="UTF-8" %>
         your table.
       </p>
       <div class="hero-actions">
-        <!-- TODO: link to /dishes once the page exists -->
-        <a class="btn btn-primary" href="#">Browse dishes</a>
+        <a class="btn btn-primary" href="<c:url value='/dishes'/>">
+          Browse dishes
+        </a>
         <a class="btn btn-outline" href="<c:url value='/ingredients'/>">
           Browse ingredients
         </a>

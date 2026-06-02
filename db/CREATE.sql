@@ -53,6 +53,9 @@ CREATE TABLE categories(
     name VARCHAR(255) NOT NULL UNIQUE PRIMARY KEY
 );
 
+-- IMAGE TYPE
+CREATE TYPE IMAGE_TYPE AS ENUM ('image/webp', 'image/jpeg', 'image/png');
+
 -- DISHES
 CREATE TABLE dishes (
     id SERIAL PRIMARY KEY,
@@ -61,7 +64,8 @@ CREATE TABLE dishes (
     category_name VARCHAR(255) NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     image BYTEA,
-    image_type VARCHAR(50),
+    image_type IMAGE_TYPE,
+    CHECK ((image IS NULL) = (image_type IS NULL)),
     FOREIGN KEY (category_name) REFERENCES categories(name)
 );
 
@@ -85,7 +89,8 @@ CREATE TABLE ingredients (
     allergen ALLERGEN[], -- this field can be null as the dish might not contain any allergen,
     is_frozen BOOLEAN,
     image BYTEA,
-    image_type VARCHAR(50)
+    image_type IMAGE_TYPE,
+    CHECK ((image IS NULL) = (image_type IS NULL))
 );
 
 -- DISH_INGREDIENTS

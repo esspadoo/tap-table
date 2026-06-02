@@ -68,6 +68,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>DishesPage</servlet-name>
+        <jsp-file>/jsp/dishes.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DishesPage</servlet-name>
+        <url-pattern>/dishes</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>CreateIngredientPage</servlet-name>
         <jsp-file>/jsp/dashboard/ingredients/create.jsp</jsp-file>
     </servlet>

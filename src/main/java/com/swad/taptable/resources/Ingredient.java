@@ -25,7 +25,7 @@ public class Ingredient extends AbstractResource {
   private final List<Allergen> allergens;
   private final Boolean frozen;
   private final byte[] image;
-  private final String imageType;
+  private final ImageType imageType;
 
   /**
    * Creates a new {@code Ingredient} without image data.
@@ -48,7 +48,7 @@ public class Ingredient extends AbstractResource {
    * @param allergens the allergens associated with the ingredient.
    * @param frozen whether the ingredient is frozen.
    * @param image the raw image bytes, or {@code null} if not present.
-   * @param imageType the MIME type of the image (e.g. {@code image/webp}), or {@code null}.
+   * @param imageType the type of the image, or {@code null}.
    */
   public Ingredient(
       final Integer id,
@@ -56,7 +56,7 @@ public class Ingredient extends AbstractResource {
       final List<Allergen> allergens,
       final Boolean frozen,
       final byte[] image,
-      final String imageType) {
+      final ImageType imageType) {
     this.id = id;
     this.name = name;
     this.allergens = allergens != null ? List.copyOf(allergens) : null;
@@ -115,8 +115,8 @@ public class Ingredient extends AbstractResource {
     return image;
   }
 
-  /** Returns the MIME type of the image, or {@code null} if not present. */
-  public String getImageType() {
+  /** Returns the image type, or {@code null} if not present. */
+  public ImageType getImageType() {
     return imageType;
   }
 
@@ -184,7 +184,7 @@ public class Ingredient extends AbstractResource {
     Boolean isFrozen = null;
     final List<Allergen> allergens = new ArrayList<>();
     byte[] imageBytes = null;
-    String imageType = null;
+    ImageType imageType = null;
 
     for (final Part p : req.getParts()) {
       switch (p.getName()) {
@@ -216,17 +216,13 @@ public class Ingredient extends AbstractResource {
           break;
 
         case "image":
-          imageType = p.getContentType();
-          switch (imageType.toLowerCase().trim()) {
-            case "image/webp":
-            case "image/png":
-            case "image/jpeg":
-              break;
-            default:
-              throw new MimeTypeParseException(
-                  String.format(
-                      "Unsupported image format %s. Accepted: image/webp, image/png, image/jpeg.",
-                      imageType));
+          try {
+            imageType = ImageType.fromMimeType(p.getContentType());
+          } catch (final IllegalArgumentException e) {
+            throw new MimeTypeParseException(
+                String.format(
+                    "Unsupported image format %s. Accepted: image/webp, image/png, image/jpeg.",
+                    p.getContentType()));
           }
           try (InputStream is = p.getInputStream()) {
             imageBytes = is.readAllBytes();

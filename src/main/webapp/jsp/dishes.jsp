@@ -5,24 +5,24 @@ contentType="text/html" pageEncoding="UTF-8" %>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ingredients - TapTable</title>
+    <title>Dishes - TapTable</title>
     <link rel="stylesheet" href="<c:url value='/css/global.css'/>" />
-    <script src="<c:url value='/js/ingredients.js'/>" defer></script>
+    <script src="<c:url value='/js/dishes.js'/>" defer></script>
   </head>
   <body>
     <%@ include file="fragments/navbar.jsp" %>
 
-    <main class="ingredients-page">
-      <header class="ingredients-header">
-        <h1>Ingredients</h1>
-        <p>Browse the available ingredients</p>
+    <main class="dishes-page">
+      <header class="dishes-header">
+        <h1>Dishes</h1>
+        <p>Browse the available dishes</p>
       </header>
 
-      <p id="ingredients-status" class="ingredients-status">Loading ingredients...</p>
+      <p class="dishes-status" data-status>Loading dishes...</p>
       <section
-        id="ingredients-grid"
-        class="ingredients-grid"
-        aria-label="Available ingredients"
+        class="dishes-grid"
+        data-grid
+        aria-label="Available dishes"
       ></section>
     </main>
 

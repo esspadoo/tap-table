@@ -4,6 +4,7 @@ package com.swad.taptable.dao.dish;
 import com.swad.taptable.dao.AbstractDAO;
 import com.swad.taptable.resources.Allergen;
 import com.swad.taptable.resources.Dish;
+import com.swad.taptable.resources.ImageType;
 import com.swad.taptable.resources.Ingredient;
 import java.sql.Array;
 import java.sql.PreparedStatement;
@@ -16,7 +17,7 @@ public class EditDishDAO extends AbstractDAO<Dish> {
   private static final String UPDATE_DISHES_STATEMENT =
       "UPDATE dishes"
           + " SET name = ?, description = ?, category_name = ?, price = ?,"
-          + " image = COALESCE(?, image), image_type = COALESCE(?, image_type)"
+          + " image = COALESCE(?, image), image_type = COALESCE(?::image_type, image_type)"
           + " WHERE id = ? RETURNING *";
   private static final String DELETE_INGREDIENTS_STATEMENT =
       "DELETE FROM dish_ingredients WHERE dish_id = ?";
@@ -38,39 +39,35 @@ public class EditDishDAO extends AbstractDAO<Dish> {
     Dish d = null;
     con.setAutoCommit(false);
 
-    // Update the dish's related informations (no bindings)
     try (PreparedStatement dishesPstmt = con.prepareStatement(UPDATE_DISHES_STATEMENT)) {
       dishesPstmt.setString(1, dish.getName());
       dishesPstmt.setString(2, dish.getDescription());
       dishesPstmt.setString(3, dish.getCategory());
       dishesPstmt.setDouble(4, dish.getPrice());
       dishesPstmt.setBytes(5, dish.getImage());
-      dishesPstmt.setString(6, dish.getImageType());
+      dishesPstmt.setString(
+          6, dish.getImageType() != null ? dish.getImageType().getMimeType() : null);
       dishesPstmt.setInt(7, dish.getId());
 
       try (ResultSet rs = dishesPstmt.executeQuery()) {
         if (!rs.next()) {
-          // early return if the dish with the provided ID doesn't exist
           return;
         }
 
-        // Retrieve the updated dish's information from the ResultSet
         final int dishId = rs.getInt("id");
         final String dishName = rs.getString("name");
         final String dishDescription = rs.getString("description");
         final String dishCategory = rs.getString("category_name");
         final double dishPrice = rs.getDouble("price");
         final byte[] dishImage = rs.getBytes("image");
-        final String dishImageType = rs.getString("image_type");
+        final ImageType dishImageType = ImageType.fromMimeType(rs.getString("image_type"));
 
-        // Delete the existing ingredients associations
         try (PreparedStatement deleteIngredientsPstmt =
             con.prepareStatement(DELETE_INGREDIENTS_STATEMENT)) {
           deleteIngredientsPstmt.setInt(1, dishId);
           deleteIngredientsPstmt.executeUpdate();
         }
 
-        // Insert the new ingredients associations
         try (PreparedStatement insertIngredientPstmt =
             con.prepareStatement(INSERT_INGREDIENTS_STATEMENT)) {
           for (final int ingredientId : dish.getIngredientIds()) {
@@ -82,7 +79,6 @@ public class EditDishDAO extends AbstractDAO<Dish> {
           }
         }
 
-        // Retrieve the updated ingredients of the dish
         final List<Ingredient> ingredients = new ArrayList<>();
         try (PreparedStatement selectIngredientsPstmt =
             con.prepareStatement(SELECT_INGREDIENTS_STATEMENT)) {
@@ -122,7 +118,6 @@ public class EditDishDAO extends AbstractDAO<Dish> {
       con.commit();
       outputParam = d;
     } catch (final SQLException e) {
-      // Rollback the transaction in case of any failure during the update process
       con.rollback();
       throw e;
     }

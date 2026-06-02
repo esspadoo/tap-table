@@ -72,7 +72,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
                                   <c:when test="${dish.liked == false}"
                                     >&#128078;</c:when
                                   >
-                                  <c:otherwise>&mdash;</c:otherwise>
+                                  <c:otherwise>&dash;</c:otherwise>
                                 </c:choose>
                               </span>
                             </c:if>
@@ -187,7 +187,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
     </main>
 
     <footer class="footer">
-      <p>&copy; 2026 TapTable &mdash; University of Padua</p>
+      <p>&copy; 2026 TapTable &dash; University of Padua</p>
     </footer>
   </body>
 </html>

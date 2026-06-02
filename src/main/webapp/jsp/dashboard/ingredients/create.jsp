@@ -7,10 +7,6 @@ contentType="text/html" pageEncoding="UTF-8" %>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>New Ingredient &dash; TapTable</title>
     <link rel="stylesheet" href="<c:url value='/css/global.css'/>" />
-    <link
-      rel="stylesheet"
-      href="<c:url value='/css/pages/ingredients-create.css'/>"
-    />
     <script src="<c:url value='/js/navbar.js'/>" defer></script>
     <script src="<c:url value='/js/ingredients-create.js'/>" defer></script>
   </head>

@@ -4,6 +4,7 @@ package com.swad.taptable.dao.dish;
 import com.swad.taptable.dao.AbstractDAO;
 import com.swad.taptable.resources.Allergen;
 import com.swad.taptable.resources.Dish;
+import com.swad.taptable.resources.ImageType;
 import com.swad.taptable.resources.Ingredient;
 import java.sql.Array;
 import java.sql.PreparedStatement;
@@ -15,7 +16,7 @@ import java.util.List;
 public class CreateDishDAO extends AbstractDAO<Dish> {
   private static final String DISHES_INSERT_STATEMENT =
       "INSERT INTO dishes(name, description, category_name, price, image, image_type)"
-          + " VALUES (?, ?, ?, ?, ?, ?) RETURNING *";
+          + " VALUES (?, ?, ?, ?, ?, ?::image_type) RETURNING *";
   private static final String INGREDIENTS_INSERT_STATEMENT =
       "INSERT INTO dish_ingredients(dish_id, ingredient_id) VALUES (?, ?)";
   private static final String INGREDIENTS_SELECT_STATEMENT =
@@ -34,46 +35,39 @@ public class CreateDishDAO extends AbstractDAO<Dish> {
     Dish d = null;
     con.setAutoCommit(false);
 
-    // Insert into dishes and get generated dish ID
     try (PreparedStatement dishesPstmt = con.prepareStatement(DISHES_INSERT_STATEMENT)) {
       dishesPstmt.setString(1, dish.getName());
       dishesPstmt.setString(2, dish.getDescription());
       dishesPstmt.setString(3, dish.getCategory());
       dishesPstmt.setDouble(4, dish.getPrice());
       dishesPstmt.setBytes(5, dish.getImage());
-      dishesPstmt.setString(6, dish.getImageType());
+      dishesPstmt.setString(
+          6, dish.getImageType() != null ? dish.getImageType().getMimeType() : null);
 
       try (ResultSet rs = dishesPstmt.executeQuery()) {
         if (!rs.next()) {
-          // If no row is returned, the insert failed
           throw new SQLException("Insert dish failed, no row returned.");
         }
 
-        // Get generated dish ID and other details returned
         final int dishId = rs.getInt("id");
         final String dishName = rs.getString("name");
         final String dishDescription = rs.getString("description");
         final String dishCategory = rs.getString("category_name");
         final double dishPrice = rs.getDouble("price");
         final byte[] dishImage = rs.getBytes("image");
-        final String dishImageType = rs.getString("image_type");
+        final ImageType dishImageType = ImageType.fromMimeType(rs.getString("image_type"));
 
-        // Insert into dish_ingredients
         try (PreparedStatement ingredientsPstmt =
             con.prepareStatement(INGREDIENTS_INSERT_STATEMENT)) {
-          // Client should provide an array of ingredient IDs to associate with the dish
           for (final int ingredientId : dish.getIngredientIds()) {
             ingredientsPstmt.setInt(1, dishId);
             ingredientsPstmt.setInt(2, ingredientId);
-
-            // If executeUpdate returns 0, the insert failed
             if (ingredientsPstmt.executeUpdate() == 0) {
               throw new SQLException("Insert dish_ingredient failed, no row affected.");
             }
           }
         }
 
-        // Retrieve the detailed list of the ingredient composing the dish
         final List<Ingredient> ingredients = new ArrayList<>();
         try (PreparedStatement ingredientsSelectPstmt =
             con.prepareStatement(INGREDIENTS_SELECT_STATEMENT)) {

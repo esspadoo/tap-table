@@ -1,3 +1,7 @@
+.is-hidden {
+  display: none;
+}
+
 .alert {
   padding: 0.75rem 1rem;
   border-radius: var(--radius);
@@ -20,6 +24,19 @@
 
 .link:hover {
   opacity: 0.75;
+}
+
+.back-link {
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgb(var(--fg-muted));
+  text-decoration: none;
+  align-self: flex-start;
+  transition: color 0.2s ease;
+}
+
+.back-link:hover {
+  color: rgb(var(--amber));
 }
 
 .badge {

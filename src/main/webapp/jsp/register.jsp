@@ -1,5 +1,5 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%@ page
+contentType="text/html" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,7 +11,6 @@
   <body>
     <div class="page-center">
       <div class="card card-wide">
-
         <div class="card-header">
           <h1>TapTable</h1>
           <p>Create your account</p>
@@ -31,7 +30,13 @@
 
           <div class="form-group">
             <label class="required" for="phone_number">Phone number</label>
-            <input type="tel" id="phone_number" name="phone_number" placeholder="+39 333 123 4567" required />
+            <input
+              type="tel"
+              id="phone_number"
+              name="phone_number"
+              placeholder="+39 333 123 4567"
+              required
+            />
           </div>
 
           <div class="form-group">
@@ -51,7 +56,12 @@
             </div>
             <div class="form-group">
               <label class="required" for="confirm_password">Confirm</label>
-              <input type="password" id="confirm_password" name="confirm_password" required />
+              <input
+                type="password"
+                id="confirm_password"
+                name="confirm_password"
+                required
+              />
             </div>
           </div>
 
@@ -68,7 +78,6 @@
           Already have an account?
           <a class="link" href="<c:url value='/login'/>">Sign in</a>
         </p>
-
       </div>
     </div>
   </body>

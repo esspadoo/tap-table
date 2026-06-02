@@ -3,6 +3,7 @@ package com.swad.taptable.dao.ingredient;
 
 import com.swad.taptable.dao.AbstractDAO;
 import com.swad.taptable.resources.Allergen;
+import com.swad.taptable.resources.ImageType;
 import com.swad.taptable.resources.Ingredient;
 import java.sql.Array;
 import java.sql.PreparedStatement;
@@ -15,7 +16,7 @@ public class EditIngredientDAO extends AbstractDAO<Ingredient> {
   private static final String STATEMENT =
       "UPDATE ingredients"
           + " SET name=?, is_frozen=?, allergen=?,"
-          + " image = COALESCE(?, image), image_type = COALESCE(?, image_type)"
+          + " image = COALESCE(?, image), image_type = COALESCE(?::image_type, image_type)"
           + " WHERE id=? RETURNING *";
 
   private final Ingredient ingredient;
@@ -44,12 +45,12 @@ public class EditIngredientDAO extends AbstractDAO<Ingredient> {
       pstmt.setBoolean(2, ingredient.isFrozen());
       pstmt.setArray(3, sqlAllergens);
       pstmt.setBytes(4, ingredient.getImage());
-      pstmt.setString(5, ingredient.getImageType());
+      pstmt.setString(
+          5, ingredient.getImageType() != null ? ingredient.getImageType().getMimeType() : null);
       pstmt.setInt(6, ingredient.getId());
 
       try (ResultSet rs = pstmt.executeQuery()) {
         if (rs.next()) {
-          // Create a list to hold the allergens
           final List<Allergen> allergens = new ArrayList<>();
           final Array allergenArray = rs.getArray("allergen");
           if (allergenArray != null) {
@@ -65,7 +66,7 @@ public class EditIngredientDAO extends AbstractDAO<Ingredient> {
                   allergens,
                   rs.getBoolean("is_frozen"),
                   rs.getBytes("image"),
-                  rs.getString("image_type"));
+                  ImageType.fromMimeType(rs.getString("image_type")));
         }
       }
     }

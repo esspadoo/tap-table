@@ -2,6 +2,7 @@
 package com.swad.taptable.rest.dish;
 
 import com.swad.taptable.dao.dish.GetDishImageDAO;
+import com.swad.taptable.resources.Image;
 import com.swad.taptable.resources.Message;
 import com.swad.taptable.rest.AbstractRR;
 import com.swad.taptable.util.Actions;
@@ -33,34 +34,36 @@ public class GetDishImageRR extends AbstractRR {
     try {
       final int dishId = Integer.parseInt((String) req.getAttribute("dish_id"));
 
-      final byte[] image = new GetDishImageDAO(dishId).access().getOutputParam();
+      final GetDishImageDAO dao = new GetDishImageDAO(dishId);
+      dao.access();
+      final Image image = dao.getOutputParam();
 
       if (image == null) {
         res.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        Message m =
+        final Message m =
             new Message("No image found for dish " + dishId, ErrorCodes.RESOURCE_NOT_FOUND, null);
         m.toJSON(res.getOutputStream());
         return;
       }
 
-      res.setContentType(WEBP_MEDIA_TYPE);
-      res.setContentLength(image.length);
+      res.setContentType(image.getType().getMimeType());
+      res.setContentLength(image.getBytes().length);
       res.setStatus(HttpServletResponse.SC_OK);
-      res.getOutputStream().write(image);
+      res.getOutputStream().write(image.getBytes());
+
     } catch (final NumberFormatException e) {
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      Message m =
+      final Message m =
           new Message(
               "Invalid dish id format.", ErrorCodes.INVALID_INPUT_PARAMETER, e.getMessage());
       m.toJSON(res.getOutputStream());
     } catch (final SQLException e) {
       res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      Message m =
+      final Message m =
           new Message(
               "Database error while retrieving dish image.",
               ErrorCodes.UNEXPECTED_DB_ERROR,
               e.getMessage());
-
       m.toJSON(res.getOutputStream());
     }
   }
