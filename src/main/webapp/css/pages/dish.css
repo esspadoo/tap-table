@@ -1,0 +1,73 @@
+.dashboard-header .breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: rgb(var(--fg-muted));
+}
+
+.dashboard-header .breadcrumb a {
+  color: rgb(var(--fg-muted));
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.dashboard-header .breadcrumb a:hover {
+  color: rgb(var(--fg));
+}
+
+.dashboard-header .breadcrumb-sep {
+  opacity: 0.4;
+}
+
+.dashboard-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.dashboard-status {
+  font-size: 0.875rem;
+  color: rgb(var(--fg-muted));
+  transition: color 0.2s ease;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-status.is-error {
+  color: #e07070;
+}
+
+.dishes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 1rem;
+}
+
+.dish-card {
+  background: rgb(var(--bg-card));
+  border: 1px solid rgba(var(--border), var(--border-transparency));
+  border-radius: var(--radius);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dish-card-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgb(var(--fg));
+  margin: 0;
+}
+
+.dish-card-category {
+  font-size: 0.75rem;
+  color: rgb(var(--fg-muted));
+}
+
+.dish-card-price {
+  font-size: 0.9rem;
+  color: rgb(var(--amber));
+  font-weight: 500;
+}

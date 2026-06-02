@@ -120,4 +120,10 @@ public final class Actions {
 
   /** Serving the create ingredient page */
   public static final String VIEW_CREATE_INGREDIENT = "VIEW_CREATE_INGREDIENT";
+
+  /** Serving the dish dashboard list page */
+  public static final String VIEW_DISHES = "VIEW_DISHES";
+
+  /** Serving the create dish page */
+  public static final String VIEW_CREATE_DISH = "VIEW_CREATE_DISH";
 }

@@ -95,6 +95,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>DishServlet</servlet-name>
+        <servlet-class>com.swad.taptable.servlet.DishServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DishServlet</servlet-name>
+        <url-pattern>/dashboard/dish/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>com.swad.taptable.servlet.LogoutServlet</servlet-class>
     </servlet>
