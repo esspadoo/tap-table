@@ -117,4 +117,7 @@ public final class Actions {
 
   /** Serving the ingredients page */
   public static final String VIEW_INGREDIENTS = "VIEW_INGREDIENTS";
+
+  /** Serving the create ingredient page */
+  public static final String VIEW_CREATE_INGREDIENT = "VIEW_CREATE_INGREDIENT";
 }

@@ -68,6 +68,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>CreateIngredientPage</servlet-name>
+        <jsp-file>/jsp/dashboard/ingredients/create.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateIngredientPage</servlet-name>
+        <url-pattern>/dashboard/ingredients/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>IngredientsServlet</servlet-name>
         <servlet-class>com.swad.taptable.servlet.IngredientsServlet</servlet-class>
     </servlet>

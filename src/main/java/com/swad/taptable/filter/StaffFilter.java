@@ -22,8 +22,8 @@ import java.io.IOException;
  */
 @WebFilter(
     urlPatterns = {
-      "/dashboard/ingredient",
-      "/dashboard/ingredient/*",
+      "/dashboard/ingredients",
+      "/dashboard/ingredients/*",
       "/dashboard/dishes",
       "/dashboard/dishes/*"
     },

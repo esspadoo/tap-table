@@ -1,0 +1,43 @@
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  position: relative;
+}
+
+.chip input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.chip label {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.8rem;
+  border-radius: 99px;
+  border: 1px solid rgba(var(--border), var(--border-transparency));
+  font-size: 0.8rem;
+  color: rgb(var(--fg-muted));
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.chip label:hover {
+  color: rgb(var(--fg));
+  border-color: rgba(var(--border), 0.3);
+}
+
+.chip input:checked + label {
+  background: rgba(var(--amber), 0.12);
+  border-color: rgba(var(--amber), 0.4);
+  color: rgb(var(--amber));
+}
