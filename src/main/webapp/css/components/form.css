@@ -51,6 +51,12 @@
     box-shadow 0.2s;
 }
 
+.form-group input[type="password"] {
+  font-family: "Jost", system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+}
+
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
