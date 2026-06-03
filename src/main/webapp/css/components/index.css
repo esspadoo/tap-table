@@ -1,4 +1,5 @@
 @import "./navbar.css";
+@import "./breadcrumb.css";
 @import "./card.css";
 @import "./media-card.css";
 @import "./chip.css";
@@ -6,3 +7,5 @@
 @import "./btn.css";
 @import "./primitives.css";
 @import "./dashboard.css";
+@import "./table.css";
+@import "./alert.css";

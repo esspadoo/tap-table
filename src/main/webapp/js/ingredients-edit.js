@@ -1,12 +1,26 @@
 document.addEventListener("DOMContentLoaded", () => {
   const ctx = document.body.dataset.ctx;
-  const form = document.getElementById("create-form");
+  const params = new URLSearchParams(location.search);
+  const id = params.get("id");
+
+  if (!id || isNaN(Number(id))) {
+    window.location.href = ctx + "/dashboard";
+    return;
+  }
+
+  const form = document.getElementById("edit-form");
   const alertContainer = document.getElementById("alert-container");
   const alertMessage = document.getElementById("alert-message");
   const imageInput = document.getElementById("image-input");
   const imagePreview = document.getElementById("image-preview");
   const dropzone = document.getElementById("image-dropzone");
   const dropzoneContent = dropzone.querySelector(".dropzone-content");
+  const pageTitle = document.getElementById("page-title");
+  const loadingOverlay = document.getElementById("form-loading");
+
+  form.classList.add("loading");
+
+  loadIngredient();
 
   imageInput.addEventListener("change", () => showPreview(imageInput.files[0]));
 
@@ -36,32 +50,90 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const submitBtn = form.querySelector('[type="submit"]');
     submitBtn.disabled = true;
-    submitBtn.textContent = "Creating…";
+    submitBtn.textContent = "Saving…";
 
     try {
       const fd = new FormData(form);
+      fd.append("id", id);
       if (!imageInput.files || imageInput.files.length === 0) fd.delete("image");
 
       const res = await fetch(ctx + "/rest/ingredient", {
-        method: "POST",
+        method: "PUT",
         headers: { Accept: "application/json" },
         body: fd,
       });
 
-      if (res.status === 201) {
+      if (res.ok) {
         window.location.href = ctx + "/dashboard";
         return;
       }
 
       const data = await res.json().catch(() => ({}));
-      showAlert(errMsg(data, "Failed to create ingredient."));
+      showAlert(errMsg(data, "Failed to save changes."));
     } catch {
       showAlert("Network error. Please try again.");
     }
 
     submitBtn.disabled = false;
-    submitBtn.textContent = "Create ingredient";
+    submitBtn.textContent = "Save changes";
   });
+
+  async function loadIngredient() {
+    try {
+      const res = await fetch(ctx + "/rest/ingredient/" + id, {
+        headers: { Accept: "application/json" },
+      });
+
+      if (res.status === 404) {
+        showAlert("Ingredient not found.");
+        loadingOverlay.classList.add("hidden");
+        return;
+      }
+
+      if (!res.ok) {
+        showAlert("Failed to load ingredient.");
+        loadingOverlay.classList.add("hidden");
+        return;
+      }
+
+      const data = await res.json();
+      populate(data);
+      loadExistingImage();
+    } catch {
+      showAlert("Network error loading ingredient.");
+    } finally {
+      loadingOverlay.classList.add("hidden");
+      form.classList.remove("loading");
+    }
+  }
+
+  function populate(data) {
+    document.getElementById("name").value = data.name || "";
+    document.getElementById("is_frozen").checked = !!data.is_frozen;
+
+    if (pageTitle) pageTitle.textContent = "Edit: " + data.name;
+    document.title = "Edit " + data.name + " - TapTable";
+
+    if (Array.isArray(data.allergens)) {
+      data.allergens.forEach((a) => {
+        const cb = document.querySelector(
+          'input[name="allergens"][value="' + a + '"]',
+        );
+        if (cb) cb.checked = true;
+      });
+    }
+  }
+
+  function loadExistingImage() {
+    fetch(ctx + "/rest/ingredient/" + id + "/image", { headers: { Accept: "*/*" } })
+      .then((r) => (r.ok ? r.blob() : Promise.reject()))
+      .then((blob) => {
+        imagePreview.src = URL.createObjectURL(blob);
+        imagePreview.classList.add("visible");
+        dropzoneContent.classList.add("hidden");
+      })
+      .catch(() => {});
+  }
 
   function showPreview(file) {
     if (!file) return;

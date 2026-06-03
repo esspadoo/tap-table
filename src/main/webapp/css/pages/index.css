@@ -4,3 +4,5 @@
 @import "./ingredients.css";
 @import "./ingredient-detail.css";
 @import "./ingredients-create.css";
+@import "./ingredients-edit.css";
+@import "./ingredients-manage.css";

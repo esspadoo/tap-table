@@ -1,0 +1,53 @@
+.data-table-wrap {
+  background: rgb(var(--bg-card));
+  border: 1px solid rgba(var(--border), var(--border-transparency));
+  border-radius: var(--radius);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table thead tr {
+  border-bottom: 1px solid rgba(var(--border), var(--border-transparency));
+}
+
+.data-table th {
+  padding: 0.7rem 1rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(var(--fg-muted));
+  text-align: left;
+}
+
+.data-table td {
+  padding: 0.75rem 1rem;
+}
+
+.data-table tbody tr {
+  border-bottom: 1px solid
+    rgba(var(--border), calc(var(--border-transparency) * 0.5));
+}
+
+.data-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.dt-empty {
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.dt-empty-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: rgb(var(--fg));
+}
+
+.dt-empty-hint {
+  font-size: 0.85rem;
+  color: rgb(var(--fg-muted));
+}

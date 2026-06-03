@@ -1,0 +1,189 @@
+#ingredients-manage-page .header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#ingredients-manage-page .header > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+#ingredients-manage-page .header > div:first-child h1 {
+  font-family: "Forum", Georgia, serif;
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+#ingredients-count {
+  font-size: 0.8rem;
+  color: rgb(var(--fg-muted));
+  letter-spacing: 0.05em;
+}
+
+#ingredients-manage-page .header > div:last-child {
+  display: flex;
+  align-items: stretch;
+  gap: 0.6rem;
+}
+
+#ingredients-manage-page .search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  background: rgb(var(--bg-input));
+  border: 1px solid rgba(var(--border), var(--border-transparency));
+  border-radius: var(--radius);
+  padding: 0.5rem 0.8rem;
+  transition: border-color 0.15s;
+}
+
+#ingredients-manage-page .search-wrap:focus-within {
+  border-color: rgba(var(--amber), 0.4);
+}
+
+#ingredients-manage-page .search-icon {
+  font-size: 0.78rem;
+  line-height: 1;
+  color: rgb(var(--fg-muted));
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+#ingredients-manage-page #ingredients-search {
+  width: 100%;
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: rgb(var(--fg));
+  outline: none;
+}
+
+#ingredients-manage-page #ingredients-search::placeholder {
+  color: rgb(var(--fg-muted));
+}
+
+#ingredients-manage-page .data-table tr th:nth-child(1),
+#ingredients-manage-page .data-table tr td:nth-child(1) {
+  width: 70%;
+}
+
+@media (min-width: 720px) {
+  #ingredients-manage-page .data-table tr th:nth-child(1),
+  #ingredients-manage-page .data-table tr td:nth-child(1) {
+    width: 30%;
+  }
+}
+
+#ingredients-manage-page .data-table tr th:nth-child(2),
+#ingredients-manage-page .data-table tr td:nth-child(2) {
+  display: none;
+}
+
+@media (min-width: 720px) {
+  #ingredients-manage-page .data-table tr th:nth-child(2),
+  #ingredients-manage-page .data-table tr td:nth-child(2) {
+    display: table-cell;
+    width: 50%;
+  }
+}
+
+#ingredients-manage-page .data-table tr th:nth-child(3),
+#ingredients-manage-page .data-table tr td:nth-child(3) {
+  width: 30%;
+}
+
+@media (min-width: 720px) {
+  #ingredients-manage-page .data-table tr th:nth-child(3),
+  #ingredients-manage-page .data-table tr td:nth-child(3) {
+    width: 20%;
+  }
+}
+
+#ingredients-manage-page .data-table .row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+#ingredients-manage-page .name-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+#ingredients-manage-page .name-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgb(var(--fg));
+  overflow-wrap: break-word;
+}
+
+#ingredients-manage-page .frozen-indicator {
+  font-size: 0.72rem;
+  color: rgb(var(--ice));
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+#ingredients-manage-page .allergen-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+#ingredients-manage-page .allergen-tag {
+  display: inline-block;
+  padding: 0.12rem 0.45rem;
+  border-radius: 99px;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: capitalize;
+  background: rgba(var(--amber), 0.08);
+  color: rgb(var(--amber));
+  border: 1px solid rgba(var(--amber), 0.18);
+  white-space: nowrap;
+}
+
+#ingredients-manage-page .allergens-none {
+  font-size: 0.85rem;
+  color: rgb(var(--fg-muted));
+}
+
+@media (min-width: 720px) {
+  #ingredients-manage-page .header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+@media (min-width: 720px) {
+  #ingredients-manage-page .search-wrap {
+    flex: unset;
+    width: 13rem;
+    transition:
+      border-color 0.15s,
+      width 0.2s;
+  }
+
+  #ingredients-manage-page .search-wrap:focus-within {
+    width: 17rem;
+  }
+}
+
+@media (min-width: 720px) {
+  #ingredients-manage-page .name-info {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
