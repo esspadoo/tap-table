@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     article.className = "media-card";
 
     const link = document.createElement("a");
-    link.href = `${ctx}/jsp/ingredient-detail.jsp?id=${ingredient.id}`;
+    link.href = `${ctx}/ingredient?id=${ingredient.id}`;
 
     const media = document.createElement("div");
     media.className = "media-card-media";
