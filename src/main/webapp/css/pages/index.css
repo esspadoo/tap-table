@@ -1,8 +1,11 @@
 @import "./homepage.css";
+@import "./cart.css";
 @import "./catalog.css";
 @import "./detail.css";
+@import "./dishes.css";
+@import "./ingredients.css";
 @import "./ingredients-manage.css";
-@import "./admin.css";
 @import "./dishes-manage.css";
 @import "./dishes-create.css";
 @import "./dishes-edit.css";
+@import "./admin.css";

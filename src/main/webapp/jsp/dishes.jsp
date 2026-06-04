@@ -7,7 +7,8 @@ contentType="text/html" pageEncoding="UTF-8" %>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dishes &dash; TapTable</title>
     <link rel="stylesheet" href="<c:url value='/css/global.css'/>" />
-    <script src="<c:url value='/js/dishes.js'/>" defer></script>
+    <script src="<c:url value='/js/navbar.js'/>" type="module"></script>
+    <script src="<c:url value='/js/dishes.js'/>" type="module"></script>
   </head>
   <body>
     <%@ include file="fragments/navbar.jsp" %>

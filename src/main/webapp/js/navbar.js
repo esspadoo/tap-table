@@ -1,6 +1,16 @@
+import { getTotalItems } from "./cart.js";
+
 const navbar = document.querySelector(".navbar");
 const burger = document.querySelector(".burger-button");
 const ctx = navbar.dataset.ctx || "";
+
+function syncCartBadge() {
+  const badge = document.getElementById("cart-count");
+  if (badge) badge.textContent = getTotalItems();
+}
+
+syncCartBadge();
+window.addEventListener("storage", syncCartBadge);
 
 const link = (href, text) => {
   const a = document.createElement("a");
@@ -31,6 +41,16 @@ fetch(ctx + "/rest/user")
 
     items.appendChild(link("/", "Home"));
     items.appendChild(link("/ingredients", "Ingredients"));
+
+    const cartLink = link("/cart", "");
+    cartLink.className = "cart-link";
+    const cartLabel = document.createTextNode("Cart (");
+    const cartBadge = document.createElement("span");
+    cartBadge.id = "cart-count";
+    cartBadge.textContent = getTotalItems();
+    const cartClose = document.createTextNode(")");
+    cartLink.append(cartLabel, cartBadge, cartClose);
+    items.appendChild(cartLink);
 
     const dashboardLink = link("/dashboard", "Dashboard");
     dashboardLink.className = "btn btn-primary";

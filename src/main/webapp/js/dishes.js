@@ -1,4 +1,12 @@
+import { addDish, getTotalItems } from "./cart.js";
+
+function syncCartBadge() {
+  const badge = document.getElementById("cart-count");
+  if (badge) badge.textContent = getTotalItems();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+  syncCartBadge();
   const ctx = document.querySelector(".navbar")?.dataset.ctx || "";
   const grid = document.querySelector("[data-grid]");
   const status = document.querySelector("[data-status]");
@@ -79,6 +87,20 @@ document.addEventListener("DOMContentLoaded", () => {
     body.append(category, name, description, footer);
     link.append(media, body);
     article.appendChild(link);
+
+    const addBtn = document.createElement("button");
+    addBtn.className = "btn btn-primary btn-sm add-to-cart-btn";
+    addBtn.textContent = "Add to cart";
+    addBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      addDish({ dishId: dish.id, name: dish.name, price: dish.price });
+      syncCartBadge();
+      addBtn.textContent = "Added!";
+      setTimeout(() => { addBtn.textContent = "Add to cart"; }, 1200);
+    });
+    article.appendChild(addBtn);
+
     return article;
   };
 

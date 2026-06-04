@@ -86,6 +86,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>CartPage</servlet-name>
+        <jsp-file>/jsp/cart.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CartPage</servlet-name>
+        <url-pattern>/cart</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>IngredientDetailPage</servlet-name>
         <jsp-file>/jsp/ingredient-detail.jsp</jsp-file>
     </servlet>
