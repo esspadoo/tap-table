@@ -24,7 +24,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
         <h1>New Ingredient</h1>
       </div>
 
-      <div id="alert-container">
+      <div id="alert-container" class="is-hidden">
         <div class="alert alert-destructive">
           <span id="alert-message"></span>
         </div>

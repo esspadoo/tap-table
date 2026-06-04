@@ -16,9 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const dropzone = document.getElementById("image-dropzone");
   const dropzoneContent = dropzone.querySelector(".dropzone-content");
   const pageTitle = document.getElementById("page-title");
-  const loadingOverlay = document.getElementById("form-loading");
-
-  form.classList.add("loading");
 
   loadIngredient();
 
@@ -86,13 +83,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (res.status === 404) {
         showAlert("Ingredient not found.");
-        loadingOverlay.classList.add("hidden");
         return;
       }
 
       if (!res.ok) {
         showAlert("Failed to load ingredient.");
-        loadingOverlay.classList.add("hidden");
         return;
       }
 
@@ -101,9 +96,6 @@ document.addEventListener("DOMContentLoaded", () => {
       loadExistingImage();
     } catch {
       showAlert("Network error loading ingredient.");
-    } finally {
-      loadingOverlay.classList.add("hidden");
-      form.classList.remove("loading");
     }
   }
 
@@ -149,11 +141,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function showAlert(msg) {
     alertMessage.textContent = msg;
-    alertContainer.classList.add("visible");
+    alertContainer.classList.remove("is-hidden");
     alertContainer.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
   function hideAlert() {
-    alertContainer.classList.remove("visible");
+    alertContainer.classList.add("is-hidden");
   }
 });

@@ -24,19 +24,13 @@ contentType="text/html" pageEncoding="UTF-8" %>
         <h1 id="page-title">Edit Ingredient</h1>
       </div>
 
-      <div id="alert-container">
+      <div id="alert-container" class="is-hidden">
         <div class="alert alert-destructive">
           <span id="alert-message"></span>
         </div>
       </div>
 
       <form id="edit-form" novalidate>
-        <div id="form-loading" aria-hidden="true">
-          <div class="skeleton-row skeleton-wide"></div>
-          <div class="skeleton-row skeleton-narrow"></div>
-          <div class="skeleton-row skeleton-mid"></div>
-        </div>
-
         <div class="form-layout">
           <div class="form-card form-card-image">
             <div class="form-section">

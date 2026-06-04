@@ -77,11 +77,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function showAlert(msg) {
     alertMessage.textContent = msg;
-    alertContainer.classList.add("visible");
+    alertContainer.classList.remove("is-hidden");
     alertContainer.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
   function hideAlert() {
-    alertContainer.classList.remove("visible");
+    alertContainer.classList.add("is-hidden");
   }
 });
