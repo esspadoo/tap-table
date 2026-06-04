@@ -100,12 +100,6 @@
   padding-top: 0.9rem;
 }
 
-.order-card-footer .btn {
-  width: auto;
-  padding: 0.4rem 1rem;
-  font-size: var(--text-sm);
-}
-
 .order-total {
   font-weight: 500;
   font-size: var(--text-base);

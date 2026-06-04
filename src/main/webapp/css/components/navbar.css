@@ -178,9 +178,3 @@
   align-items: center;
   gap: 0.5rem;
 }
-
-.navbar .actions .btn {
-  width: auto;
-  padding: 0.4rem 1rem;
-  font-size: var(--text-sm);
-}

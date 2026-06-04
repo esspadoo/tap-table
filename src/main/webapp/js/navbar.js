@@ -36,13 +36,13 @@ fetch(ctx + "/rest/user")
     dashboardLink.className = "btn btn-primary";
     actions.appendChild(dashboardLink);
 
-    const form = document.createElement("form");
-    form.method = "post";
-    form.action = ctx + "/logout";
     const signOut = document.createElement("button");
     signOut.type = "submit";
     signOut.className = "btn btn-outline";
     signOut.textContent = "Sign out";
-    form.appendChild(signOut);
-    actions.appendChild(form);
+    signOut.addEventListener("click", () => {
+      fetch(ctx + "/logout", { method: "POST" });
+    });
+
+    actions.appendChild(signOut);
   });
