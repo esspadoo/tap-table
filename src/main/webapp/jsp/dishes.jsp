@@ -13,12 +13,23 @@ contentType="text/html" pageEncoding="UTF-8" %>
     <%@ include file="fragments/navbar.jsp" %>
 
     <main class="dishes-page">
-      <header class="dishes-header">
-        <h1>Dishes</h1>
-        <p>Browse the available dishes</p>
-      </header>
-
-      <p class="dishes-status" data-status>Loading dishes...</p>
+      <div class="header">
+        <div>
+          <h1>Dishes</h1>
+          <span class="dishes-status" data-status>Loading dishes...</span>
+        </div>
+        <div>
+          <div class="search-wrap">
+            <span class="search-icon">&#x1F50E;</span>
+            <input
+              type="search"
+              id="dishes-search"
+              placeholder="Search&hellip;"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+      </div>
       <section
         class="dishes-grid"
         data-grid

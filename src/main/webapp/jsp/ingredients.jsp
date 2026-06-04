@@ -13,12 +13,23 @@ contentType="text/html" pageEncoding="UTF-8" %>
     <%@ include file="fragments/navbar.jsp" %>
 
     <main class="ingredients-page">
-      <header class="ingredients-header">
-        <h1>Ingredients</h1>
-        <p>Browse the available ingredients</p>
-      </header>
-
-      <p id="ingredients-status" class="ingredients-status">Loading ingredients...</p>
+      <div class="header">
+        <div>
+          <h1>Ingredients</h1>
+          <span id="ingredients-status" class="ingredients-status">Loading ingredients...</span>
+        </div>
+        <div>
+          <div class="search-wrap">
+            <span class="search-icon">&#x1F50E;</span>
+            <input
+              type="search"
+              id="ingredients-search"
+              placeholder="Search&hellip;"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+      </div>
       <section
         id="ingredients-grid"
         class="ingredients-grid"

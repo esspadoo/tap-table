@@ -2,10 +2,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const ctx = document.querySelector(".navbar")?.dataset.ctx || "";
   const grid = document.querySelector("[data-grid]");
   const status = document.querySelector("[data-status]");
+  const searchInput = document.getElementById("dishes-search");
   const money = new Intl.NumberFormat("it-IT", {
     style: "currency",
     currency: "EUR",
   });
+  let allDishes = [];
 
   if (!grid || !status) return;
 
@@ -81,18 +83,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const render = (dishes) => {
     grid.replaceChildren();
     if (!dishes.length) {
-      setStatus("No dishes available.");
-      const empty = document.createElement("p");
-      empty.className = "dishes-status";
-      empty.textContent = "No dishes available right now.";
-      grid.appendChild(empty);
+      const q = searchInput ? searchInput.value.trim() : "";
+      setStatus(q ? "No dishes match your search." : "No dishes available.");
       return;
     }
 
     const fragment = document.createDocumentFragment();
     for (const dish of dishes) fragment.appendChild(card(dish));
     grid.appendChild(fragment);
-    setStatus(`${dishes.length} dishes`);
+    setStatus(`${dishes.length} dish${dishes.length !== 1 ? "es" : ""}`);
   };
 
   fetch(ctx + "/rest/dish", { headers: { Accept: "application/json" } })
@@ -103,20 +102,25 @@ document.addEventListener("DOMContentLoaded", () => {
       return response.json();
     })
     .then((payload) => {
-      const dishes = Array.isArray(payload["resource-list"])
+      allDishes = Array.isArray(payload["resource-list"])
         ? payload["resource-list"]
         : Array.isArray(payload)
           ? payload
           : [];
-      render(dishes);
+      render(allDishes);
     })
     .catch((error) => {
       console.error("Failed to load dishes", error);
       setStatus("Failed to load dishes.", true);
-      grid.replaceChildren();
-      const empty = document.createElement("p");
-      empty.className = "dishes-status is-error";
-      empty.textContent = "The dishes list could not be loaded.";
-      grid.appendChild(empty);
     });
+
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
+      const q = searchInput.value.trim().toLowerCase();
+      const filtered = q
+        ? allDishes.filter((d) => (d.name || "").toLowerCase().includes(q))
+        : allDishes;
+      render(filtered);
+    });
+  }
 });
