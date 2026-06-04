@@ -21,7 +21,7 @@
   padding: 0.3rem 0.8rem;
   border-radius: var(--radius-pill);
   border: 1px solid rgba(var(--border), var(--border-transparency));
-  font-size: 0.8rem;
+  font-size: var(--text-sm);
   color: rgb(var(--fg-muted));
   cursor: pointer;
   user-select: none;

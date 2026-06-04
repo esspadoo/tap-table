@@ -15,7 +15,7 @@
 
 .data-table th {
   padding: 0.7rem 1rem;
-  font-size: 0.7rem;
+  font-size: var(--text-2xs);
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -42,12 +42,12 @@
 }
 
 .dt-empty-title {
-  font-size: 0.95rem;
+  font-size: var(--text-base);
   font-weight: 500;
   color: rgb(var(--fg));
 }
 
 .dt-empty-hint {
-  font-size: 0.85rem;
+  font-size: var(--text-sm);
   color: rgb(var(--fg-muted));
 }

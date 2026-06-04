@@ -14,7 +14,7 @@
 }
 
 .back-link {
-  font-size: 1rem;
+  font-size: var(--text-base);
   font-weight: 500;
   color: rgb(var(--fg-muted));
   text-decoration: none;
@@ -27,7 +27,7 @@
 }
 
 .badge {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -43,14 +43,14 @@
 }
 
 .badge-completed {
-  background: rgba(78, 160, 100, 0.12);
-  color: #6ecf8a;
-  border-color: rgba(78, 160, 100, 0.2);
+  background: rgba(var(--green), 0.12);
+  color: rgb(var(--green));
+  border-color: rgba(var(--green), 0.2);
 }
 
 .badge-cancelled {
   background: rgba(var(--red), 0.1);
-  color: #e07070;
+  color: rgb(var(--red-fg));
   border-color: rgba(var(--red), 0.2);
 }
 
@@ -58,7 +58,7 @@
   border-top: 1px solid rgba(var(--border), var(--border-transparency));
   padding: 1.5rem 2rem;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: var(--text-sm);
   color: rgb(var(--fg-muted));
   font-weight: 300;
 }

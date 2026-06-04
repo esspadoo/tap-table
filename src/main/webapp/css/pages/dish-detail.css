@@ -36,7 +36,7 @@
 }
 
 #dish-category {
-  font-size: 0.7rem;
+  font-size: var(--text-2xs);
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -44,26 +44,27 @@
 }
 
 #dish-name {
-  font-family: "Forum", Georgia, serif;
-  font-size: 3rem;
+  font-family: var(--font-display);
+  font-size: var(--text-5xl);
   font-weight: 400;
   color: rgb(var(--fg));
-  line-height: 1.1;
+  line-height: var(--leading-tight);
 }
 
 #dish-description {
-  font-size: 0.9rem;
+  font-size: var(--text-base);
   color: rgb(var(--fg-muted));
 }
 
 .dish-price {
-  font-family: "Forum", Georgia, serif;
+  font-family: var(--font-display);
   font-size: 1.8rem;
+  font-variant-numeric: tabular-nums;
   color: rgb(var(--amber));
 }
 
 #dish-ingredients-section > h2 {
-  font-size: 0.7rem;
+  font-size: var(--text-2xs);
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -83,7 +84,7 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 0.4rem;
-  font-size: 1rem;
+  font-size: var(--text-base);
   color: rgb(var(--fg));
   background: rgb(var(--bg-card));
   border: 1px solid rgba(var(--border), var(--border-transparency));

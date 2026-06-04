@@ -60,7 +60,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
                             <span class="dish-name"
                               >Dish #<c:out value="${dish.dishId}"
                             /></span>
-                            <span class="dish-qty"
+                            <span
                               >x<c:out value="${dish.quantity}"
                             /></span>
                             <c:if test="${order.status == 'COMPLETED'}">

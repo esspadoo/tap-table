@@ -23,21 +23,21 @@
 }
 
 .card-header h1 {
-  font-family: "Forum", Georgia, serif;
-  font-size: 3rem;
+  font-family: var(--font-display);
+  font-size: var(--text-5xl);
   font-weight: 400;
   letter-spacing: -0.01em;
   color: rgb(var(--fg));
 }
 
 .card-header p {
-  font-size: 0.9rem;
+  font-size: var(--text-base);
   color: rgb(var(--fg-muted));
   font-weight: 300;
 }
 
 .card-footer {
-  font-size: 0.8rem;
+  font-size: var(--text-sm);
   color: rgb(var(--fg-muted));
   text-align: center;
 }

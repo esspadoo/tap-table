@@ -3,8 +3,8 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 0.62rem 1.2rem;
-  font-size: 0.9rem;
+  padding: 0.6rem 1.2rem;
+  font-size: var(--text-base);
   font-weight: 500;
   font-family: inherit;
   letter-spacing: 0.03em;
@@ -20,7 +20,7 @@
 
 .btn-primary {
   background: rgb(var(--amber));
-  color: #0b0907;
+  color: rgb(var(--bg));
 }
 
 .btn-primary:hover {

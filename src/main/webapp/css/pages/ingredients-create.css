@@ -46,13 +46,13 @@
 }
 
 #create-form .form-section > h2 {
-  font-size: 1.25rem;
+  font-size: var(--text-xl);
   font-weight: 500;
   letter-spacing: 0.01em;
 }
 
 #create-form .section-hint {
-  font-size: 0.85rem;
+  font-size: var(--text-sm);
   color: rgb(var(--fg-muted));
 }
 
@@ -109,7 +109,7 @@
 }
 
 #create-form .toggle-label {
-  font-size: 0.9rem;
+  font-size: var(--text-base);
   color: rgb(var(--fg));
 }
 
@@ -158,21 +158,21 @@
 }
 
 #image-dropzone .dropzone-icon {
-  font-size: 1.75rem;
+  font-size: var(--text-3xl);
   margin-bottom: 0.6rem;
   opacity: 0.35;
   pointer-events: none;
 }
 
 #image-dropzone .dropzone-hint {
-  font-size: 0.9rem;
+  font-size: var(--text-base);
   color: rgb(var(--fg));
   margin-bottom: 0.2rem;
   pointer-events: none;
 }
 
 #image-dropzone .dropzone-formats {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   color: rgb(var(--fg-muted));
   letter-spacing: 0.06em;
   text-transform: uppercase;
