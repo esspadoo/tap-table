@@ -41,8 +41,6 @@ contentType="text/html" pageEncoding="UTF-8" %>
       </div>
     </main>
 
-    <footer class="footer">
-      <p>&copy; 2026 TapTable &dash; University of Padua</p>
-    </footer>
+    <%@ include file="fragments/footer.jsp" %>
   </body>
 </html>
