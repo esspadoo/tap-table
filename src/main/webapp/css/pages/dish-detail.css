@@ -1,41 +1,41 @@
-.dish-detail-page {
+#dish-detail-page {
   animation: fade-in 0.25s ease both;
 }
 
-.dish-detail-page > .container {
+#dish-detail-page > .container {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.dish-detail-page > .container > .image {
+#dish-detail-page > .container > .image {
   position: relative;
   aspect-ratio: 16 / 10;
   overflow: hidden;
 }
 
-#dish-image-placeholder,
-#dish-image {
+#dish-detail-page #dish-image-placeholder,
+#dish-detail-page #dish-image {
   width: 100%;
   height: 100%;
   overflow: hidden;
 }
 
-#dish-image-placeholder {
+#dish-detail-page #dish-image-placeholder {
   background: linear-gradient(135deg, rgb(38, 30, 20) 0%, rgb(55, 44, 30) 100%);
 }
 
-#dish-image {
+#dish-detail-page #dish-image {
   object-fit: cover;
 }
 
-.dish-detail-page > .container > .info {
+#dish-detail-page > .container > .info {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-#dish-category {
+#dish-detail-page #dish-category {
   font-size: var(--text-2xs);
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -43,7 +43,7 @@
   color: rgb(var(--amber));
 }
 
-#dish-name {
+#dish-detail-page #dish-name {
   font-family: var(--font-display);
   font-size: var(--text-5xl);
   font-weight: 400;
@@ -51,19 +51,19 @@
   line-height: var(--leading-tight);
 }
 
-#dish-description {
+#dish-detail-page #dish-description {
   font-size: var(--text-base);
   color: rgb(var(--fg-muted));
 }
 
-.dish-price {
+#dish-detail-page #dish-price {
   font-family: var(--font-display);
   font-size: 1.8rem;
   font-variant-numeric: tabular-nums;
   color: rgb(var(--amber));
 }
 
-#dish-ingredients-section > h2 {
+#dish-detail-page #dish-ingredients-section > h2 {
   font-size: var(--text-2xs);
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -72,14 +72,14 @@
   margin-bottom: 1rem;
 }
 
-#ingredients-list {
+#dish-detail-page #ingredients-list {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
 
-#ingredients-list > .ingredient-item {
+#dish-detail-page #ingredients-list > .ingredient-item {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -92,7 +92,7 @@
   padding: 0.5rem 1.1rem;
 }
 
-#ingredients-list > .ingredient-item > .ingredient-allergens {
+#dish-detail-page #ingredients-list > .ingredient-item > .ingredient-allergens {
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.05em;
@@ -100,13 +100,13 @@
   color: rgb(var(--amber));
 }
 
-#ingredients-list > .ingredient-item > .ingredient-frozen {
+#dish-detail-page #ingredients-list > .ingredient-item > .ingredient-frozen {
   align-self: center;
   line-height: 0;
   color: rgb(var(--ice));
 }
 
-#ingredients-list > .ingredient-item > .ingredient-frozen svg {
+#dish-detail-page #ingredients-list > .ingredient-item > .ingredient-frozen svg {
   width: 1.1rem;
   height: 1.1rem;
 }

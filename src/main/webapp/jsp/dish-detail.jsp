@@ -12,7 +12,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
   <body>
     <%@ include file="fragments/navbar.jsp" %>
 
-    <main class="dish-detail-page">
+    <main id="dish-detail-page">
       <a class="back-link" href="<c:url value='/dishes'/>"
         >&larr; Back to dishes</a
       >
@@ -31,7 +31,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
           <p id="dish-category"></p>
           <h1 id="dish-name"></h1>
           <p id="dish-description"></p>
-          <p id="dish-price" class="dish-price"></p>
+          <p id="dish-price"></p>
 
           <div id="dish-ingredients-section">
             <h2>Ingredients</h2>
