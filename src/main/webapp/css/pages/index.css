@@ -3,3 +3,6 @@
 @import "./detail.css";
 @import "./ingredients-manage.css";
 @import "./admin.css";
+@import "./dishes-manage.css";
+@import "./dishes-create.css";
+@import "./dishes-edit.css";

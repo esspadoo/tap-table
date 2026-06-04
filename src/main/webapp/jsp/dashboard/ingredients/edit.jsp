@@ -74,21 +74,17 @@ contentType="text/html" pageEncoding="UTF-8" %>
                   />
                 </div>
 
-                <div class="form-group">
-                  <label>Storage</label>
-                  <label class="toggle-field" for="is_frozen">
-                    <input
-                      type="checkbox"
-                      id="is_frozen"
-                      name="is_frozen"
-                      value="true"
-                    />
-                    <span class="toggle-track">
-                      <span class="toggle-thumb"></span>
-                    </span>
-                    <span class="toggle-label">Frozen ingredient</span>
-                  </label>
-                </div>
+        <div class="form-group">
+            <label>Storage</label>
+            <input type="hidden" name="is_frozen" value="false" />
+            <label class="toggle-field" for="is_frozen">
+                <input type="checkbox" id="is_frozen" name="is_frozen" value="true" />
+                <span class="toggle-track">
+                    <span class="toggle-thumb"></span>
+                </span>
+                <span class="toggle-label">Frozen ingredient</span>
+            </label>
+        </div>
               </div>
             </div>
 

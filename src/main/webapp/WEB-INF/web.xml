@@ -147,4 +147,39 @@
         <servlet-name>PasswordServlet</servlet-name>
         <url-pattern>/dashboard/password</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>ManageDishesPage</servlet-name>
+        <jsp-file>/jsp/dashboard/dishes/index.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ManageDishesPage</servlet-name>
+        <url-pattern>/dashboard/dishes</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CreateDishPage</servlet-name>
+        <jsp-file>/jsp/dashboard/dishes/create.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateDishPage</servlet-name>
+        <url-pattern>/dashboard/dishes/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>EditDishPage</servlet-name>
+        <jsp-file>/jsp/dashboard/dishes/edit.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EditDishPage</servlet-name>
+        <url-pattern>/dashboard/dishes/edit</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DetailDishPage</servlet-name>
+        <jsp-file>/jsp/dashboard/dishes/detail.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DetailDishPage</servlet-name>
+        <url-pattern>/dashboard/dishes/detail</url-pattern>
+    </servlet-mapping>
 </web-app>
