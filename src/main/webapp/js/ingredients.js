@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const ctx = document.querySelector(".navbar")?.dataset.ctx || "";
   const grid = document.getElementById("ingredients-grid");
   const status = document.getElementById("ingredients-status");
+  const searchInput = document.getElementById("ingredients-search");
+  let allIngredients = [];
 
   const setStatus = (message, error = false) => {
     status.textContent = message;
@@ -60,14 +62,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const render = (ingredients) => {
     grid.replaceChildren();
     if (!ingredients.length) {
-      setStatus("No ingredients available.");
+      const q = searchInput.value.trim();
+      setStatus(q ? "No ingredients match your search." : "No ingredients available.");
       return;
     }
 
     const fragment = document.createDocumentFragment();
     for (const ingredient of ingredients) fragment.appendChild(card(ingredient));
     grid.appendChild(fragment);
-    setStatus(`${ingredients.length} ingredients`);
+    setStatus(`${ingredients.length} ingredient${ingredients.length !== 1 ? "s" : ""}`);
   };
 
   fetch(ctx + "/rest/ingredient", { headers: { Accept: "application/json" } })
@@ -76,15 +79,23 @@ document.addEventListener("DOMContentLoaded", () => {
       return response.json();
     })
     .then((payload) => {
-      const ingredients = Array.isArray(payload["resource-list"])
+      allIngredients = Array.isArray(payload["resource-list"])
         ? payload["resource-list"]
         : Array.isArray(payload)
           ? payload
           : [];
-      render(ingredients);
+      render(allIngredients);
     })
     .catch((error) => {
       console.error("Failed to load ingredients", error);
       setStatus("Failed to load ingredients.", true);
     });
+
+  searchInput.addEventListener("input", () => {
+    const q = searchInput.value.trim().toLowerCase();
+    const filtered = q
+      ? allIngredients.filter((i) => (i.name || "").toLowerCase().includes(q))
+      : allIngredients;
+    render(filtered);
+  });
 });
