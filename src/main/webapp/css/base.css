@@ -10,6 +10,7 @@
   --border: 237, 232, 223;
   --border-transparency: 0.14;
   --radius: 6px;
+  --radius-pill: 9999px;
 }
 
 @media (prefers-color-scheme: light) {

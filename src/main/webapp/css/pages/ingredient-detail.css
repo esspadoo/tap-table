@@ -85,6 +85,6 @@
   text-transform: uppercase;
   color: rgb(var(--amber));
   border: 1px solid rgba(var(--amber), 0.3);
-  border-radius: 99px;
+  border-radius: var(--radius-pill);
   padding: 0.3rem 0.9rem;
 }

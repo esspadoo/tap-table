@@ -87,7 +87,7 @@
   color: rgb(var(--fg));
   background: rgb(var(--bg-card));
   border: 1px solid rgba(var(--border), var(--border-transparency));
-  border-radius: 99px;
+  border-radius: var(--radius-pill);
   padding: 0.5rem 1.1rem;
 }
 
