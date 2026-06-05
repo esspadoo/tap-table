@@ -24,7 +24,7 @@ public class DeleteIngredientDAO extends AbstractDAO<Ingredient> {
   /**
    * Constructor for DeleteIngredientDAO.
    *
-   * @param ingredient the {@code id} of the ingredient to be deleted from the database.
+   * @param id the {@code id} of the ingredient to be deleted from the database.
    */
   public DeleteIngredientDAO(final Integer id) {
     this.id = id;

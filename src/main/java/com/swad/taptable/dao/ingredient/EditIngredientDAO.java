@@ -24,7 +24,7 @@ public class EditIngredientDAO extends AbstractDAO<Ingredient> {
   /**
    * Creates a new DAO object.
    *
-   * @param editedIngredient the ingredient with updated values.
+   * @param ingredient the ingredient with updated values.
    */
   public EditIngredientDAO(final Ingredient ingredient) {
     this.ingredient = ingredient;

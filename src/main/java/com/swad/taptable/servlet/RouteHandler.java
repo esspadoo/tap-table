@@ -1,7 +1,6 @@
 /* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.servlet;
 
-import com.swad.taptable.resources.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -19,7 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public interface RouteHandler {
   /**
    * Handles a REST request for a specific route. Implementations of this method should contain the
-   * logic for serving {@link Resource#serve()} the specific
+   * logic for serving the specific
    *
    * @param req the HTTP request
    * @param res the response to be sent back to the client

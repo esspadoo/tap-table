@@ -46,7 +46,6 @@ public final class Router {
    * Tries to match the incoming request against registered routes in order. Checks the caller's
    * role before invoking the handler.
    *
-   * @param callerRole the authenticated user's role, or {@code null} if unauthenticated.
    * @return the dispatch result: {@link DispatchResult#OK} if handled, {@link
    *     DispatchResult#NOT_FOUND} if no route matched, {@link DispatchResult#UNAUTHORIZED} if
    *     authentication is required but missing, or {@link DispatchResult#FORBIDDEN} if the role is
