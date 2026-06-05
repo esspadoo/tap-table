@@ -16,8 +16,6 @@
   color: rgb(var(--fg-muted));
 }
 
-/* ─── Two-column layout ───────────────────────────────────── */
-
 .cart-layout {
   display: flex;
   flex-direction: column;
@@ -55,8 +53,6 @@
     top: 1.5rem;
   }
 }
-
-/* ─── Promo section ───────────────────────────────────────── */
 
 .promo-section {
   display: flex;
@@ -154,8 +150,6 @@
   color: rgb(var(--green));
 }
 
-/* ─── Cart summary ─────────────────────────────────────────── */
-
 .cart-summary {
   display: flex;
   flex-direction: column;
@@ -186,8 +180,6 @@
   color: rgb(var(--fg));
 }
 
-/* ─── Cart actions ─────────────────────────────────────────── */
-
 .cart-actions {
   display: flex;
   flex-direction: column;
@@ -200,8 +192,6 @@
   width: 100%;
   justify-content: center;
 }
-
-/* ─── Quantity input ──────────────────────────────────────── */
 
 .qty-input {
   width: 3.5rem;
@@ -223,8 +213,6 @@
 }
 
 
-
-/* ─── Add-to-cart button (dish cards) ────────────────────── */
 
 .add-to-cart-btn {
   width: calc(100% - 2rem);

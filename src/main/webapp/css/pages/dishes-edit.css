@@ -12,8 +12,6 @@
   display: block;
 }
 
-/* Loading skeleton */
-
 #form-loading {
   display: flex;
   flex-direction: column;
