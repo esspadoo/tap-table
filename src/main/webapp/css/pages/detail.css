@@ -1,7 +1,3 @@
-#dish-detail-page,
-#ingredient-detail-page {
-  animation: fade-in 0.25s ease both;
-}
 
 #dish-detail-page > .container,
 #ingredient-detail-page > .container {

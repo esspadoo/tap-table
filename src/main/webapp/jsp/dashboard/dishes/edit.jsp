@@ -32,12 +32,6 @@ contentType="text/html" pageEncoding="UTF-8" %>
       </div>
 
       <form id="edit-form" novalidate>
-        <div id="form-loading" aria-hidden="true">
-          <div class="skeleton-row skeleton-wide"></div>
-          <div class="skeleton-row skeleton-narrow"></div>
-          <div class="skeleton-row skeleton-mid"></div>
-        </div>
-
         <div class="form-layout">
           <div class="form-card form-card-image">
             <div class="form-section">

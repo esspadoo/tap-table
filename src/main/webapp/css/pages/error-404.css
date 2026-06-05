@@ -7,7 +7,7 @@
   text-align: center;
   gap: 1.5em;
   padding: 4em 1.5em;
-  animation: fade-in 0.35s ease both;
+
 }
 
 .error-code {
@@ -48,10 +48,4 @@
   align-items: center;
   justify-content: center;
   gap: 0.75em;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .error-page {
-    animation: none;
-  }
 }

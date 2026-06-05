@@ -16,12 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const dropzone = document.getElementById("image-dropzone");
   const dropzoneContent = document.getElementById("dropzone-content");
   const pageTitle = document.getElementById("page-title");
-  const loadingOverlay = document.getElementById("form-loading");
   const chipGroup = document.getElementById("ingredients-chip-group");
   const categorySelect = document.getElementById("category");
   const ingredientsSearch = document.getElementById("ingredients-search");
-
-  form.classList.add("loading");
 
   ingredientsSearch.addEventListener("input", () => {
     const q = ingredientsSearch.value.trim().toLowerCase();
@@ -153,13 +150,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (res.status === 404) {
         showAlert("Dish not found.");
-        loadingOverlay.classList.add("hidden");
         return;
       }
 
       if (!res.ok) {
         showAlert("Failed to load dish.");
-        loadingOverlay.classList.add("hidden");
         return;
       }
 
@@ -168,9 +163,6 @@ document.addEventListener("DOMContentLoaded", () => {
       loadExistingImage();
     } catch {
       showAlert("Network error loading dish.");
-    } finally {
-      loadingOverlay.classList.add("hidden");
-      form.classList.remove("loading");
     }
   }
 
