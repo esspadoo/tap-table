@@ -5,11 +5,21 @@ import com.swad.taptable.dao.AbstractDAO;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * DAO that deletes a dish from the database by its identifier.
+ *
+ * @author SWAD Team
+ */
 public class DeleteDishDAO extends AbstractDAO<Boolean> {
   private static final String STATEMENT = "DELETE FROM dishes WHERE id = ?";
 
   private final int dishId;
 
+  /**
+   * Creates a new DAO object.
+   *
+   * @param dishId the identifier of the dish to delete.
+   */
   public DeleteDishDAO(final int dishId) {
     this.dishId = dishId;
   }

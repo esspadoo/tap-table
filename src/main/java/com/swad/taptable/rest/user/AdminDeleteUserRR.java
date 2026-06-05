@@ -11,8 +11,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * Rest resource for the deletion of a user by an admin in the system
+ *
+ * @author SWAD Team
+ */
 public class AdminDeleteUserRR extends AbstractRR {
 
+  /**
+   * Creates a new resource handler for the admin-delete-user action.
+   *
+   * @param req the HTTP request.
+   * @param res the HTTP response.
+   */
   public AdminDeleteUserRR(final HttpServletRequest req, final HttpServletResponse res) {
     super(Actions.ADMIN_DELETE_USER, req, res);
   }

@@ -15,6 +15,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 
+/**
+ * Servlet handling user logout, invalidating the user's session by clearing the authentication
+ * cookie and redirecting them to the homepage.
+ *
+ * @author SWAD Team
+ */
 public final class LogoutServlet extends HttpServlet {
 
   private static final Logger LOGGER =

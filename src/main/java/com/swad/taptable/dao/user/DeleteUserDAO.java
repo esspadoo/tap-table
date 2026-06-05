@@ -7,12 +7,22 @@ import com.swad.taptable.resources.UserRole;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * DAO that deletes a user account and returns the deleted user record.
+ *
+ * @author SWAD Team
+ */
 public final class DeleteUserDAO extends AbstractDAO<User> {
 
   private static final String STATEMENT = "DELETE FROM users WHERE id = ? RETURNING *";
 
   private final Integer id;
 
+  /**
+   * Creates a new DAO object.
+   *
+   * @param id the identifier of the user to delete.
+   */
   public DeleteUserDAO(final Integer id) {
     this.id = id;
   }

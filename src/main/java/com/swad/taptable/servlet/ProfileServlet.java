@@ -15,6 +15,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 
+/**
+ * Servlet handling the user profile page, allowing users to view their details and change their
+ * password.
+ *
+ * @author SWAD Team
+ */
 public final class ProfileServlet extends HttpServlet {
 
   private static final Logger LOGGER =

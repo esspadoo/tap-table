@@ -16,6 +16,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 
+/**
+ * Servlet handling the user management page
+ *
+ * @author SWAD Team
+ */
 public final class UsersServlet extends HttpServlet {
 
   private static final Logger LOGGER =

@@ -9,6 +9,11 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO that retrieves all dish categories ordered alphabetically.
+ *
+ * @author SWAD Team
+ */
 public final class GetAllCategoriesDAO extends AbstractDAO<ResourceList<Category>> {
 
   private static final String STATEMENT = "SELECT name FROM categories ORDER BY name ASC";

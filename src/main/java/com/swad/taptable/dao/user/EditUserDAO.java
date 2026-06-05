@@ -7,6 +7,11 @@ import com.swad.taptable.resources.UserRole;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * DAO that updates a user's profile fields and returns the updated user record.
+ *
+ * @author SWAD Team
+ */
 public final class EditUserDAO extends AbstractDAO<User> {
 
   private static final String STATEMENT =
@@ -15,6 +20,12 @@ public final class EditUserDAO extends AbstractDAO<User> {
   private final Integer id;
   private final User user;
 
+  /**
+   * Creates a new DAO object.
+   *
+   * @param id the identifier of the user to update.
+   * @param user the user object carrying the updated field values.
+   */
   public EditUserDAO(final Integer id, final User user) {
     this.id = id;
     this.user = user;

@@ -7,6 +7,11 @@ import com.swad.taptable.resources.UserRole;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * DAO that retrieves a single user by their identifier.
+ *
+ * @author SWAD Team
+ */
 public final class GetUserDAO extends AbstractDAO<User> {
 
   private static final String STATEMENT =
@@ -14,6 +19,11 @@ public final class GetUserDAO extends AbstractDAO<User> {
 
   private final Integer id;
 
+  /**
+   * Creates a new DAO object.
+   *
+   * @param id the identifier of the user to retrieve.
+   */
   public GetUserDAO(final Integer id) {
     this.id = id;
   }

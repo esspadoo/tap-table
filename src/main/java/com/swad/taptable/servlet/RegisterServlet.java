@@ -16,6 +16,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 
+/**
+ * Servlet handling user registration, allowing new users to create an account by providing their
+ * details and credentials.
+ *
+ * @author SWAD Team
+ */
 public final class RegisterServlet extends HttpServlet {
 
   private static final Logger LOGGER =

@@ -16,8 +16,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * Rest resource for submitting a review for a dish in an order.
+ *
+ * @author SWAD Team
+ */
 public class SubmitReviewRR extends AbstractRR {
 
+  /**
+   * Creates a new resource handler for the submit-review action.
+   *
+   * @param req the HTTP request.
+   * @param res the HTTP response.
+   */
   public SubmitReviewRR(final HttpServletRequest req, final HttpServletResponse res) {
     super(Actions.EDIT_ORDER, req, res);
   }

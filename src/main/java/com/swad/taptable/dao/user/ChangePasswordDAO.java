@@ -6,6 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import org.mindrot.jbcrypt.BCrypt;
 
+/**
+ * DAO that verifies the current password and updates it to a new bcrypt hash if correct.
+ *
+ * @author SWAD Team
+ */
 public final class ChangePasswordDAO extends AbstractDAO<Boolean> {
 
   private static final String SELECT_HASH = "SELECT password_hash FROM users WHERE id = ?";
@@ -15,6 +20,13 @@ public final class ChangePasswordDAO extends AbstractDAO<Boolean> {
   private final String currentPassword;
   private final String newPassword;
 
+  /**
+   * Creates a new DAO object.
+   *
+   * @param userId the identifier of the user changing their password.
+   * @param currentPassword the user's current plaintext password for verification.
+   * @param newPassword the new plaintext password to hash and store.
+   */
   public ChangePasswordDAO(
       final int userId, final String currentPassword, final String newPassword) {
     this.userId = userId;

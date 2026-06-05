@@ -11,6 +11,11 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO that retrieves all orders together with their dish line items from the database.
+ *
+ * @author SWAD Team
+ */
 public class GetAllOrdersDAO extends AbstractDAO<ResourceList<Order>> {
 
   private static final String STATEMENT =

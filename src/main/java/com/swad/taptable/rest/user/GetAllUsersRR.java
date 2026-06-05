@@ -13,8 +13,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * Rest resource for the retrieval of all users in the system.
+ *
+ * @author SWAD Team
+ */
 public class GetAllUsersRR extends AbstractRR {
 
+  /**
+   * Creates a new resource handler for the get-all-users action.
+   *
+   * @param req the HTTP request.
+   * @param res the HTTP response.
+   */
   public GetAllUsersRR(final HttpServletRequest req, final HttpServletResponse res) {
     super(Actions.GET_ALL_USERS, req, res);
   }

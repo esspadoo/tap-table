@@ -15,6 +15,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 
+/**
+ * Servlet handling user login, authenticating users based on their credentials and issuing a JWT
+ * cookie upon successful authentication to maintain their session across requests.
+ *
+ * @author SWAD Team
+ */
 public final class LoginServlet extends HttpServlet {
 
   private static final Logger LOGGER =

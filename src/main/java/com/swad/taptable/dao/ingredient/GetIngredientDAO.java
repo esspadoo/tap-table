@@ -10,6 +10,11 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO that retrieves a single ingredient by its identifier.
+ *
+ * @author SWAD Team
+ */
 public class GetIngredientDAO extends AbstractDAO<Ingredient> {
   // We know that we can avoid to get the id from the select, but it isn't a big deal
   private static final String STATEMENT =
@@ -17,6 +22,11 @@ public class GetIngredientDAO extends AbstractDAO<Ingredient> {
 
   private final int ingredientId;
 
+  /**
+   * Creates a new DAO object.
+   *
+   * @param ingredientId the identifier of the ingredient to retrieve.
+   */
   public GetIngredientDAO(final int ingredientId) {
     this.ingredientId = ingredientId;
   }

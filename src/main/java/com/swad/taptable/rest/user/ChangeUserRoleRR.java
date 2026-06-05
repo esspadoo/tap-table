@@ -15,8 +15,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * Rest resouce for changing a user's role in the system.
+ *
+ * @author SWAD Team
+ */
 public class ChangeUserRoleRR extends AbstractRR {
 
+  /**
+   * Creates a new resource handler for the change-user-role action.
+   *
+   * @param req the HTTP request.
+   * @param res the HTTP response.
+   */
   public ChangeUserRoleRR(final HttpServletRequest req, final HttpServletResponse res) {
     super(Actions.CHANGE_USER_ROLE, req, res);
   }

@@ -381,11 +381,23 @@ public class Dish extends AbstractResource {
       return this;
     }
 
+    /**
+     * Sets the raw image bytes of the dish.
+     *
+     * @param image the image data.
+     * @return this builder.
+     */
     public Builder image(final byte[] image) {
       this.image = image;
       return this;
     }
 
+    /**
+     * Sets the MIME type of the dish image.
+     *
+     * @param imageType the image type.
+     * @return this builder.
+     */
     public Builder imageType(final ImageType imageType) {
       this.imageType = imageType;
       return this;

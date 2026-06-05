@@ -10,6 +10,11 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO that retrieves all registered users ordered by their identifier.
+ *
+ * @author SWAD Team
+ */
 public final class GetAllUsersDAO extends AbstractDAO<ResourceList<User>> {
 
   private static final String STATEMENT =

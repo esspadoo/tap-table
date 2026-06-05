@@ -6,12 +6,22 @@ import com.swad.taptable.resources.Category;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * DAO that removes a dish category from the database by name.
+ *
+ * @author SWAD Team
+ */
 public final class DeleteCategoryDAO extends AbstractDAO<Category> {
 
   private static final String STATEMENT = "DELETE FROM categories WHERE name = ? RETURNING *";
 
   private final String name;
 
+  /**
+   * Creates a new DAO object.
+   *
+   * @param name the name of the category to delete.
+   */
   public DeleteCategoryDAO(final String name) {
     this.name = name;
   }

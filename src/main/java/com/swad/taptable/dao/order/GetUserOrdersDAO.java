@@ -12,6 +12,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO that retrieves all orders belonging to a specific user.
+ *
+ * @author SWAD Team
+ */
 public class GetUserOrdersDAO extends AbstractDAO<ResourceList<Order>> {
 
   private static final String STATEMENT =
@@ -25,6 +30,11 @@ public class GetUserOrdersDAO extends AbstractDAO<ResourceList<Order>> {
 
   private final int userId;
 
+  /**
+   * Creates a new DAO object.
+   *
+   * @param userId the identifier of the user whose orders to retrieve.
+   */
   public GetUserOrdersDAO(int userId) {
     this.userId = userId;
   }

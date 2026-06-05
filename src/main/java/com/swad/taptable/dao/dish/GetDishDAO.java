@@ -12,6 +12,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO that retrieves a single dish together with its full ingredient list by dish identifier.
+ *
+ * @author SWAD Team
+ */
 public class GetDishDAO extends AbstractDAO<Dish> {
   private static final String DISH_STATEMENT = "SELECT * FROM dishes WHERE id = ?";
   private static final String INGREDIENTS_STATEMENT =
@@ -20,6 +25,11 @@ public class GetDishDAO extends AbstractDAO<Dish> {
 
   private final int dishId;
 
+  /**
+   * Creates a new DAO object.
+   *
+   * @param dishId the identifier of the dish to retrieve.
+   */
   public GetDishDAO(final int dishId) {
     this.dishId = dishId;
   }

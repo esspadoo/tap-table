@@ -13,8 +13,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * Rest resource for changing a user's password in the system.
+ *
+ * @author SWAD Team
+ */
 public class ChangePasswordRR extends AbstractRR {
 
+  /**
+   * Creates a new resource handler for the change-password action.
+   *
+   * @param req the HTTP request.
+   * @param res the HTTP response.
+   */
   public ChangePasswordRR(final HttpServletRequest req, final HttpServletResponse res) {
     super(Actions.UPDATE_PASSWORD, req, res);
   }

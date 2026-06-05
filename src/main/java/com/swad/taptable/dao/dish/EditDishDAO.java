@@ -13,6 +13,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO that updates an existing dish's fields and re-links its ingredient associations.
+ *
+ * @author SWAD Team
+ */
 public class EditDishDAO extends AbstractDAO<Dish> {
   private static final String UPDATE_DISHES_STATEMENT =
       "UPDATE dishes"
@@ -30,6 +35,11 @@ public class EditDishDAO extends AbstractDAO<Dish> {
 
   private final Dish dish;
 
+  /**
+   * Creates a new DAO object.
+   *
+   * @param dish the dish with updated field values and ingredient associations.
+   */
   public EditDishDAO(final Dish dish) {
     this.dish = dish;
   }

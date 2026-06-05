@@ -15,6 +15,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 
+/**
+ * Servlet handling the ingredients page, allowing users to view the list of available ingredients
+ * in the system.
+ *
+ * @author SWAD Team
+ */
 public final class IngredientsServlet extends HttpServlet {
 
   private static final Logger LOGGER =

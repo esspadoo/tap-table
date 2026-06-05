@@ -10,6 +10,11 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO that retrieves a single order together with its dish line items by order identifier.
+ *
+ * @author SWAD Team
+ */
 public class GetOrderDAO extends AbstractDAO<Order> {
   private static final String ORDER_STATEMENT = "SELECT * FROM orders WHERE id = ?";
   private static final String ORDER_DISHES_STATEMENT =
@@ -17,6 +22,11 @@ public class GetOrderDAO extends AbstractDAO<Order> {
 
   private final int orderId;
 
+  /**
+   * Creates a new DAO object.
+   *
+   * @param orderId the identifier of the order to retrieve.
+   */
   public GetOrderDAO(int orderId) {
     this.orderId = orderId;
   }

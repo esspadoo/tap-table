@@ -7,6 +7,11 @@ import com.swad.taptable.resources.UserRole;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * DAO that updates the role of a non-admin user and returns the updated user record.
+ *
+ * @author SWAD Team
+ */
 public final class ChangeUserRoleDAO extends AbstractDAO<User> {
 
   private static final String STATEMENT =
@@ -16,6 +21,12 @@ public final class ChangeUserRoleDAO extends AbstractDAO<User> {
   private final int targetUserId;
   private final UserRole newRole;
 
+  /**
+   * Creates a new DAO object.
+   *
+   * @param targetUserId the identifier of the user whose role is being changed.
+   * @param newRole the role to assign to the user.
+   */
   public ChangeUserRoleDAO(final int targetUserId, final UserRole newRole) {
     this.targetUserId = targetUserId;
     this.newRole = newRole;

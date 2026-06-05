@@ -5,6 +5,11 @@ import com.swad.taptable.dao.AbstractDAO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * DAO that records a user's like or dislike review for a dish in an existing order.
+ *
+ * @author SWAD Team
+ */
 public final class SubmitReviewDAO extends AbstractDAO<Boolean> {
 
   private static final String STATEMENT =
@@ -14,6 +19,13 @@ public final class SubmitReviewDAO extends AbstractDAO<Boolean> {
   private final int dishId;
   private final boolean isLiked;
 
+  /**
+   * Creates a new DAO object.
+   *
+   * @param orderId the identifier of the order containing the reviewed dish.
+   * @param dishId the identifier of the dish being reviewed.
+   * @param isLiked {@code true} if the user liked the dish, {@code false} otherwise.
+   */
   public SubmitReviewDAO(final int orderId, final int dishId, final boolean isLiked) {
     this.orderId = orderId;
     this.dishId = dishId;

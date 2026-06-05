@@ -13,6 +13,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO that retrieves all dishes together with their ingredient lists from the database.
+ *
+ * @author SWAD Team
+ */
 public class GetDishesDAO extends AbstractDAO<ResourceList<Dish>> {
   private static final String DISHES_STATEMENT = "SELECT * FROM dishes";
   private static final String INGREDIENTS_STATEMENT =

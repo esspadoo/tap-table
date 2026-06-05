@@ -19,6 +19,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 
+/**
+ * Servlet handling the dashboard page, serving different views and data based on the user's role.
+ *
+ * @author SWAD Team
+ */
 public final class DashboardServlet extends HttpServlet {
 
   private static final Logger LOGGER =

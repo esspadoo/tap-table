@@ -11,6 +11,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO that inserts a new order together with its dish line items into the database.
+ *
+ * @author SWAD Team
+ */
 public class CreateOrderDAO extends AbstractDAO<Order> {
   private static final String GET_DISH_PRICE_STATEMENT = "SELECT price FROM dishes WHERE id = ?";
   private static final String GET_PROMOTION_STATEMENT =
@@ -23,6 +28,12 @@ public class CreateOrderDAO extends AbstractDAO<Order> {
   private final Order order;
   private final Integer userId;
 
+  /**
+   * Creates a new DAO object.
+   *
+   * @param order the order to persist, including its dish line items.
+   * @param userId the identifier of the user placing the order.
+   */
   public CreateOrderDAO(final Order order, final Integer userId) {
     this.order = order;
     this.userId = userId;

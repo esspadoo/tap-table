@@ -9,6 +9,11 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO that retrieves all promotions from the database.
+ *
+ * @author SWAD Team
+ */
 public class GetPromotionsDAO extends AbstractDAO<ResourceList<Promotion>> {
 
   private static final String STATEMENT =

@@ -9,18 +9,41 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * Resource representing a request to change a user's role
+ *
+ * @author SWAD Team
+ */
 public class RoleChange extends AbstractResource {
 
   private final UserRole role;
 
+  /**
+   * Creates a new role-change resource.
+   *
+   * @param role the target role.
+   */
   public RoleChange(final UserRole role) {
     this.role = role;
   }
 
+  /**
+   * Returns the target role.
+   *
+   * @return the role.
+   */
   public UserRole getRole() {
     return role;
   }
 
+  /**
+   * Parses a {@link RoleChange} from its JSON representation.
+   *
+   * @param in the input stream containing the JSON payload.
+   * @return the parsed resource.
+   * @throws IOException if an I/O error occurs while reading the stream.
+   * @throws UnexpectedKeyException if the JSON contains an unrecognized field.
+   */
   public static RoleChange fromJSON(final InputStream in)
       throws IOException, UnexpectedKeyException {
     final JsonParser jp = JSON_FACTORY.createParser(in);

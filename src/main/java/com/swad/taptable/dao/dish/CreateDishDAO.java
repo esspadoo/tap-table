@@ -13,6 +13,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO that inserts a new dish together with its ingredient associations into the database.
+ *
+ * @author SWAD Team
+ */
 public class CreateDishDAO extends AbstractDAO<Dish> {
   private static final String DISHES_INSERT_STATEMENT =
       "INSERT INTO dishes(name, description, category_name, price, image, image_type)"
@@ -26,6 +31,11 @@ public class CreateDishDAO extends AbstractDAO<Dish> {
 
   private final Dish dish;
 
+  /**
+   * Creates a new DAO object.
+   *
+   * @param dish the dish to persist, including its ingredient identifiers and image data.
+   */
   public CreateDishDAO(final Dish dish) {
     this.dish = dish;
   }

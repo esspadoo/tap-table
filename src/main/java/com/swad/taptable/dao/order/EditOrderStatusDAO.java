@@ -11,6 +11,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO that updates the status of an existing order.
+ *
+ * @author SWAD Team
+ */
 public class EditOrderStatusDAO extends AbstractDAO<Order> {
   private static final String ORDER_UPDATE_STATEMENT =
       "UPDATE orders SET status = ?::order_status WHERE id = ? RETURNING *";
@@ -19,6 +24,12 @@ public class EditOrderStatusDAO extends AbstractDAO<Order> {
   private final Integer orderId;
   private final OrderStatus orderStatus;
 
+  /**
+   * Creates a new DAO object.
+   *
+   * @param orderId the identifier of the order to update.
+   * @param orderStatus the new status to set.
+   */
   public EditOrderStatusDAO(final Integer orderId, final OrderStatus orderStatus) {
     this.orderId = orderId;
     this.orderStatus = orderStatus;

@@ -5,11 +5,20 @@ import com.swad.taptable.dao.AbstractDAO;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-// Done
+/**
+ * DAO that deletes an order from the database by its identifier.
+ *
+ * @author SWAD Team
+ */
 public class DeleteOrderDAO extends AbstractDAO<Boolean> {
   private static final String STATEMENT = "DELETE FROM orders WHERE id = ?";
   private final int orderId;
 
+  /**
+   * Creates a new DAO object.
+   *
+   * @param orderId the identifier of the order to delete.
+   */
   public DeleteOrderDAO(int orderId) {
     this.orderId = orderId;
   }

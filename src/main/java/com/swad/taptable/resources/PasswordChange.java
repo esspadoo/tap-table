@@ -9,24 +9,52 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * Resource representing a request to change a user's password, containing the current password and
+ * the desired new password.
+ */
 public class PasswordChange extends AbstractResource {
 
   private final String currentPassword;
   private final String newPassword;
 
+  /**
+   * Creates a new password-change resource.
+   *
+   * @param currentPassword the user's current password.
+   * @param newPassword the desired new password.
+   */
   public PasswordChange(final String currentPassword, final String newPassword) {
     this.currentPassword = currentPassword;
     this.newPassword = newPassword;
   }
 
+  /**
+   * Returns the user's current password.
+   *
+   * @return the current password.
+   */
   public String getCurrentPassword() {
     return currentPassword;
   }
 
+  /**
+   * Returns the desired new password.
+   *
+   * @return the new password.
+   */
   public String getNewPassword() {
     return newPassword;
   }
 
+  /**
+   * Parses a {@link PasswordChange} from its JSON representation.
+   *
+   * @param in the input stream containing the JSON payload.
+   * @return the parsed resource.
+   * @throws IOException if an I/O error occurs while reading the stream.
+   * @throws UnexpectedKeyException if the JSON contains an unrecognised field.
+   */
   public static PasswordChange fromJSON(final InputStream in)
       throws IOException, UnexpectedKeyException {
     final JsonParser jp = JSON_FACTORY.createParser(in);
