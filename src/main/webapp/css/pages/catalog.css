@@ -1,31 +1,35 @@
-.dishes-header h1 {
+/* ─── Shared catalog layout (dishes + ingredients list pages) ─── */
+
+.catalog-header h1 {
   font-family: var(--font-display);
   font-size: var(--text-4xl);
   font-weight: 400;
   line-height: var(--leading-none);
 }
 
-.dishes-header p {
+.catalog-header p {
   margin-top: 0.35rem;
   font-size: var(--text-sm);
   color: rgb(var(--fg-muted));
 }
 
-.dishes-status {
+.catalog-status {
   font-size: var(--text-sm);
   color: rgb(var(--fg-muted));
   transition: color 0.2s ease;
 }
 
-.dishes-status.is-error {
+.catalog-status.is-error {
   color: rgb(var(--red-fg));
 }
 
-.dishes-grid {
+.catalog-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
   gap: 1rem;
 }
+
+/* ─── Dish card content ─── */
 
 .dish-category {
   font-size: var(--text-2xs);
@@ -55,4 +59,25 @@
   font-size: var(--text-base);
   font-weight: 500;
   color: rgb(var(--fg));
+}
+
+/* ─── Ingredient metadata (used in catalog cards and dish-detail ingredient chips) ─── */
+
+.ingredient-allergens {
+  font-size: var(--text-2xs);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgb(var(--amber));
+}
+
+.ingredient-frozen {
+  font-size: var(--text-sm);
+  color: rgb(var(--green));
+  font-style: italic;
+}
+
+.ingredient-id {
+  font-size: var(--text-2xs);
+  color: rgb(var(--fg-muted));
 }

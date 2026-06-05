@@ -1,6 +1,5 @@
 @import "./homepage.css";
-@import "./dishes.css";
-@import "./dish-detail.css";
-@import "./ingredients.css";
-@import "./ingredient-detail.css";
+@import "./catalog.css";
+@import "./detail.css";
 @import "./ingredients-manage.css";
+@import "./admin.css";
