@@ -1,5 +1,9 @@
 :root {
-  --placeholder-gradient: linear-gradient(135deg, rgb(38, 30, 20) 0%, rgb(55, 44, 30) 100%);
+  --placeholder-gradient: linear-gradient(
+    135deg,
+    rgb(38, 30, 20) 0%,
+    rgb(55, 44, 30) 100%
+  );
   --bg: 11, 9, 7;
   --bg-card: 22, 17, 9;
   --bg-input: 27, 22, 16;

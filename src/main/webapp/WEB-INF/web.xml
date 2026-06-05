@@ -167,14 +167,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>PasswordServlet</servlet-name>
-        <servlet-class>com.swad.taptable.servlet.PasswordServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>PasswordServlet</servlet-name>
-        <url-pattern>/dashboard/password</url-pattern>
-    </servlet-mapping>
-    <servlet>
         <servlet-name>ManageDishesPage</servlet-name>
         <jsp-file>/jsp/dashboard/dishes/index.jsp</jsp-file>
     </servlet>

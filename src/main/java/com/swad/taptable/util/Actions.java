@@ -130,6 +130,9 @@ public final class Actions {
   /** Serving the dashboard users page */
   public static final String VIEW_USERS = "VIEW_USERS";
 
+  /** Serving the ingredient management dashboard page */
+  public static final String VIEW_MANAGE_INGREDIENTS = "VIEW_MANAGE_INGREDIENTS";
+
   /** The retrieval of all users (admin) */
   public static final String GET_ALL_USERS = "GET_ALL_USERS";
 

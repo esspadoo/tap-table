@@ -5,7 +5,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>New Dish &mdash; TapTable</title>
+    <title>New Dish &dash; TapTable</title>
     <link rel="stylesheet" href="<c:url value='/css/global.css'/>" />
     <script src="<c:url value='/js/navbar.js'/>" type="module"></script>
     <script src="<c:url value='/js/dishes-create.js'/>" defer></script>
@@ -18,6 +18,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
         <nav id="breadcrumb" aria-label="Breadcrumb">
           <ol>
             <li><a href="<c:url value='/dashboard'/>">Dashboard</a></li>
+            <li><a href="<c:url value='/dashboard/dishes'/>">Dishes</a></li>
             <li><span aria-current="page">New Dish</span></li>
           </ol>
         </nav>
@@ -127,12 +128,16 @@ contentType="text/html" pageEncoding="UTF-8" %>
         </div>
 
         <div class="form-actions">
-          <a href="<c:url value='/dashboard'/>" class="btn btn-outline"
+          <a href="<c:url value='/dashboard/dishes'/>" class="btn btn-outline"
             >Cancel</a
           >
           <button type="submit" class="btn btn-primary">Create dish</button>
         </div>
       </form>
     </main>
+
+    <footer class="footer">
+      <p>&copy; 2026 TapTable &dash; University of Padua</p>
+    </footer>
   </body>
 </html>

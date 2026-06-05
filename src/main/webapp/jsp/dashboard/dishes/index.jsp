@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%@ page
 contentType="text/html" pageEncoding="UTF-8" %>
+<c:set var="activePage" value="dishes" />
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -13,57 +14,65 @@ contentType="text/html" pageEncoding="UTF-8" %>
   <body data-ctx="<c:out value='${pageContext.request.contextPath}'/>">
     <%@ include file="../../fragments/navbar.jsp" %>
 
-    <main id="dishes-manage-page">
-      <div class="header">
-        <div>
-          <h1>Dishes</h1>
-          <span id="dishes-count"></span>
-        </div>
-        <div>
-          <div class="search-wrap">
-            <span class="search-icon">&#x1F50E;</span>
-            <input
-              type="search"
-              id="dishes-search"
-              placeholder="Search&hellip;"
-              autocomplete="off"
-            />
+    <main id="dishes-manage-page" class="dash-page">
+      <%@ include file="../../fragments/dash-tabs.jsp" %>
+
+      <div class="dash-content">
+        <div class="header">
+          <div>
+            <h1>Dishes</h1>
+            <span id="dishes-count"></span>
           </div>
-          <a
-            href="<c:url value='/dashboard/dishes/create'/>"
-            class="btn btn-sm btn-primary"
-          >
-            &plus; New dish
-          </a>
+          <div>
+            <div class="search-wrap">
+              <span class="search-icon">&#x1F50E;</span>
+              <input
+                type="search"
+                id="dishes-search"
+                placeholder="Search&hellip;"
+                autocomplete="off"
+              />
+            </div>
+            <a
+              href="<c:url value='/dashboard/dishes/create'/>"
+              class="btn btn-sm btn-primary"
+            >
+              &plus; New dish
+            </a>
+          </div>
         </div>
-      </div>
 
-      <div id="alert-banner" class="alert alert-destructive is-hidden">
-        <span id="alert-message"></span>
-      </div>
+        <div id="alert-banner" class="alert alert-destructive is-hidden">
+          <span id="alert-message"></span>
+        </div>
 
-      <div class="data-table-wrap">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="dishes-tbody"></tbody>
-          <tfoot id="empty-state" class="is-hidden">
-            <tr>
-              <td colspan="3" class="dt-empty">
-                <p class="dt-empty-title">No dishes found</p>
-                <p class="dt-empty-hint">
-                  Try a different search or add a new dish.
-                </p>
-              </td>
-            </tr>
-          </tfoot>
-        </table>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="dishes-tbody"></tbody>
+            <tfoot id="empty-state" class="is-hidden">
+              <tr>
+                <td colspan="3" class="dt-empty">
+                  <p class="dt-empty-title">No dishes found</p>
+                  <p class="dt-empty-hint">
+                    Try a different search or add a new dish.
+                  </p>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
       </div>
     </main>
+
+    <footer class="footer">
+      <p>&copy; 2026 TapTable &dash; University of Padua</p>
+    </footer>
   </body>
 </html>

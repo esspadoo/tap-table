@@ -59,7 +59,7 @@ public class CreateOrderDAO extends AbstractDAO<Order> {
             if (promoRs.next()) {
               resolvedPromotionId = promoRs.getInt("id");
               float discount = promoRs.getFloat("discount");
-              total = total - (total * discount / 100f);
+              total -= (total * discount / 100f);
             } else {
               LOGGER.warn("Promotion code '%s' not found; ignoring.", promoCode);
             }

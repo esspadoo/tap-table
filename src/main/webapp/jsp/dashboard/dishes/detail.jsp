@@ -53,5 +53,9 @@ contentType="text/html" pageEncoding="UTF-8" %>
         <a id="edit-link" href="#" class="btn btn-primary">Edit</a>
       </div>
     </main>
+
+    <footer class="footer">
+      <p>&copy; 2026 TapTable &dash; University of Padua</p>
+    </footer>
   </body>
 </html>
