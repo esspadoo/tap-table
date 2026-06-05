@@ -30,6 +30,7 @@ It allows customers to browse the menu and place orders online, while giving man
    ```
 
 3. **Start all services**
+
    ```bash
    docker compose up
    ```
