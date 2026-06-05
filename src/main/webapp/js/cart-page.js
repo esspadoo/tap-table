@@ -209,7 +209,7 @@ async function checkout() {
 
   let userId;
   try {
-    const userRes = await fetch(ctx + "/rest/user", { credentials: "include" });
+    const userRes = await fetch(ctx + "/rest/user", { headers: { Accept: "application/json" } });
     if (userRes.status === 401) {
       showAlert("You must be logged in to place an order.");
       setTimeout(() => { window.location.href = ctx + "/login"; }, 1500);
@@ -239,7 +239,6 @@ async function checkout() {
   try {
     const res = await fetch(ctx + "/rest/order", {
       method: "POST",
-      credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",

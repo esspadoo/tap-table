@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const ctx = document.querySelector("main.dashboard").dataset.ctx;
+  const ctx = document.getElementById("admin-dashboard").dataset.ctx;
 
   document.querySelectorAll('[data-action="complete"]').forEach((btn) => {
     btn.addEventListener("click", async function () {
@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const res = await fetch(ctx + "/rest/order/" + orderId + "/COMPLETED", {
           method: "PUT",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
         });
         if (res.ok) {
           location.reload();
@@ -29,8 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
       this.disabled = true;
       this.textContent = "Cancelling...";
       try {
-        const res = await fetch(ctx + "/rest/order/" + orderId + "/", {
-          method: "DELETE",
+        const res = await fetch(ctx + "/rest/order/" + orderId + "/CANCELLED", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
         });
         if (res.ok) {
           location.reload();

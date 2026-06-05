@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const ctx = document.querySelector("main.dashboard").dataset.ctx;
+  const ctx = document.getElementById("staff-dashboard").dataset.ctx;
 
   const makeReviewBtn = (emoji, liked) => {
     const btn = document.createElement("button");
@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const res = await fetch(ctx + "/rest/order/" + orderId + "/COMPLETED", {
           method: "PUT",
-          credentials: "include",
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
@@ -27,14 +26,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (res.status === 200) {
           const tr = this.closest("tr");
-          const statusCell = tr.querySelector("td:nth-child(5)");
-          if (statusCell) {
-            const badge = document.createElement("span");
-            badge.className = "badge badge-completed";
-            badge.textContent = "Completed";
-            statusCell.replaceChildren(badge);
+          if (tr) {
+            const statusCell = tr.querySelector("td:nth-child(5)");
+            if (statusCell) {
+              const badge = document.createElement("span");
+              badge.className = "badge badge-completed";
+              badge.textContent = "Completed";
+              statusCell.replaceChildren(badge);
+            }
+            this.closest("td").replaceChildren();
+          } else {
+            location.reload();
           }
-          this.closest("td").replaceChildren();
           return;
         }
 

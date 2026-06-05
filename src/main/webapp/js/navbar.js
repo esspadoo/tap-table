@@ -25,7 +25,7 @@ burger.addEventListener("click", () => {
   navbar.classList.toggle("close");
 });
 
-fetch(ctx + "/rest/user")
+fetch(ctx + "/rest/user", { headers: { Accept: "application/json" } })
   .then((res) => {
     if (!res.ok) return;
     return res.json();
