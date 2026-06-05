@@ -47,7 +47,7 @@ public class ChangeUserRoleRR extends AbstractRR {
           new ChangeUserRoleDAO(targetUserId, payload.getRole()).access().getOutputParam();
 
       if (updated == null) {
-        LOGGER.warn("User %d not found or is an ADMIN — role change rejected.", targetUserId);
+        LOGGER.warn("User %d not found or is an ADMIN - role change rejected.", targetUserId);
         res.setStatus(HttpServletResponse.SC_NOT_FOUND);
         final Message m =
             new Message(

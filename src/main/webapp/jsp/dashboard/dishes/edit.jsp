@@ -106,7 +106,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
                 <div class="form-group">
                   <label for="category">Category</label>
                   <select id="category" name="category">
-                    <option value="">— select —</option>
+                    <option value="">- select -</option>
                   </select>
                 </div>
               </div>
@@ -127,8 +127,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
                   autocomplete="off"
                 />
               </div>
-              <div class="chip-group" id="ingredients-chip-group">
-              </div>
+              <div class="chip-group" id="ingredients-chip-group"></div>
             </div>
           </div>
         </div>

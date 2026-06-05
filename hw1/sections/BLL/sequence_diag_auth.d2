@@ -20,7 +20,7 @@ rest_login: {
 
   Client -> RestDispatcherServlet: "POST /rest/user/login\nJSON: { email, password }"
 
-  RestDispatcherServlet -> RestDispatcherServlet: "read auth_token cookie\n(attempt JWT verify — skipped if absent;\nroute is PUBLIC so role not required)"
+  RestDispatcherServlet -> RestDispatcherServlet: "read auth_token cookie\n(attempt JWT verify - skipped if absent;\nroute is PUBLIC so role not required)"
 
   RestDispatcherServlet -> Router: "dispatch(req, res)"
   Router -> AbstractRR: "serve()"

@@ -281,7 +281,7 @@
   color: rgb(var(--green));
 }
 
-/* Dish list — vertical display in order cards and compact table cells */
+/* Dish list - vertical display in order cards and compact table cells */
 
 .order-dish-list {
   display: flex;

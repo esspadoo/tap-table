@@ -36,9 +36,38 @@ contentType="text/html" pageEncoding="UTF-8" %>
           </table>
         </div>
 
+        <div class="promo-section">
+          <h2 class="promo-title">Promotion Code</h2>
+          <div class="promo-input-row">
+            <input
+              type="text"
+              id="promo-input"
+              class="promo-input"
+              placeholder="Enter code&hellip;"
+              autocomplete="off"
+              spellcheck="false"
+              maxlength="20"
+            />
+            <button id="promo-apply-btn" class="btn btn-secondary btn-sm">Apply</button>
+            <button id="promo-remove-btn" class="btn btn-outline btn-sm" hidden>Remove</button>
+          </div>
+          <p id="promo-feedback" class="promo-feedback" hidden></p>
+          <div id="promo-applied" class="promo-applied" hidden>
+            <span class="promo-applied-label">Applied:</span>
+            <span id="promo-applied-code" class="promo-applied-code"></span>
+            <span class="promo-applied-sep">&mdash;</span>
+            <span id="promo-applied-discount" class="promo-applied-discount"></span> off
+          </div>
+        </div>
+
         <div class="cart-footer">
-          <div class="cart-total">
-            Total: <strong id="cart-total-price">0,00 €</strong>
+          <div class="cart-total-block">
+            <div id="promo-original-row" class="cart-original-total" hidden>
+              Subtotal: <span id="promo-original-price"></span>
+            </div>
+            <div class="cart-total">
+              Total: <strong id="cart-total-price">0,00 €</strong>
+            </div>
           </div>
           <div class="cart-actions">
             <button id="clear-cart-btn" class="btn btn-outline btn-sm">Clear cart</button>

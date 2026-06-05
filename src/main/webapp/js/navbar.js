@@ -67,12 +67,12 @@ fetch(ctx + "/rest/user")
             location.href = ctx + "/";
           } else {
             signOut.disabled = false;
-            signOut.textContent = "Sign out failed — try again";
+            signOut.textContent = "Sign out failed - try again";
           }
         })
         .catch(() => {
           signOut.disabled = false;
-          signOut.textContent = "Sign out failed — try again";
+          signOut.textContent = "Sign out failed - try again";
         });
     });
     actions.appendChild(signOut);

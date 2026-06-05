@@ -1,4 +1,5 @@
 const CART_KEY = "cart";
+const PROMO_KEY = "cart_promotion";
 
 function getCart() {
   try {
@@ -51,6 +52,7 @@ function decreaseQuantity(dishId) {
 
 function clearCart() {
   localStorage.removeItem(CART_KEY);
+  localStorage.removeItem(PROMO_KEY);
 }
 
 function getTotalItems() {
@@ -59,6 +61,31 @@ function getTotalItems() {
 
 function getTotalPrice() {
   return getCart().reduce((sum, item) => sum + item.price * item.quantity, 0);
+}
+
+// ── Promotion ────────────────────────────────────────────────
+
+function getPromotion() {
+  try {
+    return JSON.parse(localStorage.getItem(PROMO_KEY)) || null;
+  } catch {
+    return null;
+  }
+}
+
+function savePromotion(promo) {
+  localStorage.setItem(PROMO_KEY, JSON.stringify(promo));
+}
+
+function removePromotion() {
+  localStorage.removeItem(PROMO_KEY);
+}
+
+function getFinalPrice() {
+  const base = getTotalPrice();
+  const promo = getPromotion();
+  if (!promo) return base;
+  return base - (base * promo.discount) / 100;
 }
 
 export {
@@ -71,4 +98,8 @@ export {
   clearCart,
   getTotalItems,
   getTotalPrice,
+  getPromotion,
+  savePromotion,
+  removePromotion,
+  getFinalPrice,
 };

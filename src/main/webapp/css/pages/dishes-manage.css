@@ -74,7 +74,7 @@
   width: auto;
 }
 
-/* col 2: Category — hidden on mobile, visible on desktop */
+/* col 2: Category - hidden on mobile, visible on desktop */
 #dishes-manage-page .data-table tr th:nth-child(2),
 #dishes-manage-page .data-table tr td:nth-child(2) {
   display: none;
@@ -88,7 +88,7 @@
   }
 }
 
-/* col 3: Actions — always visible */
+/* col 3: Actions - always visible */
 #dishes-manage-page .data-table tr th:nth-child(3),
 #dishes-manage-page .data-table tr td:nth-child(3) {
   width: 1%;

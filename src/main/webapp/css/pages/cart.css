@@ -76,3 +76,109 @@
   color: rgb(110, 195, 110);
   border: 1px solid rgba(110, 195, 110, 0.2);
 }
+
+/* ─── Promotion section ──────────────────────────────────── */
+
+.promo-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(var(--border), var(--border-transparency));
+}
+
+.promo-title {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgb(var(--fg-muted));
+  letter-spacing: 0.02em;
+}
+
+.promo-input-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.promo-input {
+  flex: 1;
+  min-width: 0;
+  max-width: 16rem;
+  background: rgb(var(--bg-input));
+  border: 1px solid rgba(var(--border), var(--border-transparency));
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: rgb(var(--fg));
+  padding: 0.3rem 0.6rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.promo-input:focus {
+  border-color: rgba(var(--amber), 0.4);
+}
+
+.promo-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.promo-input::placeholder {
+  color: rgb(var(--fg-muted));
+}
+
+.promo-feedback {
+  font-size: 0.82rem;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.promo-feedback-error {
+  color: #e07070;
+}
+
+.promo-feedback-success {
+  color: #6ecf8a;
+}
+
+.promo-applied {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+}
+
+.promo-applied-label {
+  color: rgb(var(--fg-muted));
+}
+
+.promo-applied-code {
+  font-weight: 600;
+  color: rgb(var(--amber));
+  letter-spacing: 0.05em;
+}
+
+.promo-applied-sep {
+  color: rgb(var(--fg-muted));
+}
+
+.promo-applied-discount {
+  font-weight: 600;
+  color: #6ecf8a;
+}
+
+/* ─── Total block with optional subtotal row ─────────────── */
+
+.cart-total-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.cart-original-total {
+  font-size: 0.85rem;
+  color: rgb(var(--fg-muted));
+  text-decoration: line-through;
+}

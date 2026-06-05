@@ -5,6 +5,10 @@ import {
   decreaseQuantity,
   clearCart,
   getTotalPrice,
+  getPromotion,
+  savePromotion,
+  removePromotion,
+  getFinalPrice,
 } from "./cart.js";
 
 const ctx = document.querySelector(".navbar")?.dataset.ctx || "";
@@ -18,6 +22,17 @@ const alertEl = document.getElementById("cart-alert");
 const checkoutBtn = document.getElementById("checkout-btn");
 const clearBtn = document.getElementById("clear-cart-btn");
 
+// Promotion elements
+const promoInput = document.getElementById("promo-input");
+const promoApplyBtn = document.getElementById("promo-apply-btn");
+const promoRemoveBtn = document.getElementById("promo-remove-btn");
+const promoFeedback = document.getElementById("promo-feedback");
+const promoApplied = document.getElementById("promo-applied");
+const promoAppliedCode = document.getElementById("promo-applied-code");
+const promoAppliedDiscount = document.getElementById("promo-applied-discount");
+const promoOriginalRow = document.getElementById("promo-original-row");
+const promoOriginalPrice = document.getElementById("promo-original-price");
+
 function showAlert(message, isError = true) {
   alertEl.textContent = message;
   alertEl.className = "alert " + (isError ? "alert-destructive" : "alert-success");
@@ -26,6 +41,34 @@ function showAlert(message, isError = true) {
 
 function hideAlert() {
   alertEl.hidden = true;
+}
+
+function setPromoFeedback(message, isError = true) {
+  promoFeedback.textContent = message;
+  promoFeedback.className = "promo-feedback " + (isError ? "promo-feedback-error" : "promo-feedback-success");
+  promoFeedback.hidden = !message;
+}
+
+function renderPromoSection() {
+  const promo = getPromotion();
+
+  if (promo) {
+    promoInput.value = "";
+    promoInput.disabled = true;
+    promoApplyBtn.disabled = true;
+    promoApplied.hidden = false;
+    promoAppliedCode.textContent = promo.code;
+    promoAppliedDiscount.textContent = promo.discount + "%";
+    promoRemoveBtn.hidden = false;
+    promoOriginalRow.hidden = false;
+    promoOriginalPrice.textContent = money.format(getTotalPrice());
+  } else {
+    promoInput.disabled = false;
+    promoApplyBtn.disabled = false;
+    promoApplied.hidden = true;
+    promoRemoveBtn.hidden = true;
+    promoOriginalRow.hidden = true;
+  }
 }
 
 function render() {
@@ -83,8 +126,79 @@ function render() {
     tbody.appendChild(tr);
   }
 
-  totalEl.textContent = money.format(getTotalPrice());
+  renderPromoSection();
+  totalEl.textContent = money.format(getFinalPrice());
 }
+
+// ── Promotion apply ──────────────────────────────────────────
+
+async function applyPromotion() {
+  const code = promoInput.value.trim().toUpperCase();
+  if (!code) {
+    setPromoFeedback("Enter a promotion code.");
+    return;
+  }
+
+  promoApplyBtn.disabled = true;
+  promoApplyBtn.textContent = "Checking…";
+  setPromoFeedback("");
+
+  try {
+    // 1. Validate code exists
+    const promoRes = await fetch(ctx + "/rest/promotion/" + encodeURIComponent(code), {
+      headers: { Accept: "application/json" },
+    });
+
+    if (promoRes.status === 404) {
+      setPromoFeedback("Promotion code not found.");
+      return;
+    }
+    if (!promoRes.ok) {
+      setPromoFeedback("Could not validate promotion code.");
+      return;
+    }
+
+    const promo = await promoRes.json();
+
+    // 2. Check if already used
+    const usageRes = await fetch(ctx + "/rest/promotion/" + encodeURIComponent(code) + "/usage", {
+      headers: { Accept: "application/json" },
+    });
+
+    if (usageRes.ok) {
+      const usage = await usageRes.json();
+      if (usage.is_already_used) {
+        setPromoFeedback("This promotion code has already been used.");
+        return;
+      }
+    }
+
+    // 3. Apply
+    savePromotion({ code: promo.code, discount: promo.discount, description: promo.description || null });
+    setPromoFeedback("Promotion applied!", false);
+    render();
+  } catch {
+    setPromoFeedback("Could not validate promotion code.");
+  } finally {
+    promoApplyBtn.disabled = false;
+    promoApplyBtn.textContent = "Apply";
+  }
+}
+
+promoApplyBtn.addEventListener("click", applyPromotion);
+
+promoInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") applyPromotion();
+});
+
+promoRemoveBtn.addEventListener("click", () => {
+  removePromotion();
+  promoInput.value = "";
+  setPromoFeedback("");
+  render();
+});
+
+// ── Checkout ─────────────────────────────────────────────────
 
 async function checkout() {
   const cart = getCart();
@@ -110,10 +224,11 @@ async function checkout() {
     return;
   }
 
+  const promo = getPromotion();
   const payload = {
     status: "PENDING",
     user_id: userId,
-    promotion_id: null,
+    promotion_code: promo ? promo.code : null,
     dishes: cart.map((item) => ({
       dish_id: item.dishId,
       quantity: item.quantity,

@@ -43,14 +43,15 @@ contentType="text/html" pageEncoding="UTF-8" %>
                   name="image"
                   accept="image/webp,image/png,image/jpeg"
                 />
-                <img
-                  id="image-preview"
-                  alt="Dish preview"
-                />
+                <img id="image-preview" alt="Dish preview" />
                 <div class="dropzone-content">
                   <div class="dropzone-icon">&#x1F5BC;</div>
-                  <p class="dropzone-hint">Drop image here or click to upload</p>
-                  <p class="dropzone-formats">WebP &middot; PNG &middot; JPEG</p>
+                  <p class="dropzone-hint">
+                    Drop image here or click to upload
+                  </p>
+                  <p class="dropzone-formats">
+                    WebP &middot; PNG &middot; JPEG
+                  </p>
                 </div>
               </div>
             </div>
@@ -99,7 +100,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
                 <div class="form-group">
                   <label for="category">Category</label>
                   <select id="category" name="category">
-                    <option value="">— select —</option>
+                    <option value="">- select -</option>
                   </select>
                 </div>
               </div>
@@ -120,8 +121,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
                   autocomplete="off"
                 />
               </div>
-              <div class="chip-group" id="ingredients-chip-group">
-              </div>
+              <div class="chip-group" id="ingredients-chip-group"></div>
             </div>
           </div>
         </div>
@@ -130,9 +130,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
           <a href="<c:url value='/dashboard'/>" class="btn btn-outline"
             >Cancel</a
           >
-          <button type="submit" class="btn btn-primary">
-            Create dish
-          </button>
+          <button type="submit" class="btn btn-primary">Create dish</button>
         </div>
       </form>
     </main>

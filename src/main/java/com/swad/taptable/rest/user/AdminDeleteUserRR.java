@@ -24,7 +24,7 @@ public class AdminDeleteUserRR extends AbstractRR {
       final boolean deleted = new AdminDeleteUserDAO(targetUserId).access().getOutputParam();
 
       if (!deleted) {
-        LOGGER.warn("User %d not found or is an ADMIN — delete rejected.", targetUserId);
+        LOGGER.warn("User %d not found or is an ADMIN - delete rejected.", targetUserId);
         res.setStatus(HttpServletResponse.SC_NOT_FOUND);
         final Message m =
             new Message(
