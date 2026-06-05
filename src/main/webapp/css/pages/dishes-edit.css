@@ -1,74 +1,3 @@
-
-
-#edit-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-#edit-form .form-layout {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-@media (min-width: 720px) {
-  #edit-form .form-layout {
-    flex-direction: row;
-    align-items: stretch;
-  }
-
-  #edit-form .form-layout > .form-card {
-    flex: 1;
-  }
-}
-
-#edit-form .form-card {
-  background: rgb(var(--bg-card));
-  border: 1px solid rgba(var(--border), var(--border-transparency));
-  border-radius: var(--radius);
-  padding: 1.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-#edit-form .form-card-image {
-  min-height: 16rem;
-}
-
-#edit-form .form-card-image > .form-section {
-  flex: 1;
-}
-
-#edit-form .form-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-#edit-form .form-section > h2 {
-  font-size: 1.25rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-}
-
-#edit-form .section-hint {
-  font-size: 0.85rem;
-  color: rgb(var(--fg-muted));
-}
-
-#edit-form .form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-}
-
-#edit-form .form-actions .btn {
-  width: auto;
-  padding: 0.65rem 1.75rem;
-}
-
 /* Image dropzone */
 
 #dish-edit-page #image-dropzone {
@@ -186,7 +115,6 @@
 .skeleton-mid  { width: 40%; animation-delay: 0.2s; }
 .skeleton-narrow { width: 25%; animation-delay: 0.4s; }
 
-/* Hide form layout while loading */
 #edit-form.loading .form-layout,
 #edit-form.loading .form-actions {
   display: none;

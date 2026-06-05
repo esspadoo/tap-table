@@ -14,7 +14,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
     <%@ include file="../../fragments/navbar.jsp" %>
 
     <main id="dish-detail-page">
-      <div class="dashboard-header">
+      <div class="dash-page-header">
         <nav id="breadcrumb" aria-label="Breadcrumb">
           <ol>
             <li><a href="<c:url value='/dashboard'/>">Dashboard</a></li>
