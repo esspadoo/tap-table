@@ -74,7 +74,6 @@
 .ingredient-frozen {
   font-size: var(--text-sm);
   color: rgb(var(--green));
-  font-style: italic;
 }
 
 .ingredient-id {

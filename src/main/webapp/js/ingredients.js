@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const ctx = document.querySelector(".navbar")?.dataset.ctx || "";
+  const ctx = document.querySelector(".ingredients-page").dataset.ctx;
   const grid = document.getElementById("ingredients-grid");
   const status = document.getElementById("ingredients-status");
   const searchInput = document.getElementById("ingredients-search");

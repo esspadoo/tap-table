@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const ctx = document.querySelector(".navbar")?.dataset.ctx || "";
+  const ctx = document.getElementById("dish-detail-page").dataset.ctx;
   const img = document.getElementById("dish-image");
   const placeholder = document.getElementById("dish-image-placeholder");
   const category = document.getElementById("dish-category");
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (ing.is_frozen === true) {
         const frozenSpan = document.createElement("span");
         frozenSpan.className = "ingredient-frozen";
-        frozenSpan.innerHTML = "❄";
+        frozenSpan.textContent = "\u2744";
         li.appendChild(frozenSpan);
       }
 

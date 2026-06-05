@@ -7,13 +7,13 @@ contentType="text/html" pageEncoding="UTF-8" %>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cart - TapTable</title>
     <link rel="stylesheet" href="<c:url value='/css/global.css'/>" />
-    <script src="<c:url value='/js/navbar.js'/>" type="module"></script>
-    <script src="<c:url value='/js/cart-page.js'/>" type="module"></script>
+    <script src="<c:url value='/js/navbar.js'/>" defer></script>
+    <script src="<c:url value='/js/cart-page.js'/>" defer></script>
   </head>
   <body>
     <%@ include file="fragments/navbar.jsp" %>
 
-    <main class="cart-page">
+    <main class="cart-page" data-ctx="<c:out value='${pageContext.request.contextPath}'/>">
       <h1>Your Cart</h1>
 
       <div id="cart-empty" class="cart-empty" hidden>

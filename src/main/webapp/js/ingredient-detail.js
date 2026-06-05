@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const ctx = document.querySelector(".navbar")?.dataset.ctx || "";
+  const ctx = document.getElementById("ingredient-detail-page").dataset.ctx;
   const img = document.getElementById("ingredient-image");
   const placeholder = document.getElementById("ingredient-image-placeholder");
   const name = document.getElementById("ingredient-name");

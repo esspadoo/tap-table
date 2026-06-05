@@ -1,13 +1,42 @@
-import { addDish, getTotalItems } from "./cart.js";
-
-function syncCartBadge() {
-  const badge = document.getElementById("cart-count");
-  if (badge) badge.textContent = getTotalItems();
-}
-
 document.addEventListener("DOMContentLoaded", () => {
+  const CART_KEY = "cart";
+
+  function getCart() {
+    try {
+      return JSON.parse(localStorage.getItem(CART_KEY)) || [];
+    } catch {
+      return [];
+    }
+  }
+  function saveCart(cart) {
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  }
+  function addDish(dish) {
+    const cart = getCart();
+    const existing = cart.find((item) => item.dishId === dish.dishId);
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      cart.push({
+        dishId: dish.dishId,
+        name: dish.name,
+        price: dish.price,
+        quantity: 1,
+      });
+    }
+    saveCart(cart);
+  }
+  function getTotalItems() {
+    return getCart().reduce((sum, item) => sum + item.quantity, 0);
+  }
+
+  function syncCartBadge() {
+    const badge = document.getElementById("cart-count");
+    if (badge) badge.textContent = getTotalItems();
+  }
+
   syncCartBadge();
-  const ctx = document.querySelector(".navbar")?.dataset.ctx || "";
+  const ctx = document.querySelector(".dishes-page").dataset.ctx;
   const grid = document.querySelector("[data-grid]");
   const status = document.querySelector("[data-status]");
   const searchInput = document.getElementById("dishes-search");
@@ -97,7 +126,9 @@ document.addEventListener("DOMContentLoaded", () => {
       addDish({ dishId: dish.id, name: dish.name, price: dish.price });
       syncCartBadge();
       addBtn.textContent = "Added!";
-      setTimeout(() => { addBtn.textContent = "Add to cart"; }, 1200);
+      setTimeout(() => {
+        addBtn.textContent = "Add to cart";
+      }, 1200);
     });
     article.appendChild(addBtn);
 

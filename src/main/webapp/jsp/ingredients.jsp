@@ -7,13 +7,13 @@ contentType="text/html" pageEncoding="UTF-8" %>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ingredients &dash; TapTable</title>
     <link rel="stylesheet" href="<c:url value='/css/global.css'/>" />
-    <script src="<c:url value='/js/navbar.js'/>" type="module"></script>
+    <script src="<c:url value='/js/navbar.js'/>" defer></script>
     <script src="<c:url value='/js/ingredients.js'/>" defer></script>
   </head>
   <body>
     <%@ include file="fragments/navbar.jsp" %>
 
-    <main class="ingredients-page">
+    <main class="ingredients-page" data-ctx="<c:out value='${pageContext.request.contextPath}'/>">
       <div class="header">
         <div>
           <h1>Ingredients</h1>

@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (ingredient.is_frozen) {
       const frozenEl = document.createElement("span");
       frozenEl.className = "frozen-indicator";
-      frozenEl.textContent = "❄ Frozen";
+      frozenEl.textContent = "\u2744 Frozen";
       nameInfo.appendChild(frozenEl);
     }
 
