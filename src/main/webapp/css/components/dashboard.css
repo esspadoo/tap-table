@@ -1,25 +1,3 @@
-.dashboard {
-  max-width: 72rem;
-  margin: 0 auto;
-  padding: 2.5rem 1.5rem 4rem;
-  display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
-}
-
-.dashboard-header h1 {
-  font-family: var(--font-display);
-  font-size: var(--text-4xl);
-  font-weight: 400;
-  letter-spacing: -0.01em;
-}
-
-.dashboard-header p {
-  font-size: var(--text-base);
-  color: rgb(var(--fg-muted));
-  margin-top: 0.25rem;
-}
-
 .dashboard-section {
   background: rgb(var(--bg-card));
   border: 1px solid rgba(var(--border), var(--border-transparency));
@@ -90,7 +68,6 @@
   flex: 1;
 }
 
-
 .order-card-footer {
   display: flex;
   align-items: center;
@@ -111,9 +88,21 @@
   font-style: italic;
 }
 
+/* Review states */
+
 .dish-eval {
   margin-left: auto;
+  display: flex;
+  align-items: center;
   font-size: var(--text-base);
+}
+
+.dish-eval-liked {
+  color: rgb(var(--green));
+}
+
+.dish-eval-disliked {
+  color: rgb(var(--fg-muted));
 }
 
 .orders-table-wrap {
@@ -150,4 +139,200 @@
 
 .orders-table tbody tr:hover td {
   background: rgba(var(--fg), 0.02);
+}
+
+/* Review buttons */
+
+.review-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.review-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  background: rgb(var(--bg-input));
+  border: 1px solid rgba(var(--border), var(--border-transparency));
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  line-height: 1;
+  cursor: pointer;
+  font-family: inherit;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+
+.review-btn:hover:not(:disabled) {
+  background: rgba(var(--amber), 0.1);
+  border-color: rgba(var(--amber), 0.35);
+}
+
+.review-btn:active:not(:disabled) {
+  background: rgba(var(--amber), 0.18);
+}
+
+.review-btn:focus-visible {
+  outline: 2px solid rgb(var(--amber));
+  outline-offset: 2px;
+}
+
+.review-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ─── Role-based dashboard layout ─────────────────────────────────── */
+
+/*
+ * .dash-page  - two-column shell (sidebar + content) used by the
+ *               customer dashboard and all /dashboard/* sub-pages.
+ * Staff/admin dashboards use the existing .dashboard single-column layout.
+ */
+
+.dash-page {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Tab navigation - visual language identical to .navbar .menu .items a */
+
+.dash-sidebar {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  border-bottom: 1px solid rgba(var(--border), var(--border-transparency));
+}
+
+.dash-sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.dash-sidebar a {
+  display: block;
+  white-space: nowrap;
+  font-size: var(--text-base);
+  font-weight: 400;
+  color: rgb(var(--fg-muted));
+  text-decoration: none;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s;
+}
+
+.dash-sidebar a:hover {
+  color: rgb(var(--fg));
+}
+
+.dash-sidebar a.active {
+  color: rgb(var(--amber));
+  font-weight: 500;
+  border-bottom-color: rgb(var(--amber));
+}
+
+/* Content */
+
+.dash-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.dash-page-header h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.dash-page-header p {
+  font-size: var(--text-base);
+  color: rgb(var(--fg-muted));
+  margin-top: 0.25rem;
+}
+
+/* Password strength rule */
+
+.password-rules {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.2rem;
+}
+
+.password-rule {
+  font-size: var(--text-sm);
+  color: rgb(var(--fg-muted));
+}
+
+.password-rule.met {
+  color: rgb(var(--green));
+}
+
+/* Dish list — vertical display in order cards and compact table cells */
+
+.order-dish-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.order-dish-line {
+  font-size: var(--text-sm);
+  color: rgb(var(--fg));
+  line-height: 1.4;
+}
+
+.order-dish-overflow {
+  font-size: var(--text-sm);
+  color: rgb(var(--fg-muted));
+}
+
+/* Profile read-only fields */
+
+.profile-fields {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid rgba(var(--border), var(--border-transparency));
+}
+
+.profile-field:first-child {
+  padding-top: 0;
+}
+
+.profile-field:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.profile-field-label {
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgb(var(--fg-muted));
+}
+
+.profile-field-value {
+  font-size: var(--text-base);
+  color: rgb(var(--fg));
 }

@@ -54,6 +54,24 @@
   border-color: rgba(var(--red), 0.2);
 }
 
+.badge-admin {
+  background: rgba(var(--ice), 0.12);
+  color: rgb(var(--ice));
+  border-color: rgba(var(--ice), 0.25);
+}
+
+.badge-staff {
+  background: rgba(var(--amber), 0.12);
+  color: rgb(var(--amber));
+  border-color: rgba(var(--amber), 0.25);
+}
+
+.badge-customer {
+  background: rgba(var(--fg), 0.05);
+  color: rgb(var(--fg-muted));
+  border-color: rgba(var(--border), var(--border-transparency));
+}
+
 .footer {
   border-top: 1px solid rgba(var(--border), var(--border-transparency));
   padding: 1.5rem 2rem;

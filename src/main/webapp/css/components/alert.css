@@ -12,3 +12,9 @@
   color: rgb(var(--red));
   border: 1px solid rgba(var(--red), 0.2);
 }
+
+.alert-success {
+  background: rgba(var(--green), 0.1);
+  color: rgb(var(--green));
+  border: 1px solid rgba(var(--green), 0.2);
+}

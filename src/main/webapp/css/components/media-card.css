@@ -30,7 +30,7 @@
   position: relative;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background: linear-gradient(135deg, rgb(38, 30, 20) 0%, rgb(55, 44, 30) 100%);
+  background: var(--placeholder-gradient);
 }
 
 .media-card-media img,
@@ -46,7 +46,7 @@
 }
 
 .media-card-placeholder {
-  background: linear-gradient(135deg, rgb(38, 30, 20) 0%, rgb(55, 44, 30) 100%);
+  background: var(--placeholder-gradient);
 }
 
 .media-card-body {
