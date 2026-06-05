@@ -120,4 +120,22 @@ public final class Actions {
 
   /** Serving the create ingredient page */
   public static final String VIEW_CREATE_INGREDIENT = "VIEW_CREATE_INGREDIENT";
+
+  /** Serving the dashboard profile page */
+  public static final String VIEW_PROFILE = "VIEW_PROFILE";
+
+  /** Serving the dashboard password page */
+  public static final String VIEW_PASSWORD = "VIEW_PASSWORD";
+
+  /** Serving the dashboard users page */
+  public static final String VIEW_USERS = "VIEW_USERS";
+
+  /** The retrieval of all users (admin) */
+  public static final String GET_ALL_USERS = "GET_ALL_USERS";
+
+  /** The change of a user's role (admin) */
+  public static final String CHANGE_USER_ROLE = "CHANGE_USER_ROLE";
+
+  /** The deletion of a user by an admin */
+  public static final String ADMIN_DELETE_USER = "ADMIN_DELETE_USER";
 }

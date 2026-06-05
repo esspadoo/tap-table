@@ -120,4 +120,31 @@
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UsersServlet</servlet-name>
+        <servlet-class>com.swad.taptable.servlet.UsersServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UsersServlet</servlet-name>
+        <url-pattern>/dashboard/users</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ProfileServlet</servlet-name>
+        <servlet-class>com.swad.taptable.servlet.ProfileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProfileServlet</servlet-name>
+        <url-pattern>/dashboard/profile</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PasswordServlet</servlet-name>
+        <servlet-class>com.swad.taptable.servlet.PasswordServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PasswordServlet</servlet-name>
+        <url-pattern>/dashboard/password</url-pattern>
+    </servlet-mapping>
 </web-app>

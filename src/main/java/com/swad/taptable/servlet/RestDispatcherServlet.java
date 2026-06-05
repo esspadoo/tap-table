@@ -26,13 +26,18 @@ import com.swad.taptable.rest.order.GetAllOrdersRR;
 import com.swad.taptable.rest.order.GetOrderRR;
 import com.swad.taptable.rest.order.GetUserOrdersRR;
 import com.swad.taptable.rest.order.NewOrderRR;
+import com.swad.taptable.rest.order.SubmitReviewRR;
 import com.swad.taptable.rest.promotion.CheckPromotionRR;
 import com.swad.taptable.rest.promotion.CheckPromotionUsageRR;
 import com.swad.taptable.rest.promotion.GetPromotionsRR;
 import com.swad.taptable.rest.promotion.NewPromotionRR;
+import com.swad.taptable.rest.user.AdminDeleteUserRR;
 import com.swad.taptable.rest.user.AuthenticateUserRR;
+import com.swad.taptable.rest.user.ChangePasswordRR;
+import com.swad.taptable.rest.user.ChangeUserRoleRR;
 import com.swad.taptable.rest.user.DeleteUserRR;
 import com.swad.taptable.rest.user.EditUserRR;
+import com.swad.taptable.rest.user.GetAllUsersRR;
 import com.swad.taptable.rest.user.GetUserRR;
 import com.swad.taptable.rest.user.LogoutRR;
 import com.swad.taptable.rest.user.RegisterUserRR;
@@ -87,6 +92,24 @@ public final class RestDispatcherServlet extends HttpServlet {
               "/rest/user",
               (req, res) -> new DeleteUserRR(req, res).serve(),
               RouteAccess.AUTHENTICATED)
+          .put(
+              "/rest/user/password",
+              (req, res) -> new ChangePasswordRR(req, res).serve(),
+              RouteAccess.AUTHENTICATED)
+
+          // admin user management
+          .get(
+              "/rest/users",
+              (req, res) -> new GetAllUsersRR(req, res).serve(),
+              RouteAccess.ADMIN_ONLY)
+          .put(
+              "/rest/users/{user_id}/role",
+              (req, res) -> new ChangeUserRoleRR(req, res).serve(),
+              RouteAccess.ADMIN_ONLY)
+          .delete(
+              "/rest/users/{user_id}",
+              (req, res) -> new AdminDeleteUserRR(req, res).serve(),
+              RouteAccess.ADMIN_ONLY)
 
           // category
           .post(
@@ -176,6 +199,10 @@ public final class RestDispatcherServlet extends HttpServlet {
               "/rest/order/{order_id}/",
               (req, res) -> new DeleteOrderRR(req, res).serve(),
               RouteAccess.ADMIN_ONLY)
+          .post(
+              "/rest/order/{order_id}/review",
+              (req, res) -> new SubmitReviewRR(req, res).serve(),
+              RouteAccess.AUTHENTICATED)
 
           // promotion
           .post(
