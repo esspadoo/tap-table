@@ -62,11 +62,6 @@ public class ChangeUserRoleRR extends AbstractRR {
       res.setStatus(HttpServletResponse.SC_OK);
       updated.toJSON(res.getOutputStream());
 
-    } catch (final IllegalArgumentException e) {
-      res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      final Message m =
-          new Message("Invalid role value.", ErrorCodes.INVALID_INPUT_PARAMETER, e.getMessage());
-      m.toJSON(res.getOutputStream());
     } catch (final UnexpectedKeyException e) {
       res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       final Message m =
@@ -82,6 +77,11 @@ public class ChangeUserRoleRR extends AbstractRR {
               "Invalid user ID: " + req.getAttribute("user_id"),
               ErrorCodes.INVALID_INPUT_PARAMETER,
               e.getMessage());
+      m.toJSON(res.getOutputStream());
+    } catch (final IllegalArgumentException e) {
+      res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      final Message m =
+          new Message("Invalid role value.", ErrorCodes.INVALID_INPUT_PARAMETER, e.getMessage());
       m.toJSON(res.getOutputStream());
     } catch (final SQLException e) {
       LOGGER.error("Database error while changing user role: %s", e.getMessage());
