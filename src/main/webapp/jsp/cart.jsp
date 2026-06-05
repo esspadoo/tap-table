@@ -55,7 +55,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
           <div id="promo-applied" class="promo-applied" hidden>
             <span class="promo-applied-label">Applied:</span>
             <span id="promo-applied-code" class="promo-applied-code"></span>
-            <span class="promo-applied-sep">&mdash;</span>
+            <span class="promo-applied-sep">&dash;</span>
             <span id="promo-applied-discount" class="promo-applied-discount"></span> off
           </div>
         </div>

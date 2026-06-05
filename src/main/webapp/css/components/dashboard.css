@@ -218,7 +218,7 @@
   font-weight: 400;
   color: rgb(var(--fg-muted));
   text-decoration: none;
-  padding: 0.4rem 0.5rem;
+  padding: 0.4rem 0.4rem;
   border-bottom: 2px solid transparent;
   transition: color 0.15s;
 }

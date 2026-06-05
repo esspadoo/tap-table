@@ -30,43 +30,6 @@
   gap: 0.6rem;
 }
 
-#ingredients-manage-page .search-wrap {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex: 1;
-  background: rgb(var(--bg-input));
-  border: 1px solid rgba(var(--border), var(--border-transparency));
-  border-radius: var(--radius);
-  padding: 0.5rem 0.8rem;
-  transition: border-color 0.15s;
-}
-
-#ingredients-manage-page .search-wrap:focus-within {
-  border-color: rgba(var(--amber), 0.4);
-}
-
-#ingredients-manage-page .search-icon {
-  font-size: 0.78rem;
-  line-height: var(--leading-none);
-  color: rgb(var(--fg-muted));
-  flex-shrink: 0;
-  pointer-events: none;
-}
-
-#ingredients-manage-page #ingredients-search {
-  width: 100%;
-  background: transparent;
-  border: none;
-  font-family: inherit;
-  font-size: var(--text-sm);
-  color: rgb(var(--fg));
-  outline: none;
-}
-
-#ingredients-manage-page #ingredients-search::placeholder {
-  color: rgb(var(--fg-muted));
-}
 
 #ingredients-manage-page .data-table tr th:nth-child(1),
 #ingredients-manage-page .data-table tr td:nth-child(1) {
@@ -163,20 +126,6 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-  }
-}
-
-@media (min-width: 720px) {
-  #ingredients-manage-page .search-wrap {
-    flex: unset;
-    width: 13rem;
-    transition:
-      border-color 0.15s,
-      width 0.2s;
-  }
-
-  #ingredients-manage-page .search-wrap:focus-within {
-    width: 17rem;
   }
 }
 
