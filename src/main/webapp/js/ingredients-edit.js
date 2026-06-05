@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const imageInput = document.getElementById("image-input");
   const imagePreview = document.getElementById("image-preview");
   const dropzone = document.getElementById("image-dropzone");
-  const dropzoneContent = dropzone.querySelector(".dropzone-content");
+  const dropzoneContent = document.getElementById("dropzone-content");
   const pageTitle = document.getElementById("page-title");
 
   loadIngredient();

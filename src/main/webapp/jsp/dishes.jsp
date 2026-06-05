@@ -13,11 +13,11 @@ contentType="text/html" pageEncoding="UTF-8" %>
   <body>
     <%@ include file="fragments/navbar.jsp" %>
 
-    <main class="dishes-page" data-ctx="<c:out value='${pageContext.request.contextPath}'/>">
+    <main id="dishes-page" class="dishes-page" data-ctx="<c:out value='${pageContext.request.contextPath}'/>">
       <div class="header">
         <div>
           <h1>Dishes</h1>
-          <span class="dishes-status" data-status>Loading dishes...</span>
+          <span id="dishes-status" class="dishes-status">Loading dishes...</span>
         </div>
         <div>
           <div class="search-wrap">
@@ -32,8 +32,8 @@ contentType="text/html" pageEncoding="UTF-8" %>
         </div>
       </div>
       <section
+        id="dishes-grid"
         class="catalog-grid"
-        data-grid
         aria-label="Available dishes"
       ></section>
     </main>

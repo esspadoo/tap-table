@@ -1,8 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<nav class="navbar close">
+<nav id="navbar" class="navbar close">
   <div class="row">
     <a class="logo" href="<c:url value='/'/>">TapTable</a>
     <button
+      id="burger-button"
       class="burger-button"
       aria-label="Toggle menu"
       aria-expanded="false"

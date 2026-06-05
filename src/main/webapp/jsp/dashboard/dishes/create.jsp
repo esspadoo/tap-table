@@ -45,7 +45,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
                   accept="image/webp,image/png,image/jpeg"
                 />
                 <img id="image-preview" alt="Dish preview" />
-                <div class="dropzone-content">
+                <div id="dropzone-content" class="dropzone-content">
                   <div class="dropzone-icon">&#x1F5BC;</div>
                   <p class="dropzone-hint">
                     Drop image here or click to upload

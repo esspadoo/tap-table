@@ -14,13 +14,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const orderId = span.dataset.orderId;
     const dishId = span.dataset.dishId;
 
+    const thumbUp = makeReviewBtn("👍", true);
+    const thumbDown = makeReviewBtn("👎", false);
     const actions = document.createElement("span");
     actions.className = "review-actions";
-    actions.appendChild(makeReviewBtn("👍", true));
-    actions.appendChild(makeReviewBtn("👎", false));
+    actions.appendChild(thumbUp);
+    actions.appendChild(thumbDown);
     span.appendChild(actions);
-
-    const [thumbUp, thumbDown] = actions.querySelectorAll(".review-btn");
 
     [thumbUp, thumbDown].forEach((btn) => {
       btn.addEventListener("click", async () => {

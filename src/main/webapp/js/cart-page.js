@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return base - (base * promo.discount) / 100;
   }
 
-  const ctx = document.querySelector(".cart-page").dataset.ctx;
+  const ctx = document.getElementById("cart-page").dataset.ctx;
   const money = new Intl.NumberFormat("it-IT", {
     style: "currency",
     currency: "EUR",

@@ -13,7 +13,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
   <body>
     <%@ include file="fragments/navbar.jsp" %>
 
-    <main class="ingredients-page" data-ctx="<c:out value='${pageContext.request.contextPath}'/>">
+    <main id="ingredients-page" class="ingredients-page" data-ctx="<c:out value='${pageContext.request.contextPath}'/>">
       <div class="header">
         <div>
           <h1>Ingredients</h1>

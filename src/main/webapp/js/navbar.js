@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const navbar = document.querySelector(".navbar");
-  const burger = document.querySelector(".burger-button");
+  const navbar = document.getElementById("navbar");
+  const burger = document.getElementById("burger-button");
 
   burger.addEventListener("click", () => {
     const expanded = burger.getAttribute("aria-expanded") === "true";

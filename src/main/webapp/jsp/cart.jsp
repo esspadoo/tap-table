@@ -13,7 +13,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
   <body>
     <%@ include file="fragments/navbar.jsp" %>
 
-    <main class="cart-page" data-ctx="<c:out value='${pageContext.request.contextPath}'/>">
+    <main id="cart-page" class="cart-page" data-ctx="<c:out value='${pageContext.request.contextPath}'/>">
       <h1>Your Cart</h1>
 
       <div id="cart-empty" class="cart-empty" hidden>

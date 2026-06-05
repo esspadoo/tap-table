@@ -36,9 +36,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   syncCartBadge();
-  const ctx = document.querySelector(".dishes-page").dataset.ctx;
-  const grid = document.querySelector("[data-grid]");
-  const status = document.querySelector("[data-status]");
+  const ctx = document.getElementById("dishes-page").dataset.ctx;
+  const grid = document.getElementById("dishes-grid");
+  const status = document.getElementById("dishes-status");
   const searchInput = document.getElementById("dishes-search");
   const money = new Intl.NumberFormat("it-IT", {
     style: "currency",
