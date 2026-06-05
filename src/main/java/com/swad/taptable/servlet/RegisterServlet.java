@@ -5,6 +5,7 @@ import com.swad.taptable.dao.user.RegisterUserDAO;
 import com.swad.taptable.resources.User;
 import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.LogContext;
+import com.swad.taptable.util.Validator;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -50,6 +51,17 @@ public final class RegisterServlet extends HttpServlet {
       if (!password.equals(confirmPassword)) {
         LOGGER.warn("Registration failed: passwords do not match for username '%s'.", username);
         req.setAttribute("error", "Passwords do not match.");
+        req.getRequestDispatcher("/jsp/register.jsp").forward(req, res);
+        return;
+      }
+
+      if (!Validator.isValidPassword(password)) {
+        LOGGER.warn(
+            "Registration failed: password does not meet policy for username '%s'.", username);
+        req.setAttribute(
+            "error",
+            "Password must be 8-16 characters and contain at least one uppercase letter, one"
+                + " lowercase letter, one digit, and one special character.");
         req.getRequestDispatcher("/jsp/register.jsp").forward(req, res);
         return;
       }
