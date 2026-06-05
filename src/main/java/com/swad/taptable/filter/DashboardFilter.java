@@ -21,7 +21,7 @@ import java.io.IOException;
  * attribute on success.
  */
 @WebFilter(
-    urlPatterns = "/dashboard/*",
+    urlPatterns = {"/dashboard", "/dashboard/*"},
     filterName = "DashboardFilter",
     description = "Filter all dashboard URLs")
 public class DashboardFilter implements Filter {
@@ -43,8 +43,8 @@ public class DashboardFilter implements Filter {
 
     try {
       DecodedJWT decoded = JWTUtil.verify(token);
-      int userId = decoded.getClaim("user_id").asInt();
-      req.setAttribute("user_id", userId);
+      req.setAttribute("user_id", decoded.getClaim("user_id").asInt());
+      req.setAttribute("user_role", decoded.getClaim("user_role").asString());
     } catch (JWTVerificationException ex) {
       res.sendRedirect(req.getContextPath() + "/login");
       return;
