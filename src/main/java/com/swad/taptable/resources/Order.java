@@ -21,9 +21,7 @@ public class Order extends AbstractResource {
   private final OrderStatus status;
   private final Float totalPrice;
   private final Integer userId;
-  /** Integer FK stored in DB; set by DAO, never parsed from client input. */
   private final Integer promotionId;
-  /** Promotion code received from client; used by DAO to resolve promotionId and discount. */
   private final String promotionCode;
   private final List<OrderDish> dishes;
 
