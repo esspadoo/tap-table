@@ -25,7 +25,9 @@ import java.io.IOException;
       "/dashboard/ingredients",
       "/dashboard/ingredients/*",
       "/dashboard/dishes",
-      "/dashboard/dishes/*"
+      "/dashboard/dishes/*",
+      "/dashboard/promotions",
+      "/dashboard/promotions/*"
     },
     filterName = "StaffFilter",
     description = "Restricts access to staff and admin users only")

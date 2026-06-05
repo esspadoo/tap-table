@@ -10,5 +10,8 @@
   <c:if test="${user_role == 'ADMIN' or user_role == 'STAFF'}">
     <a href="<c:url value='/dashboard/ingredients'/>"<c:if test="${activePage == 'ingredients'}"> class="active"</c:if>>Ingredients</a>
   </c:if>
+  <c:if test="${user_role == 'ADMIN'}">
+    <a href="<c:url value='/dashboard/promotions'/>"<c:if test="${activePage == 'promotions'}"> class="active"</c:if>>Promotions</a>
+  </c:if>
   <a href="<c:url value='/dashboard/profile'/>"<c:if test="${activePage == 'profile'}"> class="active"</c:if>>Account</a>
 </nav>

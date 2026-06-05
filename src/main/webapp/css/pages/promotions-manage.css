@@ -1,0 +1,39 @@
+#promotions-manage-page .header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#promotions-manage-page .header > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+#promotions-manage-page .header > div:first-child h1 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: var(--leading-none);
+  letter-spacing: 0.01em;
+}
+
+#promotions-count {
+  font-size: var(--text-sm);
+  color: rgb(var(--fg-muted));
+  letter-spacing: 0.05em;
+}
+
+#promotions-manage-page .header > div:last-child {
+  display: flex;
+  align-items: stretch;
+  gap: 0.6rem;
+}
+
+@media (min-width: 720px) {
+  #promotions-manage-page .header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

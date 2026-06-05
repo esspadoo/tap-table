@@ -202,6 +202,24 @@
         <url-pattern>/dashboard/dishes/detail</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ManagePromotionsPage</servlet-name>
+        <jsp-file>/jsp/dashboard/promotions/index.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ManagePromotionsPage</servlet-name>
+        <url-pattern>/dashboard/promotions</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CreatePromotionPage</servlet-name>
+        <jsp-file>/jsp/dashboard/promotions/create.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreatePromotionPage</servlet-name>
+        <url-pattern>/dashboard/promotions/create</url-pattern>
+    </servlet-mapping>
+
     <error-page>
         <error-code>404</error-code>
         <location>/jsp/error/404.jsp</location>
