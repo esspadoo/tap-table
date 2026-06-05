@@ -7,12 +7,12 @@ INSERT INTO "public"."users" ("id", "username", "email", "name", "surname", "pho
 (5, 'fbaldan',    'fabio@test.com',      'Fabio',     'Baldan',     '123456',     'CUSTOMER', '$2a$10$9i5IInoeVbDddTclE6G6EOPrTK4v4NllI.T1nYY5EzzD6U0uXv7W6');
 
 INSERT INTO "public"."categories" ("name") VALUES
-('Antipasti'),
-('Primi'),
-('Secondi'),
-('Contorni'),
-('Dolci'),
-('Bevande');
+('Starters'),
+('First Courses'),
+('Main Courses'),
+('Side Dishes'),
+('Desserts'),
+('Drinks');
 
 INSERT INTO "public"."ingredients" ("id", "name", "allergen", "is_frozen") VALUES
 (1, 'Pomodoro San Marzano', NULL,                                     false),
@@ -22,11 +22,11 @@ INSERT INTO "public"."ingredients" ("id", "name", "allergen", "is_frozen") VALUE
 (5, 'Mascarpone',           ARRAY['milk']::ALLERGEN[],                false);
 
 INSERT INTO "public"."dishes" ("id", "name", "description", "category_name", "price") VALUES
-(1, 'Bruschetta al pomodoro',  'Pane tostato con pomodoro fresco e basilico',     'Antipasti', 5.50),
-(2, 'Spaghetti al pomodoro',   'Spaghetti con salsa di pomodoro fresco e basilico','Primi',    9.00),
-(3, 'Pollo ai ferri',          'Petto di pollo marinato alla griglia con limone', 'Secondi',  13.00),
-(4, 'Tiramisù della casa',     'Classico tiramisù al mascarpone e caffè',         'Dolci',     6.00),
-(5, 'Acqua naturale 0.5L',     NULL,                                               'Bevande',  1.50);
+(1, 'Bruschetta al pomodoro',  'Pane tostato con pomodoro fresco e basilico',     'Starters',      5.50),
+(2, 'Spaghetti al pomodoro',   'Spaghetti con salsa di pomodoro fresco e basilico','First Courses', 9.00),
+(3, 'Pollo ai ferri',          'Petto di pollo marinato alla griglia con limone', 'Main Courses',  13.00),
+(4, 'Tiramisù della casa',     'Classico tiramisù al mascarpone e caffè',         'Desserts',       6.00),
+(5, 'Acqua naturale 0.5L',     NULL,                                               'Drinks',         1.50);
 
 INSERT INTO "public"."dish_ingredients" ("id", "dish_id", "ingredient_id") VALUES
 (1, 1, 1),  -- bruschetta   → pomodoro
