@@ -21,7 +21,10 @@ public class Order extends AbstractResource {
   private final OrderStatus status;
   private final Float totalPrice;
   private final Integer userId;
+  /** Integer FK stored in DB; set by DAO, never parsed from client input. */
   private final Integer promotionId;
+  /** Promotion code received from client; used by DAO to resolve promotionId and discount. */
+  private final String promotionCode;
   private final List<OrderDish> dishes;
 
   /**
@@ -35,6 +38,7 @@ public class Order extends AbstractResource {
     this.totalPrice = builder.totalPrice;
     this.userId = builder.userId;
     this.promotionId = builder.promotionId;
+    this.promotionCode = builder.promotionCode;
     this.dishes = builder.dishes == null ? null : List.copyOf(builder.dishes);
   }
 
@@ -75,12 +79,21 @@ public class Order extends AbstractResource {
   }
 
   /**
-   * Returns the identifier of the applied promotion, if any.
+   * Returns the DB identifier of the applied promotion, if any.
    *
    * @return the promotion identifier.
    */
   public Integer getPromotionId() {
     return promotionId;
+  }
+
+  /**
+   * Returns the promotion code supplied by the client, if any.
+   *
+   * @return the promotion code.
+   */
+  public String getPromotionCode() {
+    return promotionCode;
   }
 
   /**
@@ -106,7 +119,7 @@ public class Order extends AbstractResource {
     OrderStatus status = null;
     Float totalPrice = null;
     Integer userId = null;
-    Integer promotionId = null;
+    String promotionCode = null;
     List<OrderDish> dishes = null;
 
     final JsonParser jp = JSON_FACTORY.createParser(inputStream);
@@ -136,9 +149,9 @@ public class Order extends AbstractResource {
           jp.nextToken();
           userId = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getIntValue();
           break;
-        case "promotion_id":
+        case "promotion_code":
           jp.nextToken();
-          promotionId = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getIntValue();
+          promotionCode = jp.getCurrentToken() == JsonToken.VALUE_NULL ? null : jp.getText();
           break;
         case "dishes":
           if (jp.nextToken() == JsonToken.VALUE_NULL) break;
@@ -183,7 +196,7 @@ public class Order extends AbstractResource {
         .status(status)
         .totalPrice(totalPrice)
         .userId(userId)
-        .promotionId(promotionId)
+        .promotionCode(promotionCode)
         .dishes(dishes)
         .build();
   }
@@ -239,6 +252,7 @@ public class Order extends AbstractResource {
     private Float totalPrice;
     private Integer userId;
     private Integer promotionId;
+    private String promotionCode;
     private List<OrderDish> dishes = new ArrayList<>();
 
     /**
@@ -286,13 +300,24 @@ public class Order extends AbstractResource {
     }
 
     /**
-     * Sets the identifier of the applied promotion.
+     * Sets the DB identifier of the applied promotion.
      *
      * @param promotionId the promotion identifier.
      * @return this builder.
      */
     public Builder promotionId(Integer promotionId) {
       this.promotionId = promotionId;
+      return this;
+    }
+
+    /**
+     * Sets the promotion code supplied by the client.
+     *
+     * @param promotionCode the promotion code.
+     * @return this builder.
+     */
+    public Builder promotionCode(String promotionCode) {
+      this.promotionCode = promotionCode;
       return this;
     }
 

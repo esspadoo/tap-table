@@ -13,6 +13,8 @@ import java.util.List;
 
 public class CreateOrderDAO extends AbstractDAO<Order> {
   private static final String GET_DISH_PRICE_STATEMENT = "SELECT price FROM dishes WHERE id = ?";
+  private static final String GET_PROMOTION_STATEMENT =
+      "SELECT id, discount FROM promotions WHERE code = ?";
   private static final String CREATE_ORDER_STATEMENT =
       "INSERT INTO orders (user_id, promotion_id, total_amount, status) VALUES (?, ?, ?, ?::order_status) RETURNING *";
   private static final String CREATE_ORDER_DISHES_STATEMENT =
@@ -32,6 +34,7 @@ public class CreateOrderDAO extends AbstractDAO<Order> {
     con.setAutoCommit(false);
 
     try {
+      // Sum raw dish prices
       float total = 0f;
       try (PreparedStatement priceStmt = con.prepareStatement(GET_DISH_PRICE_STATEMENT)) {
         for (OrderDish od : order.getDishes()) {
@@ -46,12 +49,30 @@ public class CreateOrderDAO extends AbstractDAO<Order> {
         }
       }
 
+      // Resolve promotion code → id + discount
+      Integer resolvedPromotionId = null;
+      final String promoCode = order.getPromotionCode();
+      if (promoCode != null && !promoCode.isBlank()) {
+        try (PreparedStatement promoStmt = con.prepareStatement(GET_PROMOTION_STATEMENT)) {
+          promoStmt.setString(1, promoCode.trim().toUpperCase());
+          try (ResultSet promoRs = promoStmt.executeQuery()) {
+            if (promoRs.next()) {
+              resolvedPromotionId = promoRs.getInt("id");
+              float discount = promoRs.getFloat("discount");
+              total = total - (total * discount / 100f);
+            } else {
+              LOGGER.warn("Promotion code '%s' not found; ignoring.", promoCode);
+            }
+          }
+        }
+      }
+
       try (PreparedStatement createOrderStmt = con.prepareStatement(CREATE_ORDER_STATEMENT)) {
         createOrderStmt.setInt(1, this.userId);
-        if (order.getPromotionId() == null) {
+        if (resolvedPromotionId == null) {
           createOrderStmt.setNull(2, java.sql.Types.INTEGER);
         } else {
-          createOrderStmt.setInt(2, order.getPromotionId());
+          createOrderStmt.setInt(2, resolvedPromotionId);
         }
         createOrderStmt.setFloat(3, total);
         createOrderStmt.setString(4, order.getStatus().name());
