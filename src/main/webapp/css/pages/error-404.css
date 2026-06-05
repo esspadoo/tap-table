@@ -1,0 +1,57 @@
+.error-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1.5em;
+  padding: 4em 1.5em;
+  animation: fade-in 0.35s ease both;
+}
+
+.error-code {
+  font-family: var(--font-display);
+  font-size: clamp(5em, 18vw, 8em);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: rgba(var(--fg), 0.12);
+  user-select: none;
+}
+
+.error-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  max-width: 36ch;
+}
+
+.error-body h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 400;
+  color: rgb(var(--fg));
+  letter-spacing: -0.01em;
+}
+
+.error-body p {
+  font-size: var(--text-base);
+  color: rgb(var(--fg-muted));
+  line-height: var(--leading-normal);
+  font-weight: 300;
+}
+
+.error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .error-page {
+    animation: none;
+  }
+}
