@@ -69,11 +69,8 @@ function render() {
     qtyWrap.append(btnDec, qtySpan, btnInc);
     tdQty.appendChild(qtyWrap);
 
-    const tdPrice = document.createElement("td");
-    tdPrice.textContent = money.format(item.price);
-
-    const tdSubtotal = document.createElement("td");
-    tdSubtotal.textContent = money.format(item.price * item.quantity);
+    const tdTotal = document.createElement("td");
+    tdTotal.textContent = money.format(item.price * item.quantity);
 
     const tdRemove = document.createElement("td");
     const removeBtn = document.createElement("button");
@@ -82,7 +79,7 @@ function render() {
     removeBtn.addEventListener("click", () => { removeDish(item.dishId); render(); });
     tdRemove.appendChild(removeBtn);
 
-    tr.append(tdName, tdQty, tdPrice, tdSubtotal, tdRemove);
+    tr.append(tdName, tdQty, tdTotal, tdRemove);
     tbody.appendChild(tr);
   }
 

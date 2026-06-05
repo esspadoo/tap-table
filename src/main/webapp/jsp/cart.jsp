@@ -28,8 +28,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
               <tr>
                 <th>Dish</th>
                 <th>Qty</th>
-                <th>Price</th>
-                <th>Subtotal</th>
+                <th>Total</th>
                 <th></th>
               </tr>
             </thead>
