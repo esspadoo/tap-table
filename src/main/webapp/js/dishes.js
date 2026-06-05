@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!dishes.length) {
       setStatus("No dishes available.");
       const empty = document.createElement("p");
-      empty.className = "dishes-status";
+      empty.className = "catalog-status";
       empty.textContent = "No dishes available right now.";
       grid.appendChild(empty);
       return;
@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
       setStatus("Failed to load dishes.", true);
       grid.replaceChildren();
       const empty = document.createElement("p");
-      empty.className = "dishes-status is-error";
+      empty.className = "catalog-status is-error";
       empty.textContent = "The dishes list could not be loaded.";
       grid.appendChild(empty);
     });

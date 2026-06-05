@@ -5,14 +5,14 @@ contentType="text/html" pageEncoding="UTF-8" %>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ingredient Details - TapTable</title>
+    <title>Ingredient Details &dash; TapTable</title>
     <link rel="stylesheet" href="<c:url value='/css/global.css'/>" />
     <script src="<c:url value='/js/ingredient-detail.js'/>" defer></script>
   </head>
   <body>
     <%@ include file="fragments/navbar.jsp" %>
 
-    <main class="ingredient-detail-page">
+    <main id="ingredient-detail-page">
       <a class="back-link" href="<c:url value='/ingredients'/>"
         >&larr; Back to ingredients</a
       >

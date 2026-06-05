@@ -12,7 +12,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
   <body>
     <%@ include file="fragments/navbar.jsp" %>
 
-    <main class="hero">
+    <main id="home-page" class="hero">
       <h1>TapTable</h1>
       <p>
         Fresh ingredients, great dishes. Create an account and order right from

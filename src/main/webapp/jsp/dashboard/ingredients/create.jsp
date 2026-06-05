@@ -5,7 +5,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>New Ingredient &mdash; TapTable</title>
+    <title>New Ingredient &dash; TapTable</title>
     <link rel="stylesheet" href="<c:url value='/css/global.css'/>" />
     <script src="<c:url value='/js/navbar.js'/>" defer></script>
     <script src="<c:url value='/js/ingredients-create.js'/>" defer></script>
@@ -14,7 +14,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
     <%@ include file="../../fragments/navbar.jsp" %>
 
     <main id="ingredient-create-page">
-      <div class="dashboard-header">
+      <div class="dash-page-header">
         <nav id="breadcrumb" aria-label="Breadcrumb">
           <ol>
             <li><a href="<c:url value='/dashboard'/>">Dashboard</a></li>
@@ -43,14 +43,15 @@ contentType="text/html" pageEncoding="UTF-8" %>
                   name="image"
                   accept="image/webp,image/png,image/jpeg"
                 />
-                <img
-                  id="image-preview"
-                  alt="Ingredient preview"
-                />
+                <img id="image-preview" alt="Ingredient preview" />
                 <div class="dropzone-content">
                   <div class="dropzone-icon">&#x1F5BC;</div>
-                  <p class="dropzone-hint">Drop image here or click to upload</p>
-                  <p class="dropzone-formats">WebP &middot; PNG &middot; JPEG</p>
+                  <p class="dropzone-hint">
+                    Drop image here or click to upload
+                  </p>
+                  <p class="dropzone-formats">
+                    WebP &middot; PNG &middot; JPEG
+                  </p>
                 </div>
               </div>
             </div>
@@ -99,59 +100,129 @@ contentType="text/html" pageEncoding="UTF-8" %>
 
               <div class="chip-group">
                 <div class="chip">
-                  <input type="checkbox" id="a-cereals" name="allergens" value="cereals" />
+                  <input
+                    type="checkbox"
+                    id="a-cereals"
+                    name="allergens"
+                    value="cereals"
+                  />
                   <label for="a-cereals">Cereals</label>
                 </div>
                 <div class="chip">
-                  <input type="checkbox" id="a-crustaceans" name="allergens" value="crustaceans" />
+                  <input
+                    type="checkbox"
+                    id="a-crustaceans"
+                    name="allergens"
+                    value="crustaceans"
+                  />
                   <label for="a-crustaceans">Crustaceans</label>
                 </div>
                 <div class="chip">
-                  <input type="checkbox" id="a-eggs" name="allergens" value="eggs" />
+                  <input
+                    type="checkbox"
+                    id="a-eggs"
+                    name="allergens"
+                    value="eggs"
+                  />
                   <label for="a-eggs">Eggs</label>
                 </div>
                 <div class="chip">
-                  <input type="checkbox" id="a-fish" name="allergens" value="fish" />
+                  <input
+                    type="checkbox"
+                    id="a-fish"
+                    name="allergens"
+                    value="fish"
+                  />
                   <label for="a-fish">Fish</label>
                 </div>
                 <div class="chip">
-                  <input type="checkbox" id="a-peanuts" name="allergens" value="peanuts" />
+                  <input
+                    type="checkbox"
+                    id="a-peanuts"
+                    name="allergens"
+                    value="peanuts"
+                  />
                   <label for="a-peanuts">Peanuts</label>
                 </div>
                 <div class="chip">
-                  <input type="checkbox" id="a-soybeans" name="allergens" value="soybeans" />
+                  <input
+                    type="checkbox"
+                    id="a-soybeans"
+                    name="allergens"
+                    value="soybeans"
+                  />
                   <label for="a-soybeans">Soybeans</label>
                 </div>
                 <div class="chip">
-                  <input type="checkbox" id="a-milk" name="allergens" value="milk" />
+                  <input
+                    type="checkbox"
+                    id="a-milk"
+                    name="allergens"
+                    value="milk"
+                  />
                   <label for="a-milk">Milk</label>
                 </div>
                 <div class="chip">
-                  <input type="checkbox" id="a-nuts" name="allergens" value="nuts" />
+                  <input
+                    type="checkbox"
+                    id="a-nuts"
+                    name="allergens"
+                    value="nuts"
+                  />
                   <label for="a-nuts">Nuts</label>
                 </div>
                 <div class="chip">
-                  <input type="checkbox" id="a-celery" name="allergens" value="celery" />
+                  <input
+                    type="checkbox"
+                    id="a-celery"
+                    name="allergens"
+                    value="celery"
+                  />
                   <label for="a-celery">Celery</label>
                 </div>
                 <div class="chip">
-                  <input type="checkbox" id="a-mustard" name="allergens" value="mustard" />
+                  <input
+                    type="checkbox"
+                    id="a-mustard"
+                    name="allergens"
+                    value="mustard"
+                  />
                   <label for="a-mustard">Mustard</label>
                 </div>
                 <div class="chip">
-                  <input type="checkbox" id="a-sesame" name="allergens" value="sesame_seeds" />
+                  <input
+                    type="checkbox"
+                    id="a-sesame"
+                    name="allergens"
+                    value="sesame_seeds"
+                  />
                   <label for="a-sesame">Sesame</label>
                 </div>
                 <div class="chip">
-                  <input type="checkbox" id="a-sulphites" name="allergens" value="sulphur_dioxide_and_sulphites" />
+                  <input
+                    type="checkbox"
+                    id="a-sulphites"
+                    name="allergens"
+                    value="sulphur_dioxide_and_sulphites"
+                  />
                   <label for="a-sulphites">Sulphites</label>
                 </div>
                 <div class="chip">
-                  <input type="checkbox" id="a-lupin" name="allergens" value="lupin" />
+                  <input
+                    type="checkbox"
+                    id="a-lupin"
+                    name="allergens"
+                    value="lupin"
+                  />
                   <label for="a-lupin">Lupin</label>
                 </div>
                 <div class="chip">
-                  <input type="checkbox" id="a-molluscs" name="allergens" value="molluscs" />
+                  <input
+                    type="checkbox"
+                    id="a-molluscs"
+                    name="allergens"
+                    value="molluscs"
+                  />
                   <label for="a-molluscs">Molluscs</label>
                 </div>
               </div>

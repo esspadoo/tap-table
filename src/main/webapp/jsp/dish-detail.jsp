@@ -5,7 +5,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dish Details - TapTable</title>
+    <title>Dish Details &dash; TapTable</title>
     <link rel="stylesheet" href="<c:url value='/css/global.css'/>" />
     <script src="<c:url value='/js/dish-detail.js'/>" defer></script>
   </head>

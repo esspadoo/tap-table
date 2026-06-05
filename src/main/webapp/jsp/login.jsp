@@ -5,11 +5,11 @@ contentType="text/html" pageEncoding="UTF-8" %>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login - TapTable</title>
+    <title>Login &dash; TapTable</title>
     <link rel="stylesheet" href="<c:url value='/css/global.css'/>" />
   </head>
   <body>
-    <div class="page-center">
+    <main id="login-page" class="page-center">
       <div class="card">
         <div class="card-header">
           <h1>TapTable</h1>
@@ -50,6 +50,6 @@ contentType="text/html" pageEncoding="UTF-8" %>
           <a class="link" href="<c:url value='/register'/>">Register</a>
         </p>
       </div>
-    </div>
+    </main>
   </body>
 </html>

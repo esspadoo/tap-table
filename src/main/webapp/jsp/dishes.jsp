@@ -5,22 +5,22 @@ contentType="text/html" pageEncoding="UTF-8" %>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dishes - TapTable</title>
+    <title>Dishes &dash; TapTable</title>
     <link rel="stylesheet" href="<c:url value='/css/global.css'/>" />
     <script src="<c:url value='/js/dishes.js'/>" defer></script>
   </head>
   <body>
     <%@ include file="fragments/navbar.jsp" %>
 
-    <main class="dishes-page">
-      <header class="dishes-header">
+    <main id="dishes-page">
+      <header class="catalog-header">
         <h1>Dishes</h1>
         <p>Browse the available dishes</p>
       </header>
 
-      <p class="dishes-status" data-status>Loading dishes...</p>
+      <p class="catalog-status" data-status>Loading dishes...</p>
       <section
-        class="dishes-grid"
+        class="catalog-grid"
         data-grid
         aria-label="Available dishes"
       ></section>
