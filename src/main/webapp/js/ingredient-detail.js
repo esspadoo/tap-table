@@ -24,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (ingredient.is_frozen === true) {
         frozenEl.hidden = false;
-        frozenEl.textContent = "❄";
       }
 
       if (ingredient.allergens && ingredient.allergens.length) {

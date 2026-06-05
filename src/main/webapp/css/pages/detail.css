@@ -15,8 +15,15 @@
 #dish-detail-page > .container > .image,
 #ingredient-detail-page > .container > .image {
   position: relative;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
+}
+
+@media (min-width: 720px) {
+  #dish-detail-page > .container > .image,
+  #ingredient-detail-page > .container > .image {
+    aspect-ratio: 21 / 9;
+  }
 }
 
 #dish-detail-page #dish-image-placeholder,

@@ -22,10 +22,10 @@ contentType="text/html" pageEncoding="UTF-8" %>
             kitchen take care of the rest.
           </p>
           <div class="home-actions">
-            <a class="btn btn-primary btn-md" href="<c:url value='/dishes'/>">
+            <a class="btn btn-primary" href="<c:url value='/dishes'/>">
               Browse dishes
             </a>
-            <a class="btn btn-outline btn-md" href="<c:url value='/ingredients'/>">
+            <a class="btn btn-outline" href="<c:url value='/ingredients'/>">
               View ingredients
             </a>
           </div>
