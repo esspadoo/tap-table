@@ -16,19 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         if (res.status === 200) {
-          const tr = this.closest("tr");
-          if (tr) {
-            const statusCell = tr.querySelector('[data-col="status"]');
-            if (statusCell) {
-              const badge = document.createElement("span");
-              badge.className = "badge badge-completed";
-              badge.textContent = "Completed";
-              statusCell.replaceChildren(badge);
-            }
-            this.closest("td").replaceChildren();
-          } else {
-            location.reload();
-          }
+          location.reload();
           return;
         }
 

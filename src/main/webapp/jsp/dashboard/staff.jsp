@@ -109,7 +109,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
                           </div>
                         </td>
                         <td>&euro;<fmt:formatNumber value="${order.totalPrice}" pattern="#,##0.00" /></td>
-                        <td data-col="status">
+                        <td>
                           <c:choose>
                             <c:when test="${order.status == 'PENDING'}"><span class="badge badge-pending">Pending</span></c:when>
                             <c:when test="${order.status == 'COMPLETED'}"><span class="badge badge-completed">Completed</span></c:when>
