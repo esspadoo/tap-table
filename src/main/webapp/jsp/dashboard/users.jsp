@@ -31,65 +31,68 @@
               <p class="empty-state">No users found.</p>
             </c:when>
             <c:otherwise>
-              <div class="user-list">
-                <c:forEach var="u" items="${users}">
-                  <div class="user-row">
-
-                    <div class="user-info">
-                      <span class="user-name">
-                        <c:out value="${u.name} ${u.surname}" />
-                      </span>
-                      <span class="user-email">
-                        <c:out value="${u.email}" />
-                      </span>
-                    </div>
-
-                    <div class="user-actions">
-                      <c:choose>
-                        <c:when test="${u.role.name() == 'ADMIN'}">
-                          <span class="badge badge-admin">Admin</span>
-                        </c:when>
-                        <c:when test="${u.role.name() == 'STAFF'}">
-                          <span class="badge badge-staff">Staff</span>
-                        </c:when>
-                        <c:otherwise>
-                          <span class="badge badge-customer">Customer</span>
-                        </c:otherwise>
-                      </c:choose>
-
-                      <c:if test="${u.role.name() != 'ADMIN'}">
-
-                        <c:choose>
-                          <c:when test="${u.role.name() == 'CUSTOMER'}">
-                            <form method="post" action="<c:url value='/dashboard/users'/>">
-                              <input type="hidden" name="_action" value="change_role" />
-                              <input type="hidden" name="userId" value="<c:out value='${u.id}'/>" />
-                              <input type="hidden" name="newRole" value="STAFF" />
-                              <button type="submit" class="btn btn-secondary btn-sm">Make staff</button>
-                            </form>
-                          </c:when>
-                          <c:when test="${u.role.name() == 'STAFF'}">
-                            <form method="post" action="<c:url value='/dashboard/users'/>">
-                              <input type="hidden" name="_action" value="change_role" />
-                              <input type="hidden" name="userId" value="<c:out value='${u.id}'/>" />
-                              <input type="hidden" name="newRole" value="CUSTOMER" />
-                              <button type="submit" class="btn btn-secondary btn-sm">Remove staff</button>
-                            </form>
-                          </c:when>
-                        </c:choose>
-
-                        <form method="post" action="<c:url value='/dashboard/users'/>"
-                              onsubmit="return confirm('Delete this user? This cannot be undone.')">
-                          <input type="hidden" name="_action" value="delete_user" />
-                          <input type="hidden" name="userId" value="<c:out value='${u.id}'/>" />
-                          <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                        </form>
-
-                      </c:if>
-                    </div>
-
-                  </div>
-                </c:forEach>
+              <div class="data-table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Role</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <c:forEach var="u" items="${users}">
+                      <tr>
+                        <td><c:out value="${u.name} ${u.surname}" /></td>
+                        <td><c:out value="${u.email}" /></td>
+                        <td>
+                          <c:choose>
+                            <c:when test="${u.role.name() == 'ADMIN'}">
+                              <span class="badge badge-admin">Admin</span>
+                            </c:when>
+                            <c:when test="${u.role.name() == 'STAFF'}">
+                              <span class="badge badge-staff">Staff</span>
+                            </c:when>
+                            <c:otherwise>
+                              <span class="badge badge-customer">Customer</span>
+                            </c:otherwise>
+                          </c:choose>
+                        </td>
+                        <td>
+                          <c:if test="${u.role.name() != 'ADMIN'}">
+                            <div class="row-actions">
+                              <c:choose>
+                                <c:when test="${u.role.name() == 'CUSTOMER'}">
+                                  <form method="post" action="<c:url value='/dashboard/users'/>">
+                                    <input type="hidden" name="_action" value="change_role" />
+                                    <input type="hidden" name="userId" value="<c:out value='${u.id}'/>" />
+                                    <input type="hidden" name="newRole" value="STAFF" />
+                                    <button type="submit" class="btn btn-secondary btn-sm">Make staff</button>
+                                  </form>
+                                </c:when>
+                                <c:when test="${u.role.name() == 'STAFF'}">
+                                  <form method="post" action="<c:url value='/dashboard/users'/>">
+                                    <input type="hidden" name="_action" value="change_role" />
+                                    <input type="hidden" name="userId" value="<c:out value='${u.id}'/>" />
+                                    <input type="hidden" name="newRole" value="CUSTOMER" />
+                                    <button type="submit" class="btn btn-secondary btn-sm">Remove staff</button>
+                                  </form>
+                                </c:when>
+                              </c:choose>
+                              <form method="post" action="<c:url value='/dashboard/users'/>"
+                                    onsubmit="return confirm('Delete this user? This cannot be undone.')">
+                                <input type="hidden" name="_action" value="delete_user" />
+                                <input type="hidden" name="userId" value="<c:out value='${u.id}'/>" />
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                              </form>
+                            </div>
+                          </c:if>
+                        </td>
+                      </tr>
+                    </c:forEach>
+                  </tbody>
+                </table>
               </div>
             </c:otherwise>
           </c:choose>

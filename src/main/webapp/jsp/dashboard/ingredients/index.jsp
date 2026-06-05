@@ -46,7 +46,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
           <span id="alert-message"></span>
         </div>
 
-        <div class="data-table-wrap">
+        <div class="data-table-wrap" hidden>
           <table class="data-table">
             <thead>
               <tr>
@@ -56,17 +56,11 @@ contentType="text/html" pageEncoding="UTF-8" %>
               </tr>
             </thead>
             <tbody id="ingredients-tbody"></tbody>
-            <tfoot id="empty-state" hidden>
-              <tr>
-                <td colspan="3" class="dt-empty">
-                  <p class="dt-empty-title">No ingredients found</p>
-                  <p class="dt-empty-hint">
-                    Try a different search or add a new ingredient.
-                  </p>
-                </td>
-              </tr>
-            </tfoot>
           </table>
+        </div>
+        <div id="empty-state" class="table-empty-state" hidden>
+          <p class="table-empty-title">No ingredients found</p>
+          <p class="table-empty-hint">Try a different search or add a new ingredient.</p>
         </div>
       </div>
     </main>

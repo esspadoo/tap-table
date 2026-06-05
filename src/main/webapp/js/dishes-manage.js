@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const ctx = document.body.dataset.ctx;
   const tbody = document.getElementById("dishes-tbody");
+  const tableWrap = tbody.closest(".data-table-wrap");
   const countEl = document.getElementById("dishes-count");
   const searchInput = document.getElementById("dishes-search");
   const emptyState = document.getElementById("empty-state");
@@ -36,7 +37,9 @@ document.addEventListener("DOMContentLoaded", () => {
   function render(dishes) {
     tbody.replaceChildren();
     updateCount(dishes.length);
-    emptyState.hidden = dishes.length > 0;
+    const isEmpty = dishes.length === 0;
+    tableWrap.hidden = isEmpty;
+    emptyState.hidden = !isEmpty;
 
     const fragment = document.createDocumentFragment();
     dishes.forEach((dish) => {
@@ -104,6 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
         allDishes = allDishes.filter((d) => d.id !== id);
         const remaining = tbody.querySelectorAll("tr").length;
         updateCount(remaining);
+        tableWrap.hidden = remaining === 0;
         emptyState.hidden = remaining > 0;
       } else {
         const data = await res.json().catch(() => ({}));

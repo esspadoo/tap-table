@@ -86,8 +86,8 @@ contentType="text/html" pageEncoding="UTF-8" %>
               <p class="empty-state">No orders yet.</p>
             </c:when>
             <c:otherwise>
-              <div class="orders-table-wrap">
-                <table class="orders-table">
+              <div class="data-table-wrap">
+                <table class="data-table">
                   <thead>
                     <tr>
                       <th>#</th>
@@ -100,7 +100,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
                   <tbody>
                     <c:forEach var="order" items="${orders}">
                       <tr>
-                        <td class="order-id"><c:out value="${order.id}" /></td>
+                        <td><c:out value="${order.id}" /></td>
                         <td>User #<c:out value="${order.userId}" /></td>
                         <td>
                           <div class="order-dish-list">
@@ -109,29 +109,12 @@ contentType="text/html" pageEncoding="UTF-8" %>
                             </c:forEach>
                           </div>
                         </td>
-                        <td class="order-total">
-                          &euro;<fmt:formatNumber
-                            value="${order.totalPrice}"
-                            pattern="#,##0.00"
-                          />
-                        </td>
+                        <td>&euro;<fmt:formatNumber value="${order.totalPrice}" pattern="#,##0.00" /></td>
                         <td>
                           <c:choose>
-                            <c:when test="${order.status == 'PENDING'}"
-                              ><span class="badge badge-pending"
-                                >Pending</span
-                              ></c:when
-                            >
-                            <c:when test="${order.status == 'COMPLETED'}"
-                              ><span class="badge badge-completed"
-                                >Completed</span
-                              ></c:when
-                            >
-                            <c:otherwise
-                              ><span class="badge badge-cancelled"
-                                >Cancelled</span
-                              ></c:otherwise
-                            >
+                            <c:when test="${order.status == 'PENDING'}"><span class="badge badge-pending">Pending</span></c:when>
+                            <c:when test="${order.status == 'COMPLETED'}"><span class="badge badge-completed">Completed</span></c:when>
+                            <c:otherwise><span class="badge badge-cancelled">Cancelled</span></c:otherwise>
                           </c:choose>
                         </td>
                       </tr>

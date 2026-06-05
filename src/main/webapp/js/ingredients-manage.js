@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const ctx = document.body.dataset.ctx;
   const tbody = document.getElementById("ingredients-tbody");
+  const tableWrap = tbody.closest(".data-table-wrap");
   const countEl = document.getElementById("ingredients-count");
   const searchInput = document.getElementById("ingredients-search");
   const emptyState = document.getElementById("empty-state");
@@ -36,10 +37,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function render(ingredients) {
     tbody.replaceChildren();
     updateCount(ingredients.length);
-    emptyState.hidden = ingredients.length > 0;
+    const isEmpty = ingredients.length === 0;
+    tableWrap.hidden = isEmpty;
+    emptyState.hidden = !isEmpty;
 
     const fragment = document.createDocumentFragment();
-    ingredients.forEach((ingredient, i) => {
+    ingredients.forEach((ingredient) => {
       const row = buildRow(ingredient);
       fragment.appendChild(row);
     });
@@ -127,6 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
         allIngredients = allIngredients.filter((i) => i.id !== id);
         const remaining = tbody.querySelectorAll("tr").length;
         updateCount(remaining);
+        tableWrap.hidden = remaining === 0;
         emptyState.hidden = remaining > 0;
       } else {
         const data = await res.json().catch(() => ({}));

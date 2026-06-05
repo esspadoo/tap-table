@@ -94,8 +94,8 @@
               <p class="empty-state">No orders yet.</p>
             </c:when>
             <c:otherwise>
-              <div class="orders-table-wrap">
-                <table class="orders-table">
+              <div class="data-table-wrap">
+                <table class="data-table">
                   <thead>
                     <tr>
                       <th>#</th><th>Customer</th><th>Dishes</th><th>Total</th><th>Status</th>
@@ -104,7 +104,7 @@
                   <tbody>
                     <c:forEach var="order" items="${orders}">
                       <tr>
-                        <td class="order-id"><c:out value="${order.id}" /></td>
+                        <td><c:out value="${order.id}" /></td>
                         <td>User #<c:out value="${order.userId}" /></td>
                         <td>
                           <div class="order-dish-list">
@@ -113,7 +113,7 @@
                             </c:forEach>
                           </div>
                         </td>
-                        <td class="order-total">&euro;<fmt:formatNumber value="${order.totalPrice}" pattern="#,##0.00" /></td>
+                        <td>&euro;<fmt:formatNumber value="${order.totalPrice}" pattern="#,##0.00" /></td>
                         <td>
                           <c:choose>
                             <c:when test="${order.status == 'PENDING'}"><span class="badge badge-pending">Pending</span></c:when>

@@ -30,50 +30,6 @@
   gap: 0.6rem;
 }
 
-
-#ingredients-manage-page .data-table tr th:nth-child(1),
-#ingredients-manage-page .data-table tr td:nth-child(1) {
-  width: 70%;
-}
-
-@media (min-width: 720px) {
-  #ingredients-manage-page .data-table tr th:nth-child(1),
-  #ingredients-manage-page .data-table tr td:nth-child(1) {
-    width: 30%;
-  }
-}
-
-#ingredients-manage-page .data-table tr th:nth-child(2),
-#ingredients-manage-page .data-table tr td:nth-child(2) {
-  display: none;
-}
-
-@media (min-width: 720px) {
-  #ingredients-manage-page .data-table tr th:nth-child(2),
-  #ingredients-manage-page .data-table tr td:nth-child(2) {
-    display: table-cell;
-    width: 50%;
-  }
-}
-
-#ingredients-manage-page .data-table tr th:nth-child(3),
-#ingredients-manage-page .data-table tr td:nth-child(3) {
-  width: 30%;
-}
-
-@media (min-width: 720px) {
-  #ingredients-manage-page .data-table tr th:nth-child(3),
-  #ingredients-manage-page .data-table tr td:nth-child(3) {
-    width: 20%;
-  }
-}
-
-#ingredients-manage-page .data-table .row-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
 #ingredients-manage-page .name-info {
   display: flex;
   flex-direction: column;
@@ -90,7 +46,7 @@
 }
 
 #ingredients-manage-page .frozen-indicator {
-  font-size: 0.72rem;
+  font-size: var(--text-2xs);
   color: rgb(var(--ice));
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -106,7 +62,7 @@
   display: inline-block;
   padding: 0.12rem 0.45rem;
   border-radius: var(--radius-pill);
-  font-size: 0.68rem;
+  font-size: var(--text-2xs);
   font-weight: 500;
   letter-spacing: 0.03em;
   text-transform: capitalize;
@@ -127,9 +83,7 @@
     align-items: center;
     justify-content: space-between;
   }
-}
 
-@media (min-width: 720px) {
   #ingredients-manage-page .name-info {
     flex-direction: row;
     align-items: center;
