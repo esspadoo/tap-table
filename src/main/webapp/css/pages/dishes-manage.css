@@ -68,18 +68,13 @@
   color: rgb(var(--fg-muted));
 }
 
+/* col 1: Name */
 #dishes-manage-page .data-table tr th:nth-child(1),
 #dishes-manage-page .data-table tr td:nth-child(1) {
-  width: 70%;
+  width: auto;
 }
 
-@media (min-width: 720px) {
-  #dishes-manage-page .data-table tr th:nth-child(1),
-  #dishes-manage-page .data-table tr td:nth-child(1) {
-    width: 30%;
-  }
-}
-
+/* col 2: Category — hidden on mobile, visible on desktop */
 #dishes-manage-page .data-table tr th:nth-child(2),
 #dishes-manage-page .data-table tr td:nth-child(2) {
   display: none;
@@ -93,34 +88,22 @@
   }
 }
 
+/* col 3: Actions — always visible */
 #dishes-manage-page .data-table tr th:nth-child(3),
 #dishes-manage-page .data-table tr td:nth-child(3) {
-  display: none;
+  width: 1%;
+  white-space: nowrap;
 }
 
-@media (min-width: 720px) {
-  #dishes-manage-page .data-table tr th:nth-child(3),
-  #dishes-manage-page .data-table tr td:nth-child(3) {
-    display: table-cell;
-    width: 15%;
-  }
-}
-
-#dishes-manage-page .data-table tr th:nth-child(4),
-#dishes-manage-page .data-table tr td:nth-child(4) {
-  width: 30%;
-}
-
-@media (min-width: 720px) {
-  #dishes-manage-page .data-table tr th:nth-child(4),
-  #dishes-manage-page .data-table tr td:nth-child(4) {
-    width: 30%;
-  }
+/* table wrapper enables horizontal scroll on small viewports */
+#dishes-manage-page .data-table-wrap {
+  overflow-x: auto;
 }
 
 #dishes-manage-page .data-table .row-actions {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  align-items: center;
   gap: 0.5rem;
 }
 
