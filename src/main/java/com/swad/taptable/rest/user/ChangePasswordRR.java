@@ -1,12 +1,10 @@
 /* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.user;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
 import com.swad.taptable.dao.user.ChangePasswordDAO;
 import com.swad.taptable.exception.json.UnexpectedKeyException;
 import com.swad.taptable.resources.Message;
+import com.swad.taptable.resources.PasswordChange;
 import com.swad.taptable.rest.AbstractRR;
 import com.swad.taptable.util.Actions;
 import com.swad.taptable.util.ErrorCodes;
@@ -17,8 +15,6 @@ import java.sql.SQLException;
 
 public class ChangePasswordRR extends AbstractRR {
 
-  private static final JsonFactory JSON_FACTORY = new JsonFactory();
-
   public ChangePasswordRR(final HttpServletRequest req, final HttpServletResponse res) {
     super(Actions.UPDATE_PASSWORD, req, res);
   }
@@ -27,28 +23,9 @@ public class ChangePasswordRR extends AbstractRR {
   protected void doServe() throws IOException {
     try {
       final int userId = Integer.parseInt((String) req.getAttribute("user_id"));
+      final PasswordChange payload = PasswordChange.fromJSON(req.getInputStream());
 
-      String currentPassword = null;
-      String newPassword = null;
-      try (JsonParser jp = JSON_FACTORY.createParser(req.getInputStream())) {
-        while (jp.nextToken() != JsonToken.END_OBJECT) {
-          if (jp.getCurrentToken() != JsonToken.FIELD_NAME) continue;
-          switch (jp.currentName()) {
-            case "current_password":
-              jp.nextToken();
-              currentPassword = jp.getText();
-              break;
-            case "new_password":
-              jp.nextToken();
-              newPassword = jp.getText();
-              break;
-            default:
-              throw new UnexpectedKeyException("Unexpected key: " + jp.currentName());
-          }
-        }
-      }
-
-      if (currentPassword == null || newPassword == null) {
+      if (payload.getCurrentPassword() == null || payload.getNewPassword() == null) {
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         final Message m =
             new Message(
@@ -59,7 +36,7 @@ public class ChangePasswordRR extends AbstractRR {
         return;
       }
 
-      if (newPassword.length() < 8) {
+      if (payload.getNewPassword().length() < 8) {
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         final Message m =
             new Message(
@@ -71,7 +48,9 @@ public class ChangePasswordRR extends AbstractRR {
       }
 
       final boolean ok =
-          new ChangePasswordDAO(userId, currentPassword, newPassword).access().getOutputParam();
+          new ChangePasswordDAO(userId, payload.getCurrentPassword(), payload.getNewPassword())
+              .access()
+              .getOutputParam();
 
       if (!ok) {
         LOGGER.warn("Password change failed for user %d: wrong current password.", userId);
