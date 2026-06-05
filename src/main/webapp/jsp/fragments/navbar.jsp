@@ -17,8 +17,8 @@
       <a href="<c:url value='/ingredients'/>">Ingredients</a>
     </div>
     <div class="actions">
-      <a class="btn btn-outline" href="<c:url value='/login'/>">Sign in</a>
-      <a class="btn btn-primary" href="<c:url value='/register'/>">Register</a>
+      <a class="btn btn-outline btn-md" href="<c:url value='/login'/>">Sign in</a>
+      <a class="btn btn-primary btn-md" href="<c:url value='/register'/>">Register</a>
     </div>
   </div>
 </nav>

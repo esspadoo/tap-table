@@ -53,11 +53,11 @@ fetch(ctx + "/rest/user", { headers: { Accept: "application/json" } })
     items.appendChild(cartLink);
 
     const dashboardLink = link("/dashboard", "Dashboard");
-    dashboardLink.className = "btn btn-primary";
+    dashboardLink.className = "btn btn-primary btn-md";
     actions.appendChild(dashboardLink);
 
     const signOut = document.createElement("button");
-    signOut.className = "btn btn-outline";
+    signOut.className = "btn btn-outline btn-md";
     signOut.textContent = "Sign out";
     signOut.addEventListener("click", () => {
       signOut.disabled = true;

@@ -76,6 +76,12 @@
   cursor: not-allowed;
 }
 
+.btn-md {
+  padding: 0.35rem 0.9rem;
+  font-size: var(--text-sm);
+  letter-spacing: 0.025em;
+}
+
 .btn-sm {
   padding: 0.3rem 0.6rem;
   font-size: 0.78rem;

@@ -169,6 +169,7 @@
 @media (min-width: 720px) {
   .navbar .menu .actions {
     flex-direction: row;
+    align-items: center;
     padding: 0;
   }
 }
