@@ -14,7 +14,7 @@ import java.util.List;
 public class CreateOrderDAO extends AbstractDAO<Order> {
   private static final String GET_DISH_PRICE_STATEMENT = "SELECT price FROM dishes WHERE id = ?";
   private static final String CREATE_ORDER_STATEMENT =
-      "INSERT INTO orders (user_id, promotion_id, total_amount, status) VALUES (?, ?, ?, ?) RETURNING *";
+      "INSERT INTO orders (user_id, promotion_id, total_amount, status) VALUES (?, ?, ?, ?::order_status) RETURNING *";
   private static final String CREATE_ORDER_DISHES_STATEMENT =
       "INSERT INTO order_dishes (order_id, dish_id, quantity, is_liked) VALUES (?, ?, ?, ?) RETURNING *";
 

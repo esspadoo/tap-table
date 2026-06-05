@@ -13,7 +13,7 @@ import java.util.List;
 
 public class EditOrderStatusDAO extends AbstractDAO<Order> {
   private static final String ORDER_UPDATE_STATEMENT =
-      "UPDATE orders SET status = ? WHERE id = ? RETURNING *";
+      "UPDATE orders SET status = ?::order_status WHERE id = ? RETURNING *";
   private static final String ORDER_DISHES_STATEMENT =
       "SELECT dish_id, quantity, is_liked FROM order_dishes WHERE order_id = ?";
   private final Integer orderId;
