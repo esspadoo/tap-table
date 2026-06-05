@@ -4,10 +4,6 @@ TapTable is a web application for the management of a dining developed for the W
 
 It allows customers to browse the menu and place orders online, while giving managers and staff dedicated tools to manage dishes, ingredients and promotions.
 
-## Architecture
-
-TODO
-
 ## Tech Stack
 
 | Layer      | Technology                     |
