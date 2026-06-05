@@ -1,14 +1,12 @@
 /* Copyright (c) 2026 University of Padua, Italy - MIT License */
 package com.swad.taptable.rest.order;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
 import com.swad.taptable.dao.order.GetOrderDAO;
 import com.swad.taptable.dao.order.SubmitReviewDAO;
 import com.swad.taptable.exception.json.UnexpectedKeyException;
 import com.swad.taptable.resources.Message;
 import com.swad.taptable.resources.Order;
+import com.swad.taptable.resources.OrderReview;
 import com.swad.taptable.resources.OrderStatus;
 import com.swad.taptable.rest.AbstractRR;
 import com.swad.taptable.util.Actions;
@@ -20,8 +18,6 @@ import java.sql.SQLException;
 
 public class SubmitReviewRR extends AbstractRR {
 
-  private static final JsonFactory JSON_FACTORY = new JsonFactory();
-
   public SubmitReviewRR(final HttpServletRequest req, final HttpServletResponse res) {
     super(Actions.EDIT_ORDER, req, res);
   }
@@ -31,28 +27,9 @@ public class SubmitReviewRR extends AbstractRR {
     try {
       final int userId = Integer.parseInt((String) req.getAttribute("user_id"));
       final int orderId = Integer.parseInt((String) req.getAttribute("order_id"));
+      final OrderReview review = OrderReview.fromJSON(req.getInputStream());
 
-      Integer dishId = null;
-      Boolean isLiked = null;
-      try (JsonParser jp = JSON_FACTORY.createParser(req.getInputStream())) {
-        while (jp.nextToken() != JsonToken.END_OBJECT) {
-          if (jp.getCurrentToken() != JsonToken.FIELD_NAME) continue;
-          switch (jp.currentName()) {
-            case "dish_id":
-              jp.nextToken();
-              dishId = jp.getIntValue();
-              break;
-            case "is_liked":
-              jp.nextToken();
-              isLiked = jp.getBooleanValue();
-              break;
-            default:
-              throw new UnexpectedKeyException("Unexpected key: " + jp.currentName());
-          }
-        }
-      }
-
-      if (dishId == null || isLiked == null) {
+      if (review.getDishId() == null || review.getIsLiked() == null) {
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         final Message m =
             new Message(
@@ -93,20 +70,25 @@ public class SubmitReviewRR extends AbstractRR {
         return;
       }
 
-      final boolean saved = new SubmitReviewDAO(orderId, dishId, isLiked).access().getOutputParam();
+      final boolean saved =
+          new SubmitReviewDAO(orderId, review.getDishId(), review.getIsLiked())
+              .access()
+              .getOutputParam();
 
       if (!saved) {
         res.setStatus(HttpServletResponse.SC_NOT_FOUND);
         final Message m =
             new Message(
-                String.format("Dish %d not found in order %d.", dishId, orderId),
+                String.format("Dish %d not found in order %d.", review.getDishId(), orderId),
                 ErrorCodes.RESOURCE_NOT_FOUND,
                 null);
         m.toJSON(res.getOutputStream());
         return;
       }
 
-      LOGGER.info("Review submitted for order %d, dish %d by user %d.", orderId, dishId, userId);
+      LOGGER.info(
+          "Review submitted for order %d, dish %d by user %d.",
+          orderId, review.getDishId(), userId);
       res.setStatus(HttpServletResponse.SC_NO_CONTENT);
 
     } catch (final UnexpectedKeyException e) {
