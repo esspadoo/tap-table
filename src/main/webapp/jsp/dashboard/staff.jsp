@@ -104,24 +104,9 @@ contentType="text/html" pageEncoding="UTF-8" %>
                         <td>User #<c:out value="${order.userId}" /></td>
                         <td>
                           <div class="order-dish-list">
-                            <c:forEach
-                              var="dish"
-                              items="${order.dishes}"
-                              varStatus="loop"
-                            >
-                              <c:if test="${loop.index < 3}">
-                                <span class="order-dish-line"
-                                  ><c:out value="${dish.dishName}" /> &times;
-                                  <c:out value="${dish.quantity}"
-                                /></span>
-                              </c:if>
+                            <c:forEach var="dish" items="${order.dishes}">
+                              <span class="order-dish-line"><c:out value="${dish.dishName}" /> &times; <c:out value="${dish.quantity}" /></span>
                             </c:forEach>
-                            <c:if test="${order.dishes.size() > 3}">
-                              <span class="order-dish-overflow"
-                                >+<c:out value="${order.dishes.size() - 3}" />
-                                more</span
-                              >
-                            </c:if>
                           </div>
                         </td>
                         <td class="order-total">
