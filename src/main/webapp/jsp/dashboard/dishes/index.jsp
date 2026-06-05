@@ -14,7 +14,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
   <body data-ctx="<c:out value='${pageContext.request.contextPath}'/>">
     <%@ include file="../../fragments/navbar.jsp" %>
 
-    <main id="dishes-manage-page" class="dash-page">
+    <main id="dishes-manage-page">
       <%@ include file="../../fragments/dash-tabs.jsp" %>
 
       <div class="dash-content">

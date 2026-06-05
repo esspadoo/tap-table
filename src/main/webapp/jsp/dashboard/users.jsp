@@ -12,7 +12,7 @@
   <body>
     <%@ include file="../fragments/navbar.jsp" %>
 
-    <main id="users-page" class="dash-page">
+    <main id="users-page">
 
       <%@ include file="../fragments/dash-tabs.jsp" %>
 

@@ -39,6 +39,7 @@
 
 #home-page .home-actions {
   display: flex;
+  flex-direction: column;
   gap: 0.75rem;
   justify-content: center;
   flex-wrap: wrap;
@@ -56,6 +57,10 @@
   #home-page .home-hero p {
     font-size: var(--text-lg);
     max-width: 32rem;
+  }
+
+  #home-page .home-actions {
+    flex-direction: row;
   }
 }
 

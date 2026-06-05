@@ -87,8 +87,6 @@
   color: rgb(var(--fg-muted));
 }
 
-/* Review states */
-
 .dish-eval {
   display: flex;
   align-items: center;
@@ -110,8 +108,6 @@
   border: none;
   border-radius: 0;
 }
-
-/* Review buttons */
 
 .review-actions {
   display: flex;
@@ -155,30 +151,12 @@
   cursor: not-allowed;
 }
 
-/* ─── Role-based dashboard layout ─────────────────────────────────── */
-
-/*
- * .dash-page  - two-column shell (sidebar + content) used by the
- *               customer dashboard and all /dashboard/* sub-pages.
- * Staff/admin dashboards use the existing .dashboard single-column layout.
- */
-
-.dash-page {
-  max-width: 72rem;
-  margin: 0 auto;
-  padding: 2.5rem 1.5rem 4rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-/* Tab navigation - visual language identical to .navbar .menu .items a */
-
 .dash-sidebar {
   flex-shrink: 0;
   display: flex;
   flex-direction: row;
   border-bottom: 1px solid rgba(var(--border), var(--border-transparency));
+  overflow-x: auto;
 }
 
 .dash-sidebar a {
@@ -210,8 +188,6 @@
   border-bottom-color: rgb(var(--amber));
 }
 
-/* Content */
-
 .dash-content {
   flex: 1;
   min-width: 0;
@@ -239,8 +215,6 @@
   margin-top: -0.25rem;
 }
 
-/* Password strength rule */
-
 .password-rules {
   display: flex;
   flex-direction: column;
@@ -256,8 +230,6 @@
 .password-rule.met {
   color: rgb(var(--green));
 }
-
-/* Dish list - vertical display in order cards and compact table cells */
 
 .order-dish-list {
   display: flex;
@@ -275,8 +247,6 @@
   font-size: var(--text-sm);
   color: rgb(var(--fg-muted));
 }
-
-/* Profile read-only fields */
 
 .profile-fields {
   display: flex;

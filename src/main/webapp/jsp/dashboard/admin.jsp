@@ -27,7 +27,7 @@
   <body>
     <%@ include file="../fragments/navbar.jsp" %>
 
-    <main id="admin-dashboard" class="dash-page" data-ctx="<c:out value='${pageContext.request.contextPath}'/>">
+    <main id="admin-dashboard" data-ctx="<c:out value='${pageContext.request.contextPath}'/>">
 
       <%@ include file="../fragments/dash-tabs.jsp" %>
 

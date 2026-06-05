@@ -24,7 +24,6 @@ contentType="text/html" pageEncoding="UTF-8" %>
 
     <main
       id="staff-dashboard"
-      class="dash-page"
       data-ctx="<c:out value='${pageContext.request.contextPath}'/>"
     >
       <%@ include file="../fragments/dash-tabs.jsp" %>
