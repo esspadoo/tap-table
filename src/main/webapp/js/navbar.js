@@ -37,12 +37,23 @@ fetch(ctx + "/rest/user")
     actions.appendChild(dashboardLink);
 
     const signOut = document.createElement("button");
-    signOut.type = "submit";
     signOut.className = "btn btn-outline";
     signOut.textContent = "Sign out";
     signOut.addEventListener("click", () => {
-      fetch(ctx + "/logout", { method: "POST" });
+      signOut.disabled = true;
+      fetch(ctx + "/logout", { method: "POST" })
+        .then((res) => {
+          if (res.ok) {
+            location.href = ctx + "/";
+          } else {
+            signOut.disabled = false;
+            signOut.textContent = "Sign out failed — try again";
+          }
+        })
+        .catch(() => {
+          signOut.disabled = false;
+          signOut.textContent = "Sign out failed — try again";
+        });
     });
-
     actions.appendChild(signOut);
   });
