@@ -35,10 +35,6 @@
                 <c:forEach var="u" items="${users}">
                   <div class="user-row">
 
-                    <div class="user-avatar">
-                      <c:out value="${not empty u.name ? u.name.substring(0,1) : '?'}${not empty u.surname ? u.surname.substring(0,1) : ''}" />
-                    </div>
-
                     <div class="user-info">
                       <span class="user-name">
                         <c:out value="${u.name} ${u.surname}" />

@@ -126,21 +126,6 @@
   border-bottom: none;
 }
 
-.user-avatar {
-  flex-shrink: 0;
-  width: 2.125rem;
-  height: 2.125rem;
-  border-radius: 50%;
-  background: rgba(var(--border), 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--text-xs);
-  font-weight: 600;
-  color: rgb(var(--fg-muted));
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-}
 
 .user-info {
   flex: 1;
