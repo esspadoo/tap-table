@@ -38,7 +38,7 @@ public class GetAllOrdersDAO extends AbstractDAO<ResourceList<Order>> {
             while (dishesRs.next()) {
               int dishId = dishesRs.getInt("dish_id");
               int quantity = dishesRs.getInt("quantity");
-              boolean isLiked = dishesRs.getBoolean("is_liked");
+              Boolean isLiked = dishesRs.getObject("is_liked", Boolean.class);
 
               orderDishes.add(new OrderDish(dishId, quantity, isLiked));
             }
