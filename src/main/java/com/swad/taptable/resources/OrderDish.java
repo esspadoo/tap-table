@@ -10,18 +10,33 @@ public class OrderDish {
   private final Integer dishId;
   private final Integer quantity;
   private final Boolean isLiked;
+  private final String dishName;
 
   /**
-   * Creates a new ordered dish entry.
+   * Creates a new ordered dish entry without a resolved dish name.
    *
    * @param dishId the identifier of the ordered dish.
    * @param quantity the amount requested for the dish.
    * @param isLiked the feedback flag associated with the dish, if available.
    */
   public OrderDish(final Integer dishId, final Integer quantity, final Boolean isLiked) {
+    this(dishId, quantity, isLiked, null);
+  }
+
+  /**
+   * Creates a new ordered dish entry with a resolved dish name.
+   *
+   * @param dishId the identifier of the ordered dish.
+   * @param quantity the amount requested for the dish.
+   * @param isLiked the feedback flag associated with the dish, if available.
+   * @param dishName the human-readable name of the dish.
+   */
+  public OrderDish(
+      final Integer dishId, final Integer quantity, final Boolean isLiked, final String dishName) {
     this.dishId = dishId;
     this.quantity = quantity;
     this.isLiked = isLiked;
+    this.dishName = dishName;
   }
 
   /**
@@ -50,5 +65,14 @@ public class OrderDish {
    */
   public Boolean isLiked() {
     return isLiked;
+  }
+
+  /**
+   * Returns the human-readable name of the dish, or {@code null} if not resolved.
+   *
+   * @return the dish name.
+   */
+  public String getDishName() {
+    return dishName;
   }
 }
