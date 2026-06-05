@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.title = (dish.name || "Dish") + " - TapTable";
 
       if (dish.ingredients && dish.ingredients.length) {
-        ingredientsSection.classList.remove("is-hidden");
+        ingredientsSection.hidden = false;
         ingredientsList.replaceChildren();
         for (const ing of dish.ingredients) {
           const li = document.createElement("li");
@@ -55,17 +55,17 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       img.alt = (dish.name || "Dish") + " image";
-      img.classList.add("is-hidden");
+      img.hidden = true;
       fetch(ctx + "/rest/dish/" + id + "/image", { headers: { Accept: "*/*" } })
         .then((r) => (r.ok ? r.blob() : Promise.reject()))
         .then((blob) => {
           img.src = URL.createObjectURL(blob);
-          img.classList.remove("is-hidden");
-          placeholder.classList.add("is-hidden");
+          img.hidden = false;
+          placeholder.hidden = true;
         })
         .catch(() => {
-          img.classList.add("is-hidden");
-          placeholder.classList.remove("is-hidden");
+          img.hidden = true;
+          placeholder.hidden = false;
         });
     })
     .catch(() => {
@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function showAlert(msg) {
     alertMessage.textContent = msg;
-    alertBanner.classList.remove("is-hidden");
+    alertBanner.hidden = false;
     alertBanner.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 });

@@ -65,7 +65,7 @@
 }
 
 .dish-name {
-  flex: 1;
+  min-width: 0;
 }
 
 .order-card-footer {
@@ -85,16 +85,16 @@
 .order-pending-note {
   font-size: var(--text-sm);
   color: rgb(var(--fg-muted));
-  font-style: italic;
 }
 
 /* Review states */
 
 .dish-eval {
-  margin-left: auto;
   display: flex;
   align-items: center;
   font-size: var(--text-base);
+  padding-left: 0.75rem;
+  border-left: 1px solid rgba(var(--border), var(--border-transparency));
 }
 
 .dish-eval-liked {

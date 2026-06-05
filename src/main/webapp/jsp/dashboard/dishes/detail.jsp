@@ -25,14 +25,14 @@ contentType="text/html" pageEncoding="UTF-8" %>
         <h1 id="page-title">Dish Detail</h1>
       </div>
 
-      <div id="alert-banner" class="alert alert-destructive is-hidden">
+      <div id="alert-banner" class="alert alert-destructive" hidden>
         <span id="alert-message"></span>
       </div>
 
       <div class="data-detail-wrap">
         <div class="detail-image-wrap">
           <div id="dish-image-placeholder" class="image-placeholder" aria-label="No image"></div>
-          <img id="dish-image" alt="Dish image" class="is-hidden" />
+          <img id="dish-image" alt="Dish image" hidden />
         </div>
 
         <div class="detail-info">
@@ -41,7 +41,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
           <p id="dish-description" class="detail-description"></p>
           <p id="dish-price" class="detail-price"></p>
 
-          <div id="dish-ingredients-section" class="is-hidden">
+          <div id="dish-ingredients-section" hidden>
             <h3>Ingredients</h3>
             <ul id="dish-ingredients-list"></ul>
           </div>

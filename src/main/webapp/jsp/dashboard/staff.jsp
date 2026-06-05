@@ -17,7 +17,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
     <title>Staff Dashboard &dash; TapTable</title>
     <link rel="stylesheet" href="<c:url value='/css/global.css'/>" />
     <script src="<c:url value='/js/navbar.js'/>" defer></script>
-    <script src="<c:url value='/js/dashboard.js'/>" defer></script>
+    <script src="<c:url value='/js/staff-dashboard.js'/>" defer></script>
   </head>
   <body>
     <%@ include file="../fragments/navbar.jsp" %>
@@ -48,7 +48,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
                       /></span>
                       <div class="admin-order-actions">
                         <button
-                          class="btn btn-secondary btn-sm"
+                          class="btn btn-success btn-sm"
                           data-order-id="<c:out value='${order.id}'/>"
                           data-action="complete"
                         >
@@ -95,7 +95,6 @@ contentType="text/html" pageEncoding="UTF-8" %>
                       <th>Dishes</th>
                       <th>Total</th>
                       <th>Status</th>
-                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -149,17 +148,6 @@ contentType="text/html" pageEncoding="UTF-8" %>
                               ></c:otherwise
                             >
                           </c:choose>
-                        </td>
-                        <td>
-                          <c:if test="${order.status == 'PENDING'}">
-                            <button
-                              class="btn btn-secondary btn-sm"
-                              data-order-id="<c:out value='${order.id}'/>"
-                              data-action="complete"
-                            >
-                              Mark complete
-                            </button>
-                          </c:if>
                         </td>
                       </tr>
                     </c:forEach>

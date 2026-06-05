@@ -23,8 +23,8 @@ document.addEventListener("DOMContentLoaded", () => {
       name.textContent = ingredient.name || "";
 
       if (ingredient.is_frozen === true) {
-        frozenEl.classList.remove("is-hidden");
-        frozenEl.innerHTML = "❄";
+        frozenEl.hidden = false;
+        frozenEl.textContent = "❄";
       }
 
       if (ingredient.allergens && ingredient.allergens.length) {
@@ -39,23 +39,22 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       img.alt = `${ingredient.name || "Ingredient"} image`;
-      img.classList.add("is-hidden");
+      img.hidden = true;
       fetch(`${ctx}/rest/ingredient/${ingredientId}/image`, {
         headers: { Accept: "*/*" },
       })
         .then((r) => (r.ok ? r.blob() : Promise.reject()))
         .then((blob) => {
           img.src = URL.createObjectURL(blob);
-          img.classList.remove("is-hidden");
-          placeholder.classList.add("is-hidden");
+          img.hidden = false;
+          placeholder.hidden = true;
         })
         .catch(() => {
-          img.classList.add("is-hidden");
-          placeholder.classList.remove("is-hidden");
+          img.hidden = true;
+          placeholder.hidden = false;
         });
     })
     .catch((error) => {
-      // FIXME: show user-visible error message
       console.error("Failed to load ingredient", error);
     });
 });

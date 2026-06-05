@@ -43,7 +43,22 @@
 }
 
 .btn-outline:hover {
-  background: rgb(var(--bg-input));
+  background: rgba(var(--fg), 0.06);
+}
+
+.btn-success {
+  background: rgb(var(--green));
+  color: rgb(var(--bg));
+  border-color: transparent;
+}
+
+.btn-success:hover {
+  filter: brightness(1.08);
+}
+
+.btn-success:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .btn-danger {

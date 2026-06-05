@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   );
   const ingredientsList = document.getElementById("ingredients-list");
 
-  ingredientsSection.classList.add("is-hidden");
+  ingredientsSection.hidden = true;
 
   const params = new URLSearchParams(window.location.search);
   const dishId = params.get("id");
@@ -67,26 +67,25 @@ document.addEventListener("DOMContentLoaded", () => {
         typeof dish.price === "number" ? money.format(dish.price) : "";
 
       if (dish.ingredients && dish.ingredients.length) {
-        ingredientsSection.classList.remove("is-hidden");
+        ingredientsSection.hidden = false;
         renderIngredients(dish.ingredients);
       }
 
       img.alt = `${dish.name || "Dish"} image`;
-      img.classList.add("is-hidden");
+      img.hidden = true;
       fetch(`${ctx}/rest/dish/${dishId}/image`, { headers: { Accept: "*/*" } })
         .then((r) => (r.ok ? r.blob() : Promise.reject()))
         .then((blob) => {
           img.src = URL.createObjectURL(blob);
-          img.classList.remove("is-hidden");
-          placeholder.classList.add("is-hidden");
+          img.hidden = false;
+          placeholder.hidden = true;
         })
         .catch(() => {
-          img.classList.add("is-hidden");
-          placeholder.classList.remove("is-hidden");
+          img.hidden = true;
+          placeholder.hidden = false;
         });
     })
     .catch((error) => {
-      // FIXME: show user-visible error message
       console.error("Failed to load dish", error);
     });
 });

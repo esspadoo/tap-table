@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function render(ingredients) {
     tbody.replaceChildren();
     updateCount(ingredients.length);
-    emptyState.classList.toggle("is-hidden", ingredients.length > 0);
+    emptyState.hidden = ingredients.length > 0;
 
     const fragment = document.createDocumentFragment();
     ingredients.forEach((ingredient, i) => {
@@ -50,7 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const tr = document.createElement("tr");
     tr.dataset.id = ingredient.id;
 
-    // ── Name ──
     const tdName = document.createElement("td");
 
     const nameInfo = document.createElement("div");
@@ -128,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
         allIngredients = allIngredients.filter((i) => i.id !== id);
         const remaining = tbody.querySelectorAll("tr").length;
         updateCount(remaining);
-        emptyState.classList.toggle("is-hidden", remaining > 0);
+        emptyState.hidden = remaining > 0;
       } else {
         const data = await res.json().catch(() => ({}));
         const m = data?.message;
@@ -152,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function showAlert(msg) {
     alertMessage.textContent = msg;
-    alertBanner.classList.remove("is-hidden");
+    alertBanner.hidden = false;
     alertBanner.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 });

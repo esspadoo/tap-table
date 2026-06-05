@@ -141,11 +141,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function showAlert(msg) {
     alertMessage.textContent = msg;
-    alertContainer.classList.remove("is-hidden");
+    alertContainer.hidden = false;
     alertContainer.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
   function hideAlert() {
-    alertContainer.classList.add("is-hidden");
+    alertContainer.hidden = true;
   }
 });

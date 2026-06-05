@@ -42,7 +42,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
           </div>
         </div>
 
-        <div id="alert-banner" class="alert alert-destructive is-hidden">
+        <div id="alert-banner" class="alert alert-destructive" hidden>
           <span id="alert-message"></span>
         </div>
 
@@ -56,7 +56,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
               </tr>
             </thead>
             <tbody id="dishes-tbody"></tbody>
-            <tfoot id="empty-state" class="is-hidden">
+            <tfoot id="empty-state" hidden>
               <tr>
                 <td colspan="3" class="dt-empty">
                   <p class="dt-empty-title">No dishes found</p>

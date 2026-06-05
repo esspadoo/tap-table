@@ -1,8 +1,7 @@
 import {
   getCart,
   removeDish,
-  increaseQuantity,
-  decreaseQuantity,
+  setQuantity,
   clearCart,
   getTotalPrice,
   getPromotion,
@@ -22,7 +21,6 @@ const alertEl = document.getElementById("cart-alert");
 const checkoutBtn = document.getElementById("checkout-btn");
 const clearBtn = document.getElementById("clear-cart-btn");
 
-// Promotion elements
 const promoInput = document.getElementById("promo-input");
 const promoApplyBtn = document.getElementById("promo-apply-btn");
 const promoRemoveBtn = document.getElementById("promo-remove-btn");
@@ -92,25 +90,17 @@ function render() {
     tdName.textContent = item.name;
 
     const tdQty = document.createElement("td");
-    const qtyWrap = document.createElement("div");
-    qtyWrap.className = "qty-controls";
-
-    const btnDec = document.createElement("button");
-    btnDec.className = "btn btn-outline btn-sm qty-btn";
-    btnDec.textContent = "−";
-    btnDec.addEventListener("click", () => { decreaseQuantity(item.dishId); render(); });
-
-    const qtySpan = document.createElement("span");
-    qtySpan.className = "qty-value";
-    qtySpan.textContent = item.quantity;
-
-    const btnInc = document.createElement("button");
-    btnInc.className = "btn btn-outline btn-sm qty-btn";
-    btnInc.textContent = "+";
-    btnInc.addEventListener("click", () => { increaseQuantity(item.dishId); render(); });
-
-    qtyWrap.append(btnDec, qtySpan, btnInc);
-    tdQty.appendChild(qtyWrap);
+    const qtyInput = document.createElement("input");
+    qtyInput.type = "number";
+    qtyInput.min = "1";
+    qtyInput.value = String(item.quantity);
+    qtyInput.className = "qty-input";
+    qtyInput.setAttribute("aria-label", "Quantity of " + item.name);
+    qtyInput.addEventListener("change", () => {
+      const val = parseInt(qtyInput.value, 10);
+      if (!isNaN(val)) { setQuantity(item.dishId, val); render(); }
+    });
+    tdQty.appendChild(qtyInput);
 
     const tdTotal = document.createElement("td");
     tdTotal.textContent = money.format(item.price * item.quantity);
@@ -119,6 +109,7 @@ function render() {
     const removeBtn = document.createElement("button");
     removeBtn.className = "btn btn-danger btn-sm";
     removeBtn.textContent = "Remove";
+    removeBtn.setAttribute("aria-label", "Remove " + item.name + " from cart");
     removeBtn.addEventListener("click", () => { removeDish(item.dishId); render(); });
     tdRemove.appendChild(removeBtn);
 
@@ -129,8 +120,6 @@ function render() {
   renderPromoSection();
   totalEl.textContent = money.format(getFinalPrice());
 }
-
-// ── Promotion apply ──────────────────────────────────────────
 
 async function applyPromotion() {
   const code = promoInput.value.trim().toUpperCase();
@@ -144,7 +133,6 @@ async function applyPromotion() {
   setPromoFeedback("");
 
   try {
-    // 1. Validate code exists
     const promoRes = await fetch(ctx + "/rest/promotion/" + encodeURIComponent(code), {
       headers: { Accept: "application/json" },
     });
@@ -160,7 +148,6 @@ async function applyPromotion() {
 
     const promo = await promoRes.json();
 
-    // 2. Check if already used
     const usageRes = await fetch(ctx + "/rest/promotion/" + encodeURIComponent(code) + "/usage", {
       headers: { Accept: "application/json" },
     });
@@ -173,7 +160,6 @@ async function applyPromotion() {
       }
     }
 
-    // 3. Apply
     savePromotion({ code: promo.code, discount: promo.discount, description: promo.description || null });
     setPromoFeedback("Promotion applied!", false);
     render();
@@ -197,8 +183,6 @@ promoRemoveBtn.addEventListener("click", () => {
   setPromoFeedback("");
   render();
 });
-
-// ── Checkout ─────────────────────────────────────────────────
 
 async function checkout() {
   const cart = getCart();

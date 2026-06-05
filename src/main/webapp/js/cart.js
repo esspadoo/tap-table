@@ -50,6 +50,19 @@ function decreaseQuantity(dishId) {
   }
 }
 
+function setQuantity(dishId, quantity) {
+  if (quantity < 1) {
+    removeDish(dishId);
+    return;
+  }
+  const cart = getCart();
+  const item = cart.find((i) => i.dishId === dishId);
+  if (item) {
+    item.quantity = quantity;
+    saveCart(cart);
+  }
+}
+
 function clearCart() {
   localStorage.removeItem(CART_KEY);
   localStorage.removeItem(PROMO_KEY);
@@ -62,8 +75,6 @@ function getTotalItems() {
 function getTotalPrice() {
   return getCart().reduce((sum, item) => sum + item.price * item.quantity, 0);
 }
-
-// ── Promotion ────────────────────────────────────────────────
 
 function getPromotion() {
   try {
@@ -95,6 +106,7 @@ export {
   removeDish,
   increaseQuantity,
   decreaseQuantity,
+  setQuantity,
   clearCart,
   getTotalItems,
   getTotalPrice,

@@ -67,12 +67,12 @@
                     <div class="admin-order-header">
                       <span class="order-id">Order #<c:out value="${order.id}" /></span>
                       <div class="admin-order-actions">
-                        <button class="btn btn-secondary btn-sm"
+                        <button class="btn btn-success btn-sm"
                                 data-order-id="<c:out value='${order.id}'/>"
                                 data-action="complete">Mark complete</button>
                         <button class="btn btn-danger btn-sm"
                                 data-order-id="<c:out value='${order.id}'/>"
-                                data-action="cancel">Cancel</button>
+                                data-action="cancel">Cancel order</button>
                       </div>
                     </div>
                     <div class="admin-order-meta">
@@ -98,7 +98,7 @@
                 <table class="orders-table">
                   <thead>
                     <tr>
-                      <th>#</th><th>Customer</th><th>Dishes</th><th>Total</th><th>Status</th><th></th>
+                      <th>#</th><th>Customer</th><th>Dishes</th><th>Total</th><th>Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -107,9 +107,16 @@
                         <td class="order-id"><c:out value="${order.id}" /></td>
                         <td>User #<c:out value="${order.userId}" /></td>
                         <td>
-                          <c:forEach var="dish" items="${order.dishes}" varStatus="loop">
-                            <c:out value="${dish.dishName}" /> (#<c:out value="${dish.dishId}" />) x<c:out value="${dish.quantity}" /><c:if test="${!loop.last}">, </c:if>
-                          </c:forEach>
+                          <div class="order-dish-list">
+                            <c:forEach var="dish" items="${order.dishes}" varStatus="loop">
+                              <c:if test="${loop.index < 3}">
+                                <span class="order-dish-line"><c:out value="${dish.dishName}" /> &times; <c:out value="${dish.quantity}" /></span>
+                              </c:if>
+                            </c:forEach>
+                            <c:if test="${order.dishes.size() > 3}">
+                              <span class="order-dish-overflow">+<c:out value="${order.dishes.size() - 3}" /> more</span>
+                            </c:if>
+                          </div>
                         </td>
                         <td class="order-total">&euro;<fmt:formatNumber value="${order.totalPrice}" pattern="#,##0.00" /></td>
                         <td>
@@ -118,13 +125,6 @@
                             <c:when test="${order.status == 'COMPLETED'}"><span class="badge badge-completed">Completed</span></c:when>
                             <c:otherwise><span class="badge badge-cancelled">Cancelled</span></c:otherwise>
                           </c:choose>
-                        </td>
-                        <td>
-                          <c:if test="${order.status == 'PENDING'}">
-                            <button class="btn btn-secondary btn-sm"
-                                    data-order-id="<c:out value='${order.id}'/>"
-                                    data-action="complete">Mark complete</button>
-                          </c:if>
                         </td>
                       </tr>
                     </c:forEach>

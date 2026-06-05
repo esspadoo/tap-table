@@ -9,7 +9,7 @@
     <title>Dashboard &dash; TapTable</title>
     <link rel="stylesheet" href="<c:url value='/css/global.css'/>" />
     <script src="<c:url value='/js/navbar.js'/>" defer></script>
-    <script src="<c:url value='/js/dashboard.js'/>" defer></script>
+    <script src="<c:url value='/js/customer-dashboard.js'/>" defer></script>
   </head>
   <body>
     <%@ include file="../fragments/navbar.jsp" %>
@@ -46,8 +46,8 @@
                     <div class="order-dishes">
                       <c:forEach var="dish" items="${order.dishes}">
                         <div class="dish-row">
-                          <span class="dish-name">Dish #<c:out value="${dish.dishId}" /></span>
-                          <span>x<c:out value="${dish.quantity}" /></span>
+                          <span class="dish-name"><c:out value="${dish.dishName}" /></span>
+                          <span>&times;<c:out value="${dish.quantity}" /></span>
                           <c:if test="${order.status == 'COMPLETED'}">
                             <c:choose>
                               <c:when test="${dish.isLiked() == true}">

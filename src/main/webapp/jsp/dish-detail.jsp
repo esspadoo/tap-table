@@ -34,7 +34,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
           <p id="dish-description"></p>
           <p id="dish-price"></p>
 
-          <div id="dish-ingredients-section">
+          <div id="dish-ingredients-section" hidden>
             <h2>Ingredients</h2>
             <ul id="ingredients-list"></ul>
           </div>

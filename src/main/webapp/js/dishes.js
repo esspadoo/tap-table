@@ -44,17 +44,17 @@ document.addEventListener("DOMContentLoaded", () => {
     img.alt = `${dish.name || "Dish"} image`;
     img.loading = "lazy";
     img.decoding = "async";
-    img.classList.add("is-hidden");
+    img.hidden = true;
     fetch(imageUrl(dish.id), { headers: { Accept: "*/*" } })
       .then((r) => (r.ok ? r.blob() : Promise.reject()))
       .then((blob) => {
         img.src = URL.createObjectURL(blob);
-        img.classList.remove("is-hidden");
-        placeholder.classList.add("is-hidden");
+        img.hidden = false;
+        placeholder.hidden = true;
       })
       .catch(() => {
-        img.classList.add("is-hidden");
-        placeholder.classList.remove("is-hidden");
+        img.hidden = true;
+        placeholder.hidden = false;
       });
 
     media.append(placeholder, img);

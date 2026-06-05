@@ -1,7 +1,3 @@
-.is-hidden {
-  display: none;
-}
-
 .link {
   color: rgb(var(--amber));
   text-decoration: underline;
@@ -37,9 +33,9 @@
 }
 
 .badge-pending {
-  background: rgba(var(--amber), 0.15);
-  color: rgb(var(--amber));
-  border-color: rgba(var(--amber), 0.25);
+  background: rgba(var(--yellow), 0.15);
+  color: rgb(var(--yellow));
+  border-color: rgba(var(--yellow), 0.25);
 }
 
 .badge-completed {

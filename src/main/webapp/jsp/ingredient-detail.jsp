@@ -29,7 +29,7 @@ contentType="text/html" pageEncoding="UTF-8" %>
         </div>
 
         <div class="info">
-          <p id="ingredient-frozen" class="is-hidden"></p>
+          <p id="ingredient-frozen" hidden></p>
           <h1 id="ingredient-name"></h1>
 
           <div id="allergens-section" hidden>
